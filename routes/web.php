@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AssessmentController;
 
 // Root route
 Route::get('/', function () {
@@ -25,6 +26,24 @@ Route::middleware(['web', 'guest'])->group(function () {
     Route::post('password/email', [UserAuthController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [UserAuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [UserAuthController::class, 'reset'])->name('password.update');
+});
+
+// Authenticated User Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('dashboard', [UserAuthController::class, 'dashboard'])->name('dashboard');
+    
+    // Assessment Routes
+    Route::get('assessment', [AssessmentController::class, 'index'])->name('assessment.index');
+    Route::get('assessment/create', [AssessmentController::class, 'create'])->name('assessment.create');
+    Route::post('assessment', [AssessmentController::class, 'store'])->name('assessment.store');
+    Route::get('assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
+    Route::get('assessment/{assessment}/edit', [AssessmentController::class, 'edit'])->name('assessment.edit');
+    Route::put('assessment/{assessment}', [AssessmentController::class, 'update'])->name('assessment.update');
+    Route::delete('assessment/{assessment}', [AssessmentController::class, 'destroy'])->name('assessment.destroy');
+
+    // Password Reset Routes for authenticated users
+    Route::get('password/reset-form', [UserAuthController::class, 'showResetForm'])->name('password.reset.form');
+    Route::put('password/reset', [UserAuthController::class, 'resetPassword'])->name('password.reset');
 });
 
 // Admin Routes

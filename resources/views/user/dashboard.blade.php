@@ -29,10 +29,11 @@
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-body">
+
                     <h5 class="card-title">Recent Assessments</h5>
                     
                     @if($recentAssessments->isEmpty())
-                        <p class="text-muted">No assessments yet. <a href="{{ route('assessment.create') }}" class="text-primary">Create your first assessment</a></p>
+                       <p class="text-muted">No assessments yet. <a href="{{ route('assessment.create') }}" class="text-primary">Create your first assessment</a></p>
                     @else
                         <div class="table-responsive">
                             <table class="table">
@@ -61,7 +62,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <a href="{{ route('assessment.index') }}" class="btn btn-primary">View All Assessments</a>
+                       <a href="{{ route('assessment.index') }}" class="btn btn-primary">View All Assessments</a>
                     @endif
                 </div>
             </div>
