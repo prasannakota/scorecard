@@ -8,10 +8,9 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('assessments', function (Blueprint $table) {
+        Schema::create('assessment_background', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
             $table->text('description')->nullable();
             $table->integer('score')->nullable();
             $table->string('organization_name')->nullable();
@@ -26,6 +25,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('assessments');
+        Schema::dropIfExists('assessment_background');
     }
 };

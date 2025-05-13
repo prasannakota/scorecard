@@ -159,3 +159,15 @@ Route::prefix('admin')->group(function () {
 Route::get('/test', function () {
     return view('test');
 })->name('test');
+
+
+
+Route::get('/assessment/question/{questionId}', [AssessmentController::class, 'showQuestion'])->name('assessment.question');
+Route::post('/assessment/answer/{questionId}', [AssessmentController::class, 'storeAnswer']);
+Route::get('/assessment/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
+
+Route::get('/assessment/start', [AssessmentController::class, 'showAllQuestions'])->name('assessment.start');
+Route::post('/assessment/submit-all', [AssessmentController::class, 'storeAllAnswers'])->name('assessment.submit');
+
+
+
