@@ -35,7 +35,7 @@
         }
         
         .main-content {
-            margin-left: 250px;
+            /*margin-left: 250px;*/
             padding: 20px;
         }
         
@@ -56,7 +56,7 @@
         
         .navbar-brand {
             font-weight: 600;
-            color: #0d6efd !important;
+            color: white !important;
         }
         
         .profile-dropdown {
@@ -67,12 +67,59 @@
             right: 0;
             left: auto;
         }
+
+        .navbar {
+            background-color: #1B2937 !important;
+            padding: 1rem;
+        }
+
+        .navbar .nav-link {
+            color: white !important;
+            margin: 0 10px;
+        }
+
+        .navbar .nav-link:hover {
+            color: #e9ecef !important;
+        }
+
+        .search-bar {
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .search-bar input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 35px 8px 15px;
+            border-radius: 20px;
+            width: 300px;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-bar .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hamburger-menu {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <nav class="sidebar">
+        {{--<nav class="sidebar">
             <div class="sidebar-header">
                 <h3 class="text-center mb-4">E-commerce Scorecard</h3>
             </div>
@@ -99,35 +146,59 @@
                     </a>
                 </li>
             </ul>
-        </nav>
+        </nav>--}}
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Top Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
-                    <button class="btn btn-link d-md-none" id="sidebarToggle">
+                    <button class="btn btn-link d-md-none hamburger-menu" id="sidebarToggle">
                         <i class="fas fa-bars"></i>
                     </button>
 
-                    <div class="ms-auto">
-                        <div class="profile-dropdown">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user me-2"></i>{{ Auth::user()->name }}
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+                    <a class="navbar-brand" href="{{ route('dashboard') }}">
+                        <i class="fas fa-bars me-2 d-none d-md-inline-block hamburger-menu"></i>
+
+                        <img src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif" width="200" />
+                    </a>
+
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search..." class="form-control">
+                            <i class="fas fa-search search-icon"></i>
                         </div>
+
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('dashboard') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Get Advice</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Add Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <div class="profile-dropdown">
+                                    <div class="dropdown">
+                                        <button class="btn btn-link nav-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                            <i class="fas fa-user me-2"></i>{{ Auth::user()->name }}
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form action="{{ route('logout') }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </nav>
@@ -148,6 +219,30 @@
 
                 @yield('content')
             </div>
+
+            <!-- footer -->
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <img src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif" width="120" />
+                    <span>2025 Kensium, Allrights reserved.</span>
+                </div>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Policies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Privacy Policy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Terms of use</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact us</a>
+                    </li>
+                </ul>
+            </nav>
+
         </div>
     </div>
 
