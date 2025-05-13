@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('assessment_background', function (Blueprint $table) {
+        Schema::create('assessment_backgrounds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('description')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('assessment_background');
+        Schema::dropIfExists('assessment_backgrounds');
     }
 };

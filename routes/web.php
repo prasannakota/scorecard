@@ -36,10 +36,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('assessment', [AssessmentController::class, 'index'])->name('assessment.index');
     Route::get('assessment/create', [AssessmentController::class, 'create'])->name('assessment.create');
     Route::post('assessment', [AssessmentController::class, 'store'])->name('assessment.store');
-    Route::get('assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
-    Route::get('assessment/{assessment}/edit', [AssessmentController::class, 'edit'])->name('assessment.edit');
-    Route::put('assessment/{assessment}', [AssessmentController::class, 'update'])->name('assessment.update');
-    Route::delete('assessment/{assessment}', [AssessmentController::class, 'destroy'])->name('assessment.destroy');
+
+    Route::get('/assessment/start', [AssessmentController::class, 'showAllQuestions'])->name('assessment.start');
+    Route::post('/assessment/submit-all', [AssessmentController::class, 'storeAllAnswers'])->name('assessment.submit');
+
+    Route::get('/assessment/question/{questionId}', [AssessmentController::class, 'showQuestion'])->name('assessment.question');
+    Route::post('/assessment/answer/{questionId}', [AssessmentController::class, 'storeAnswer']);
+    Route::get('/assessment/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
+    
+    //Route::get('assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
+
+    //Route::get('assessment/{assessment}/edit', [AssessmentController::class, 'edit'])->name('assessment.edit');
+    //Route::put('assessment/{assessment}', [AssessmentController::class, 'update'])->name('assessment.update');
+    //Route::delete('assessment/{assessment}', [AssessmentController::class, 'destroy'])->name('assessment.destroy');
 
     // Password Reset Routes for authenticated users
     Route::get('password/reset-form', [UserAuthController::class, 'showResetForm'])->name('password.reset.form');
@@ -161,13 +170,6 @@ Route::get('/test', function () {
 })->name('test');
 
 
-
-Route::get('/assessment/question/{questionId}', [AssessmentController::class, 'showQuestion'])->name('assessment.question');
-Route::post('/assessment/answer/{questionId}', [AssessmentController::class, 'storeAnswer']);
-Route::get('/assessment/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
-
-Route::get('/assessment/start', [AssessmentController::class, 'showAllQuestions'])->name('assessment.start');
-Route::post('/assessment/submit-all', [AssessmentController::class, 'storeAllAnswers'])->name('assessment.submit');
 
 
 
