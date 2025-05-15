@@ -9,14 +9,24 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="fs-2 mb-3">
-                <a href="{{ route('assessment.index') }}">
+                <a href="{{ route('assessment.create') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"></path>
                 </svg>
                 </a>
-                Background
+                Select Key Departments
             </div>
-        <sub>Total questions :6</sub>
+        <sub>Total modules :14</sub>
+        </div>
+        <div class="col-md-12">
+            Please select all departments that are important to your organisation’s strategic focus areas over the next 12 months.
+            You must select at least 5 modules to proceed.
+
+            <div class="alert alert-primary" role="alert">
+                <i class="bi bi-exclamation-circle"></i>
+                Your selection will determine which functional activities you’ll be asked to assess in the next section. You can also select or add more departments during the assessment
+            </div>
+
         </div>
 
         <div class="col-md-12">
@@ -27,7 +37,7 @@
                     <form method="POST" action="{{ route('assessment.store') }}">
                         @csrf
 
-                        <div class="form-group row">
+                        {{--<div class="form-group row">
                             <label for="organization_name" class="col-md-4 col-form-label text-md-right">{{ __('Name of your Organization') }}</label>
 
                             <div class="col-md-6">
@@ -124,12 +134,12 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div>--}}
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Next') }}
+                                    {{ __('Start Assessment') }}
                                 </button>
                             </div>
                         </div>

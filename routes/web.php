@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     // Assessment Routes
     Route::get('assessment', [AssessmentController::class, 'index'])->name('assessment.index');
     Route::get('assessment/create', [AssessmentController::class, 'create'])->name('assessment.create');
+    Route::get('assessment/department', [AssessmentController::class, 'department'])->name('assessment.department');
     Route::post('assessment', [AssessmentController::class, 'store'])->name('assessment.store');
     Route::get('assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
     Route::get('assessment/{assessment}/edit', [AssessmentController::class, 'edit'])->name('assessment.edit');
