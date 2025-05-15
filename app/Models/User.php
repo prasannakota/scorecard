@@ -53,6 +53,6 @@ class User extends Authenticatable
 
     public function assessments()
     {
-        return $this->hasMany(Assessment::class);
+        return $this->hasMany(AssessmentBackground::class);
     }
 }
