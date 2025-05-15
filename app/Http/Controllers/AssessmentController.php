@@ -49,10 +49,15 @@ class AssessmentController extends Controller
         $assessment->market_position = $validated['market_position'];
         $assessment->save();
 
-        return redirect()->route('assessment.index')
+        return redirect()->route('assessment.department')
             ->with('success', 'Assessment submitted successfully');
     }
 
+    public function department()
+    {
+        $assessment = new Assessment();
+        return view('user.assessment.department', []);
+    }
     public function start()
     {
         session()->forget('answers'); // Now this will execute
