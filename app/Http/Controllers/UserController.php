@@ -70,7 +70,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'current_password' => ['required', function ($attribute, $value, $fail) {
                 if (!Hash::check($value, auth()->user()->password)) {
-                    $fail('The current password is incorrect.');
+                    $fail('The current password  is incorrect.');
                 }
             }],
             'new_password' => 'required|string|min:8|confirmed',

@@ -164,6 +164,19 @@ Route::prefix('admin')->group(function () {
                 'destroy' => 'admin.departments.destroy'
             ]
         ]);
+
+        // Questions
+        Route::resource('departments.questions', \App\Http\Controllers\Admin\QuestionController::class, [
+            'names' => [
+                'index' => 'admin.departments.questions.index',
+                'create' => 'admin.departments.questions.create',
+                'store' => 'admin.departments.questions.store',
+                'show' => 'admin.departments.questions.show',
+                'edit' => 'admin.departments.questions.edit',
+                'update' => 'admin.departments.questions.update',
+                'destroy' => 'admin.departments.questions.destroy'
+            ]
+        ]);
         
         // Users
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class, [

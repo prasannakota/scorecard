@@ -35,6 +35,7 @@
                         <td>
                             <a href="{{ route('admin.departments.show', $department) }}" class="btn btn-sm btn-info me-1">View</a>
                             <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-sm btn-primary me-1">Edit</a>
+                            <a href="{{ route('admin.departments.questions.index', $department) }}" class="btn btn-sm btn-success me-1">Questions</a>
                             <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
