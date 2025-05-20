@@ -31,6 +31,19 @@
                                 Departments
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.logout') }}" class="nav-link" onclick="event.preventDefault(); confirmLogout();">
+                                <span data-feather="log-out"></span>
+                                Logout
+                            </a>
+                            <script>
+                                function confirmLogout() {
+                                    if (confirm('Are you sure you want to logout?')) {
+                                        window.location.href = '{{ route('admin.logout') }}';
+                                    }
+                                }
+                            </script>
+                        </li>
                     </ul>
                 </div>
             </nav>

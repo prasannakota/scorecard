@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',
     ];
 
     /**
@@ -49,6 +50,11 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function assessmentBackgrounds()
+    {
+        return $this->hasMany(AssessmentBackground::class);
     }
 
     public function assessments()

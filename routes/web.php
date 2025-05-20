@@ -9,28 +9,36 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AssessmentController;
 
 // Root route
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Social Authentication Routes
+use App\Http\Controllers\Auth\SocialAuthController;
+
+Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
 // User Authentication Routes
 Route::middleware(['web', 'guest'])->group(function () {
-    Route::get('login', [UserAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [UserAuthController::class, 'login']);
-    Route::post('logout', [UserAuthController::class, 'logout'])->name('logout');
-    Route::get('register', [UserAuthController::class, 'showRegistrationForm'])->name('register');
-    Route::post('register', [UserAuthController::class, 'register']);
+    Route::get('login', [\App\Http\Controllers\User\UserAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [\App\Http\Controllers\User\UserAuthController::class, 'login']);
+
+    Route::get('register', [\App\Http\Controllers\User\UserAuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [\App\Http\Controllers\User\UserAuthController::class, 'register']);
 
     // Password Reset Routes
-    Route::get('password/reset', [UserAuthController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('password/email', [UserAuthController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('password/reset/{token}', [UserAuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [UserAuthController::class, 'reset'])->name('password.update');
+    Route::get('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('password/email', [\App\Http\Controllers\User\UserAuthController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [\App\Http\Controllers\User\UserAuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'reset'])->name('password.update');
 });
 
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
+    Route::match(['get', 'post'], 'logout', [\App\Http\Controllers\User\UserAuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', [UserAuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'index'])->name('profile.show');
+    Route::get('profile/assessment/{id}/edit', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.assessment.edit');
+    Route::put('profile/assessment/{id}', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.assessment.update');
     
     // Assessment Routes
     Route::get('assessment', [AssessmentController::class, 'index'])->name('assessment.index');
@@ -61,7 +69,8 @@ Route::prefix('admin')->group(function () {
     // Authentication Routes
     Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('login', [AdminAuthController::class, 'login'])->name('admin.login.post');
-    Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    Route::get('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout.post');
 
     // Test routes
     Route::get('test-login', [\App\Http\Controllers\Admin\TestAdminAuthController::class, 'testLogin'])->name('admin.test.login');
