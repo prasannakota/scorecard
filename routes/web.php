@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AssessmentController;
 
+
+
 // Root route
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -62,6 +64,10 @@ Route::middleware(['auth'])->group(function () {
     // Password Reset Routes for authenticated users
     Route::get('password/reset-form', [UserAuthController::class, 'showResetForm'])->name('password.reset.form');
     Route::put('password/reset', [UserAuthController::class, 'resetPassword'])->name('password.reset');
+
+    Route::get('profile', [UserAuthController::class, 'showProfile'])->name('user.profile.show');
+    Route::put('profile', [UserAuthController::class, 'updateProfile'])->name('user.profile.update');
+
 });
 
 // Admin Routes
