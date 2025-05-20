@@ -29,6 +29,13 @@ class AdminAuthController extends Controller
     public function login(Request $request)
     {
         try {
+            // Debug: Show all request data
+            \Log::info('Login attempt:', [
+                'email' => $request->email,
+                'password' => '*****', // Don't log actual password
+                'all_data' => $request->all()
+            ]);
+
             $credentials = $request->validate([
                 'email' => ['required', 'email'],
                 'password' => ['required'],
@@ -36,12 +43,21 @@ class AdminAuthController extends Controller
 
             // First, find the user by email
             $user = AdminUser::where('email', $request->email)->first();
+            
+            // Debug: Show user data
+            \Log::info('User found:', [
+                'user_id' => $user ? $user->id : null,
+                'email' => $user ? $user->email : null,
+                'isAdmin' => $user ? $user->isAdmin() : null
+            ]);
+
+            if ($user) {
 
             if ($user) {
                 // Check if the user is an admin
                 if (!$user->isAdmin()) {
                     return back()->withErrors([
-                        'email' => 'The provided credentials do not belong to an admin account.',
+                        'email' => 'The provided credentials do not belongss to an admin account.',
                     ])->onlyInput('email');
                 }
 

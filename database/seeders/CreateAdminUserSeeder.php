@@ -12,9 +12,9 @@ class CreateAdminUserSeeder extends Seeder
     {
         AdminUser::create([
             'name' => 'Admin User',
-            'email' => 'admin@test.com',
+            'email' => 'admin@kens.com',
             'password' => Hash::make('kspl@1234'),
-            'role' => 'super_admin'
+            'role' => 'admin'
         ]);
     }
 }

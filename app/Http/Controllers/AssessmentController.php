@@ -24,7 +24,8 @@ class AssessmentController extends Controller
         return view('user.assessment.form', [
             'industrySectorOptions' => $assessment->getIndustrySectorOptions(),
             'annualRevenueOptions' => $assessment->getAnnualRevenueOptions(),
-            'marketPositionOptions' => $assessment->getMarketPositionOptions()
+            'marketPositionOptions' => $assessment->getMarketPositionOptions(),
+            'countryOptions' => $assessment->getCountryOptions()
         ]);
     }
 

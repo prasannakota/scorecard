@@ -119,7 +119,7 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        {{--<nav class="sidebar">
+        <nav class="sidebar">
             <div class="sidebar-header">
                 <h3 class="text-center mb-4">E-commerce Scorecard</h3>
             </div>
@@ -146,7 +146,7 @@
                     </a>
                 </li>
             </ul>
-        </nav>--}}
+        </nav>
 
         <!-- Main Content -->
         <div class="main-content">
@@ -189,10 +189,16 @@
                                             <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
-                                                <form action="{{ route('logout') }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
-                                                </form>
+                                                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); confirmLogout();">
+                                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                                </a>
+                                                <script>
+                                                    function confirmLogout() {
+                                                        if (confirm('Are you sure you want to logout?')) {
+                                                            window.location.href = '{{ route('logout') }}';
+                                                        }
+                                                    }
+                                                </script>
                                             </li>
                                         </ul>
                                     </div>

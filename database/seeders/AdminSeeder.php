@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@ecommercecard.com',
             'password' => Hash::make('admin123'),
-            'role' => 'admin',
+            'role' => 'super_admin',
         ]);
     }
 }
