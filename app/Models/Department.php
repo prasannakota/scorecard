@@ -16,6 +16,11 @@ class Department extends Model
         'is_active'
     ];
 
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
     public $timestamps = true;
 
     protected static function boot()
