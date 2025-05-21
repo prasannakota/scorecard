@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserAuthController extends Controller
 {
@@ -55,15 +57,31 @@ class UserAuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => 'required|email|max:250|unique:users',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[\d\W]).+$/'
+            ],
+            'first_name' => 'required|string',
+            'last_name'  => 'required|string',
+            'mobile'     => 'required|string',
+            'terms'      => 'accepted'
+        ],[
+            'password.regex' => 'Password should contain a number or symbol.',
         ]);
 
+
+        $name = $request->first_name.' '.$request->last_name;
         $user = User::create([
-            'name' => $validated['name'],
+            'name' => $name,
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'mobile'     => $validated['mobile']
         ]);
 
         Auth::guard('web')->login($user);

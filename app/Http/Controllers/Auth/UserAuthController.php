@@ -116,4 +116,36 @@ class UserAuthController extends Controller
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
     }
+
+
+    public function showProfile()
+    {
+        $user = auth()->user();
+        return view('user.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'mobile' => 'nullable|string|max:15',
+        ]);
+
+        // Combine first and last name
+        $fullName = $request->input('first_name') . ' ' . $request->input('last_name');
+
+        $user->update(
+            [
+                'name' => $fullName,
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'mobile' => $request->input('mobile'),
+            ]
+        );
+
+        return redirect()->route('dashboard')->with('success', 'Profile updated successfully.');
+    }
 }
