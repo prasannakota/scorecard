@@ -9,6 +9,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AssessmentController;
 
 
+Route::get('/react', function () {
+    return view('app');
+});
 
 // Root route
 Route::get('/', [HomeController::class, 'index'])->name('home');
