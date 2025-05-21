@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\UserLoginAlertMail;
+use App\Mail\UserRegisteredMail;
+use Illuminate\Support\Facades\Mail;
 
 class UserAuthController extends Controller
 {
@@ -39,6 +42,7 @@ class UserAuthController extends Controller
             
             // Get the intended URL from session or default to dashboard
             $intended = session()->pull('url.intended', 'dashboard');
+            Mail::to($request->email)->send(new UserLoginAlertMail(Auth::user() ));
             
             return redirect()->to($intended);
         }
@@ -83,6 +87,7 @@ class UserAuthController extends Controller
             'last_name'  => $validated['last_name'],
             'mobile'     => $validated['mobile']
         ]);
+        Mail::to($user->email)->send(new UserRegisteredMail($user));
 
         Auth::guard('web')->login($user);
 
