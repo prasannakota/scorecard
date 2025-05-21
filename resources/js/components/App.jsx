@@ -7,6 +7,7 @@ import AdminLogin from '../pages/AdminLogin';
 import Dashboard from '../pages/Dashboard';
 import Navbar from '../components/common/Navbar';
 import PrivateRoute from '../routes/PrivateRoute';
+import ForgotPassword from "../pages/ForgotPassword";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
+          <Route path="/forget-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
