@@ -20,7 +20,7 @@
                     @if(auth()->user()->address)
                         <p>Address: {{ auth()->user()->address }}</p>
                     @endif
-                    <a href="{{ route('profile.show') }}" class="btn btn-primary">Update Profile</a>
+                    <a href="{{ route('user.profile.show') }}" class="btn btn-primary">Update Profile</a>
                 </div>
             </div>
         </div>
