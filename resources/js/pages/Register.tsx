@@ -2,7 +2,7 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { Link } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -14,33 +14,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z
   .object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    workEmail: z.string().email("Invalid email"),
+    mobile: z
+      .string()
+      .min(10, "Mobile must be at least 10 digits")
+      .max(15, "Mobile number too long"),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    password_confirmation: z.string(),
+    confirmPassword: z.string(),
+    terms: z.literal(true, {
+      errorMap: () => ({ message: "You must agree to the terms and policies" }),
+    }),
   })
-  .refine((data) => data.password === data.password_confirmation, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["password_confirmation"],
+    path: ["confirmPassword"],
   });
 
 export default function Register() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      firstName: "",
+      lastName: "",
+      workEmail: "",
+      mobile: "",
       password: "",
-      password_confirmation: "",
+      confirmPassword: "",
+      terms: false,
     },
   });
 
   async function onSubmit(data: any) {
     try {
-      const response = await fetch("/register", {  // Adjust your API URL here
+      const response = await fetch("/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -48,16 +60,13 @@ export default function Register() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        // Handle validation errors from Laravel here
         alert("Registration failed: " + JSON.stringify(errorData.errors));
         return;
       }
 
       const result = await response.json();
-      alert(result.message); // or show a toast
-
-      // Redirect to dashboard
-      router.push("/dashboard");
+      alert(result.message);
+      // router.push("/dashboard");
     } catch (error) {
       console.error("Registration error:", error);
       alert("An error occurred during registration.");
@@ -75,12 +84,12 @@ export default function Register() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} />
+                      <Input placeholder="John" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -89,12 +98,40 @@ export default function Register() {
 
               <FormField
                 control={form.control}
-                name="email"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="example@email.com" {...field} />
+                      <Input placeholder="Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="workEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Work Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="you@company.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="mobile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mobile</FormLabel>
+                    <FormControl>
+                      <Input type="tel" placeholder="+1234567890" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +154,7 @@ export default function Register() {
 
               <FormField
                 control={form.control}
-                name="password_confirmation"
+                name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
@@ -129,8 +166,30 @@ export default function Register() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="terms"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-sm">
+                      I agree to the  
+                      <Link to="/policies" className="text-blue-600 underline hover:text-blue-800">
+                        Policies and Terms
+                      </Link>
+                    </FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" className="w-full">
-                Register
+                Create Account
               </Button>
             </form>
           </Form>
