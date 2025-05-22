@@ -31,14 +31,14 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
     try {
       const response = await axios.post(
-        "/login",
+        "/api/login",
         {
           email: formData.email,
           password: formData.password,
@@ -53,9 +53,12 @@ const Login = () => {
         }
       );
 
-      if (response.data.code === 200) {
-        setSuccess("Login successful!");
-        // navigate('/dashboard');
+      if (response.data.success) {
+        sessionStorage.setItem("authorization", response.data.token);
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
+        navigate("/dashboard");
+      } else {
+        setError(response.data.message || "Login failed.");
       }
     } catch (error) {
       if (error.response?.data?.errors) {
@@ -67,6 +70,7 @@ const Login = () => {
       }
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
