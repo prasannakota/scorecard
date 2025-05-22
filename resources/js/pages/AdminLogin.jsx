@@ -48,8 +48,6 @@ export default function AdminLogin() {
 
       if (response.data.code === 200) {
         setSuccess("Admin login successful!");
-        // Redirect after success
-        // navigate("/admin/dashboard");
       }
     } catch (error) {
       if (error.response?.data?.errors) {
@@ -107,9 +105,6 @@ export default function AdminLogin() {
               Remember me
             </Label>
           </div>
-          <Link to="/forget-password" className="text-sm text-blue-600 hover:underline">
-            Forgot your password?
-          </Link>
         </div>
 
         {error && <p className="text-sm text-red-500">{error}</p>}
