@@ -21,12 +21,27 @@ class AssessmentController extends Controller
     public function create()
     {
         $assessment = new AssessmentBackground();
-        return view('user.assessment.form', [
+        $result = [
             'industrySectorOptions' => $assessment->getIndustrySectorOptions(),
             'annualRevenueOptions' => $assessment->getAnnualRevenueOptions(),
             'marketPositionOptions' => $assessment->getMarketPositionOptions(),
-            'countryOptions' => $assessment->getCountryOptions()
-        ]);
+            'countryOptions' => $assessment->getCountryOptions(),
+        ];
+
+        $metaInfo = (object)['message' => 'success'];
+        return $this->sendResponse($result, $metaInfo);
+    }
+
+    public function getAssessment()
+    {
+        $userId = auth()->id(); 
+        $assessment = AssessmentBackground::where('user_id', $userId)->first();
+
+        if (!$assessment) {
+            return $this->sendError(null, ['message' => 'No assessment found']);
+        }
+
+        return $this->sendResponse($assessment, ['message' => 'Assessment fetched successfully']);
     }
 
     public function store(Request $request)
@@ -40,20 +55,23 @@ class AssessmentController extends Controller
             'market_position' => 'required|in:1,2,3,4,5,6,7,8,9,10',
         ]);
 
-        $assessment = new AssessmentBackground();
-        $assessment->user_id = auth()->id();
-        $assessment->organization_name = $validated['organization_name'];
-        $assessment->website_url = $validated['website_url'];
-        $assessment->industry_sector = $validated['industry_sector'];
-        $assessment->annual_revenue = $validated['annual_revenue'];
-        $assessment->country = $validated['country'];
-        $assessment->market_position = $validated['market_position'];
-        $assessment->save();
+        $userId = auth()->id();
 
-        return redirect()->route('assessment.department')
-            ->with('success', 'Assessment submitted successfully');
+        $assessment = AssessmentBackground::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'organization_name' => $validated['organization_name'],
+                'website_url' => $validated['website_url'],
+                'industry_sector' => $validated['industry_sector'],
+                'annual_revenue' => $validated['annual_revenue'],
+                'country' => $validated['country'],
+                'market_position' => $validated['market_position'],
+            ]
+        );
+
+        return $this->sendResponse($assessment, ['message' => 'Assessment saved successfully']);
     }
-
+    
     public function department()
     {
         $assessment = new Assessment();

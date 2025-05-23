@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
             return \Illuminate\Support\Facades\RateLimiter::limit(
                 'api',
                 60,
-                \Illuminate\Support\Facades\Cache::store('redis')
+                \Illuminate\Support\Facades\Cache::store('file')
             );
         });
     }
