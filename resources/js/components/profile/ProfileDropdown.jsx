@@ -1,12 +1,19 @@
 import { useState } from 'react';
 import { Settings, LogOut, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfileDropdown() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     sessionStorage.clear();
     window.location.href = '/react';
+  };
+
+  const handleProfileClick = () => {
+    navigate('/assessment-form');
+    setOpen(false);
   };
 
   return (
@@ -16,6 +23,13 @@ export default function ProfileDropdown() {
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow z-10">
+          <button
+            onClick={handleProfileClick}
+            className="flex items-center w-full px-4 py-2 hover:bg-gray-100"
+          >
+            <User className="w-4 h-4 mr-2" />
+            Profile
+          </button>
           <button className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
             <Settings className="w-4 h-4 mr-2" />
             Settings

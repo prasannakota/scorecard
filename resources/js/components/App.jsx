@@ -12,6 +12,8 @@ import Sidebar from '../components/common/Sidebar';
 import PrivateRoute from '../routes/PrivateRoute';
 import PublicRoute from '../routes/PublicRoute';
 
+import AssessmentForm from '../components/assessment/AssessmentForm';
+
 function AppContent() {
   const location = useLocation();
 
@@ -44,6 +46,7 @@ function AppContent() {
 
             {/* Private routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
           </Routes>
         </main>
       </div>
