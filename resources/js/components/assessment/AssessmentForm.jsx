@@ -101,7 +101,7 @@ export default function AssessmentForm() {
       setSuccessMessage('Assessment saved successfully!');
       setTimeout(() => {
         setSuccessMessage('');
-        navigate('/departments');
+        navigate('/department');
       }, 3000);
     } catch (error) {
       if (error.response?.data?.errors) {

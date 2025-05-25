@@ -13,6 +13,7 @@ import PrivateRoute from '../routes/PrivateRoute';
 import PublicRoute from '../routes/PublicRoute';
 
 import AssessmentForm from '../components/assessment/AssessmentForm';
+import DepartmentList from '../components/assessment/DepartmentList';
 
 function AppContent() {
   const location = useLocation();
@@ -47,6 +48,7 @@ function AppContent() {
             {/* Private routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
+            <Route path="/department" element={<PrivateRoute><DepartmentList /></PrivateRoute>} />
           </Routes>
         </main>
       </div>

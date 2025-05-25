@@ -111,4 +111,15 @@ class DepartmentController extends Controller
         return redirect()->route('admin.departments.index')
             ->with('success', 'Department deleted successfully.');
     }
+
+    public function getDepartment()
+    {
+        try {
+            $departments = Department::withCount('questions')->get(['id', 'name']);
+            $meta = (object) ['message' => 'Department list fetched successfully'];
+            return $this->sendResponse($departments, $meta);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to fetch departments', ['error' => $e->getMessage()], 500);
+        }
+    }
 }
