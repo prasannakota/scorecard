@@ -7,6 +7,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\Admin\DepartmentController;
 
 Route::post('/login', [UserAuthController::class, 'login']);
+Route::post('/register', [UserAuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group( function () {
 	Route::get('assessment/form-data', [AssessmentController::class, 'create']);
