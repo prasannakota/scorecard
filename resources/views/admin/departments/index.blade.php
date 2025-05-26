@@ -3,52 +3,79 @@
 @section('title', 'Manage Departments')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Departments</h2>
-        <a href="{{ route('admin.departments.create') }}" class="btn btn-primary">Create New Department</a>
-    </div>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Departments</h2>
+            <a href="{{ route('admin.departments.create') }}" class="btn btn-primary">Create New Department</a>
+        </div>
 
-    <div class="card">
-        <div class="card-body">
-            <table class="table">
-                <thead>
+        <div class="card">
+            <div class="card-body">
+                @php
+                    $currentSort = request('sort_by');
+                    $currentDirection = request('direction') === 'asc' ? 'desc' : 'asc';
+                    $arrow = fn($field) => $currentSort === $field
+                        ? (request('direction') === 'asc' ? '↑' : '↓')
+                        : '';
+                @endphp
+
+                <table class="table table-striped">
+                    <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Status</th>
+                        <th>
+                            <a href="{{ route('admin.departments.index', ['sort_by' => 'id', 'direction' => $currentSort === 'id' ? $currentDirection : 'asc']) }}">
+                                ID {!! $arrow('id') !!}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ route('admin.departments.index', ['sort_by' => 'name', 'direction' => $currentSort === 'name' ? $currentDirection : 'asc']) }}">
+                                Name {!! $arrow('name') !!}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ route('admin.departments.index', ['sort_by' => 'description', 'direction' => $currentSort === 'description' ? $currentDirection : 'asc']) }}">
+                                Description {!! $arrow('description') !!}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ route('admin.departments.index', ['sort_by' => 'is_active', 'direction' => $currentSort === 'is_active' ? $currentDirection : 'asc']) }}">
+                                Status {!! $arrow('is_active') !!}
+                            </a>
+                        </th>
                         <th>Actions</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach($departments as $department)
-                    <tr>
-                        <td>{{ $department->id }}</td>
-                        <td>{{ $department->name }}</td>
-                        <td>{{ $department->description }}</td>
-                        <td>
+                        <tr>
+                            <td>{{ $department->id }}</td>
+                            <td>{{ $department->name }}</td>
+                            <td>{{ $department->description }}</td>
+                            <td>
                             <span class="badge {{ $department->is_active ? 'bg-success' : 'bg-danger' }}">
                                 {{ $department->is_active ? 'Active' : 'Inactive' }}
                             </span>
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.departments.show', $department) }}" class="btn btn-sm btn-info me-1">View</a>
-                            <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-sm btn-primary me-1">Edit</a>
-                            <a href="{{ route('admin.departments.questions.index', $department) }}" class="btn btn-sm btn-success me-1">Questions</a>
-                            <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.departments.show', $department) }}" class="btn btn-sm btn-info me-1">View</a>
+                                <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-sm btn-primary me-1">Edit</a>
+                                <a href="{{ route('admin.departments.questions.index', $department) }}" class="btn btn-sm btn-success me-1">Questions</a>
+                                <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            {{ $departments->links() }}
+                <!-- Pagination -->
+                <div class="mt-3">
+                    {{ $departments->links() }}
+                </div>
+            </div>
         </div>
     </div>
-</div>
 @endsection

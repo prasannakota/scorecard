@@ -10,9 +10,26 @@ use Illuminate\Validation\Rule;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::latest()->paginate(10);
+        $sortBy = $request->get('sort_by', 'id');
+        $direction = $request->get('direction', 'asc');
+
+        // Allowed columns and directions for safety
+        $allowedSorts = ['id', 'name', 'description', 'is_active', 'created_at'];
+        $allowedDirections = ['asc', 'desc'];
+
+        // Validate sort inputs
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'id';
+        }
+
+        if (!in_array($direction, $allowedDirections)) {
+            $direction = 'asc';
+        }
+
+        $departments = Department::orderBy($sortBy, $direction)->paginate(10)->withQueryString();
+
         return view('admin.departments.index', compact('departments'));
     }
 
@@ -87,17 +104,17 @@ class DepartmentController extends Controller
 
     public function update(Request $request, Department $department)
     {
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('departments')->ignore($department->id)],
             'description' => 'nullable|string',
-            'is_active' => 'boolean',
         ]);
-
+        $isActive = $request->has('is_active');
         $department->update([
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
             'slug' => Str::slug($validated['name']),
-            'is_active' => $validated['is_active'] ?? true,
+            'is_active' => $isActive,
         ]);
 
         return redirect()->route('admin.departments.index')
