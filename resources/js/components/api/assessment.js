@@ -35,3 +35,18 @@ export const saveAssessment = async (payload) => {
     throw error;
   }
 };
+
+export const fetchDepartments = async () => {
+  const token = getAuthToken();
+  try {
+    const response = await axios.get('/api/department', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Failed to fetch departments:', error);
+    throw error;
+  }
+};
