@@ -43,11 +43,16 @@ export default function Home() {
                 <BsPersonPlus className="text-lg" />
                 Create an Account
               </TabsTrigger>
+                <a
+                    href="/admin/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 text-sm font-medium px-3 py-2 rounded-md bg-muted hover:bg-muted/80 transition-colors"
+                >
+                    <BsShieldLock className="text-lg" />
+                    Admin Login
+                </a>
 
-              <TabsTrigger value="admin" className="flex items-center justify-center gap-2">
-                <BsShieldLock className="text-lg" />
-                Admin Login
-              </TabsTrigger>
             </TabsList>
 
 
@@ -67,13 +72,13 @@ export default function Home() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="admin">
-              <Card>
-                <CardContent className="p-4">
-                  <AdminLogin />
-                </CardContent>
-              </Card>
-            </TabsContent>
+            {/*<TabsContent value="admin">*/}
+              {/*<Card>*/}
+                {/*<CardContent className="p-4">*/}
+                  {/*<AdminLogin />*/}
+                {/*</CardContent>*/}
+              {/*</Card>*/}
+            {/*</TabsContent>*/}
           </Tabs>
         </div>
       </div>
