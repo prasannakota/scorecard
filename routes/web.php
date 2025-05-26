@@ -7,6 +7,9 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\Admin\EmailTemplateController;
+use App\Http\Controllers\Admin\MailSettingController;
+use App\Http\Controllers\Admin\EmailLogController;
 
 
 Route::get('/react', function () {
@@ -193,6 +196,26 @@ Route::prefix('admin')->group(function () {
                 'destroy' => 'admin.users.destroy'
             ]
         ]);
+
+        // 📩 Email Templates, Mail Settings, Email Logs
+        Route::resource('email-templates', EmailTemplateController::class, [
+            'names' => [
+                'index' => 'admin.email_templates.index',
+                'create' => 'admin.email_templates.create',
+                'store' => 'admin.email_templates.store',
+                'show' => 'admin.email_templates.show',
+                'edit' => 'admin.email_templates.edit',
+                'update' => 'admin.email_templates.update',
+                'destroy' => 'admin.email_templates.destroy'
+            ]
+        ]);
+
+        Route::get('mail-settings', [MailSettingController::class, 'index'])->name('admin.mail_settings.index');
+        Route::post('mail-settings', [MailSettingController::class, 'update'])->name('admin.mail_settings.update');
+
+        Route::get('email-logs', [EmailLogController::class, 'index'])->name('admin.email_logs.index');
+
+
     });
 });
 
