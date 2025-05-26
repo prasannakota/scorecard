@@ -23,59 +23,72 @@ const usMobileRegex = /^(\+1)?\d{10}$/;
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    workEmail: z.string().email("Invalid email"),
+    first_name: z.string().min(1, "First name is required"),
+    last_name: z.string().min(1, "Last name is required"),
+    email: z.string().email("Invalid email"),
     mobile: z.string().regex(usMobileRegex, {
-      message: "Enter a valid US mobile number (10 digits, optional +1)",
+      message: "Enter a valid mobile number (10 digits)",
     }),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
+    password_confirmation: z.string(),
     terms: z.literal(true, {
       errorMap: () => ({ message: "You must agree to the terms and policies" }),
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["password_confirmation"],
   });
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formMessage, setFormMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      workEmail: "",
+      first_name: "",
+      last_name: "",
+      email: "",
       mobile: "",
       password: "",
-      confirmPassword: "",
+      password_confirmation: "",
       terms: false,
     },
   });
 
   async function onSubmit(data: any) {
+    setFormMessage(null);
     try {
-      const response = await fetch("/register", {
+      const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        alert("Registration failed: " + JSON.stringify(errorData.errors));
+        if (result?.data && typeof result.data === "object") {
+          // Inject API errors into react-hook-form
+          Object.entries(result.data).forEach(([field, messages]) => {
+            const msg = Array.isArray(messages) ? messages.join(", ") : String(messages);
+            form.setError(field as any, { type: "server", message: msg });
+          });
+        } else {
+          // Fallback global error
+          setFormMessage({ type: "error", text: result.message || "Registration failed." });
+        }
         return;
       }
 
-      const result = await response.json();
-      alert(result.message);
+      // Success case
+      setFormMessage({ type: "success", text: result.meta || "Registration successful!" });
+      form.reset();
     } catch (error) {
       console.error("Registration error:", error);
-      alert("An error occurred during registration.");
+      setFormMessage({ type: "error", text: "An error occurred during registration." });
     }
   }
 
@@ -84,12 +97,23 @@ export default function Register() {
       <Card className="w-full max-w-md">
         <CardContent>
           <Form {...form}>
+
+            {formMessage && (
+              <div
+                className={`p-2 mb-4 rounded ${
+                  formMessage.type === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                }`}
+              >
+                {formMessage.text}
+              </div>
+            )}
+
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* First and Last Name */}
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="firstName"
+                  name="first_name"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>First Name</FormLabel>
@@ -102,7 +126,7 @@ export default function Register() {
                 />
                 <FormField
                   control={form.control}
-                  name="lastName"
+                  name="last_name"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>Last Name</FormLabel>
@@ -119,7 +143,7 @@ export default function Register() {
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="workEmail"
+                  name="email"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>Work Email</FormLabel>
@@ -177,7 +201,7 @@ export default function Register() {
                 />
                 <FormField
                   control={form.control}
-                  name="confirmPassword"
+                  name="password_confirmation"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>Confirm Password</FormLabel>
