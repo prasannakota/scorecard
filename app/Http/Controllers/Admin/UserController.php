@@ -13,11 +13,27 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.users.index', compact('users'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -33,7 +49,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'password_confirmation' => 'required_with:password|same:password',
@@ -41,11 +58,14 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
         ]);
+
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
@@ -85,11 +105,11 @@ class UserController extends Controller
             'role' => $validated['role'],
         ]);
 
-        if ($validated['password']) {
-            $user->update([
-                'password' => Hash::make($validated['password']),
-            ]);
-        }
+//        if ($validated['password']) {
+//            $user->update([
+//                'password' => Hash::make($validated['password']),
+//            ]);
+//        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');
