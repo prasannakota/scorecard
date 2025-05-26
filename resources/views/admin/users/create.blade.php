@@ -6,12 +6,11 @@
     <div class="container-fluid">
         <div class="card mt-4 shadow-sm">
             <div class="card-header bg-white border-bottom">
-                <h5 class="card-title mb-0">Edit User</h5>
+                <h5 class="card-title mb-0">Create User</h5>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('admin.users.store') }}" novalidate>
                     @csrf
-
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label for="first_name" class="form-label fw-semibold">First Name</label>
@@ -43,13 +42,9 @@
                             @enderror
                         </div>
                     </div>
-
-                    <div class="mb-4">
-                        <label for="email" class="form-label fw-semibold">Email Address</label>
-                        <div class="input-group has-validation">
-                                <span class="input-group-text bg-light text-primary">
-                                    <i class="bi bi-envelope-fill"></i>
-                                </span>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-semibold">Work Email</label>
                             <input
                                     type="email"
                                     id="email"
@@ -62,8 +57,16 @@
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label fw-semibold">Mobile</label>
+                            <input type="text" id="mobile" name="mobile"
+                                   class="form-control @error('mobile') is-invalid @enderror"
+                                   value="{{ old('mobile') }}">
+                            @error('mobile')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
-
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label for="password" class="form-label fw-semibold">Password</label>

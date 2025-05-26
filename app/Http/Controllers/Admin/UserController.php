@@ -53,6 +53,7 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'mobile'     => 'required|string',
             'password_confirmation' => 'required_with:password|same:password',
             'role' => ['required', Rule::in(['user', 'collaborator', 'admin'])],
         ]);
@@ -62,6 +63,7 @@ class UserController extends Controller
             'last_name' => $validated['last_name'],
             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'email' => $validated['email'],
+            'mobile'     => $validated['mobile'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
         ]);
