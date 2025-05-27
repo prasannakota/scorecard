@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Assessment;
 use App\Models\AssessmentAnswer;
 use function Termwind\ValueObjects\pr;
+use App\Models\Department;
 
 class AssessmentController extends Controller
 {
@@ -165,5 +166,132 @@ class AssessmentController extends Controller
 
         session()->forget('answers');
         return view('assessment.result', compact('assessment'));
+    }
+
+    public function getQuestions(Request $request)
+    {
+        $departments = explode(',', $request->departments);
+        $questions = Question::whereIn('department_id', $departments)->get();
+        $departmentsData = Department::whereIn('id', $departments)->get();
+
+        $result = [
+            'questions' => $questions,
+            'departments' => $departmentsData
+        ];
+
+        return $this->sendResponse($result, [
+            'total_questions' => $questions->count(),
+        ]);
+    }
+
+    public function submitAnswer(Request $request)
+    {
+        $user = auth()->user();
+        $answer = AssessmentAnswer::updateOrCreate(
+            [
+                'assessment_id' => $request->assessment_id,
+                'question_id' => $request->question_id,
+                'user_id' =>  $user->id,
+                'department_id' => $request->department_id,
+            ],
+            [
+                'selected_option' => $request->selected_option,
+                'score' => $request->score,
+            ]
+        );
+
+        return $this->sendResponse($answer, ['status' => 'saved']);
+    }
+
+
+    public function startAssessment(Request $request)
+    {
+        $user = auth()->user();
+        $departments = $request->input('departments', []);
+        $departmentsString = implode(',', $departments);
+        $assessment = Assessment::where('user_id', $user->id)->first();
+
+        if ($assessment) {
+            $assessment->department_id = $departmentsString;
+            $assessment->save();
+
+            $message = 'Assessment updated successfully!';
+        } else {
+            $assessment = Assessment::create([
+                'user_name' => $user->name,
+                'user_id' => $user->id,
+                'total_score' => 0,
+                'department_id' => $departmentsString,
+            ]);
+
+            $message = 'Assessment created successfully!';
+        }
+
+        return $this->sendResponse([
+            'assessment_id' => $assessment->id,
+            'message' => $message,
+        ], []);
+    }
+
+    public function checkAssessmentStatus(Request $request)
+    {
+        $user = auth()->user();
+        $latestAssessment = Assessment::where('user_id', $user->id)->latest()->first();
+        if ($latestAssessment) {
+            return $this->sendResponse([
+                'assessment_id' => $latestAssessment->id,
+                'departments' => $latestAssessment->department_id,
+                'total_score' => $latestAssessment->total_score
+            ], []);
+        }
+
+        return $this->sendResponse(null, [], 'No assessment found', 404);
+    }
+
+    public function getAnswersByAssessment($assessmentId)
+    {
+        $answers = AssessmentAnswer::where('assessment_id', $assessmentId)->get();
+        return $this->sendResponse(
+            $answers,
+            ['message' => 'Answers retrieved successfully']
+        );
+    }
+
+
+    public function updateAnswer(Request $request, $id)
+    {
+        $answer = AssessmentAnswer::findOrFail($id);
+        $answer->selected_option = $request->selected_option;
+        $answer->score = $request->score;
+
+        $answer->save();
+
+        return $this->sendResponse(
+            $answer,
+            ['message' => 'Answer updated successfully']
+        );
+    }
+
+    public function updateScore(Request $request)
+    {
+        $user = auth()->user();
+        $assessmentId = $request->input('assessment_id');
+        $score = $request->input('score', 0); 
+
+        $assessment = Assessment::where('id', $assessmentId)
+                                ->where('user_id', $user->id)
+                                ->first();
+
+        if (!$assessment) {
+            return $this->sendError('Assessment not found.', [], 404);
+        }
+
+        $assessment->total_score = $score;
+        $assessment->save();
+
+        return $this->sendResponse(
+            $assessment,
+            ['message' => 'Score updated successfully']
+        );
     }
 }

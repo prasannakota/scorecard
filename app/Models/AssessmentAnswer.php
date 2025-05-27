@@ -9,6 +9,6 @@ class AssessmentAnswer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['assessment_id', 'question_id', 'selected_option', 'score'];
+    protected $fillable = ['assessment_id', 'question_id', 'selected_option', 'score','department_id','user_id'];
 
 }

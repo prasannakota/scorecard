@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             $table->string('user_name')->nullable();
+            $table->string('department_id')->nullable();
             $table->float('total_score');
             $table->timestamps();
         });
