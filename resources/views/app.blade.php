@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>React App</title>
+    <title>E-commerce Scorecard</title>
     @viteReactRefresh
     @vite('resources/js/app.jsx')
 </head>

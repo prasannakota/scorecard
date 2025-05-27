@@ -19,7 +19,7 @@ function AppContent() {
   const location = useLocation();
 
   const isAuthenticated = !!sessionStorage.getItem('authorization');
-  const hideNavbarOn = ['/react'];
+  const hideNavbarOn = ['/'];
   const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true); // Default to open
    const toggleSidebar = () => {
@@ -39,7 +39,7 @@ function AppContent() {
         <main className="flex-1 p-6 mt-0"> 
           <Routes>
             {/* Public routes */}
-            <Route path="/react" element={<PublicRoute><Home /></PublicRoute>} />
+            <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

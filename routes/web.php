@@ -12,12 +12,12 @@ use App\Http\Controllers\Admin\MailSettingController;
 use App\Http\Controllers\Admin\EmailLogController;
 
 
-Route::get('/react', function () {
+Route::get('/', function () {
     return view('app');
 });
 
 // Root route
-Route::get('/', [HomeController::class, 'index'])->name('home');
+//Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Social Authentication Routes
 use App\Http\Controllers\Auth\SocialAuthController;
