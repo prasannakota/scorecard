@@ -28,7 +28,7 @@ export default function AssessmentForm() {
   const [annualRevenue, setAnnualRevenue] = useState('');
   const [country, setCountry] = useState('');
   const [marketPosition, setMarketPosition] = useState('');
-
+  const [assessmentData, setAssessMentData] = useState();
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -70,6 +70,7 @@ export default function AssessmentForm() {
           setAnnualRevenue(data.annual_revenue || '');
           setCountry(data.country || '');
           setMarketPosition(data.market_position || '');
+          setAssessMentData(data);
         }
       } catch (error) {
         console.error('Failed to load assessment data', error);
@@ -101,7 +102,9 @@ export default function AssessmentForm() {
       setSuccessMessage('Assessment saved successfully!');
       setTimeout(() => {
         setSuccessMessage('');
-        navigate('/department');
+        if (!assessmentData || !assessmentData.organization_name || assessmentData.organization_name.trim() === '') {
+            navigate('/department');
+        }
       }, 3000);
     } catch (error) {
       if (error.response?.data?.errors) {
