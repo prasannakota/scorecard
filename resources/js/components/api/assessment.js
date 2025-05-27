@@ -50,3 +50,67 @@ export const fetchDepartments = async () => {
     throw error;
   }
 };
+
+export const fetchQuestionsByDepartments = async (departmentIds) => {
+  const token = getAuthToken();
+  const response = await axios.get(`/api/assessment/questions`, {
+    params: { departments: departmentIds.join(',') },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.data; 
+};
+
+export const submitAnswer = async (payload) => {
+  const token = getAuthToken();
+  const response = await axios.post(`/api/assessment/answer`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  return response.data.data; 
+};
+
+export const startAssessment = async (departments) => {
+  const token = getAuthToken();
+  const response = await axios.post(
+    `/api/start-assessment`,
+    { departments },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.data; 
+};
+
+export const getAssessmentStatus = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(`/api/assessment-status`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data.data;
+};
+
+export const fetchAnswersByAssessmentId = async (assessmentId) => {
+  const token = getAuthToken();
+  const response = await axios.get(`/api/assessment-answers/${assessmentId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.data;  
+};
+
+export const updateScore = async (assessmentId, score) => {
+  const token = getAuthToken();
+  const response = await axios.post(
+    `/api/update-score`,
+    { assessment_id: assessmentId, score },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.data;
+};

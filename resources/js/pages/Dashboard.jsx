@@ -3,36 +3,33 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import { getUser } from "@/components/api/dashboard";
 import { getUserFromSession } from "@/components/api/auth";
-import { fetchAssessment } from '@/components/api/assessment';
+import { fetchAssessment, getAssessmentStatus } from "@/components/api/assessment";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
-  const [assessment, setAssessment] = useState([]);
+  const [assessment, setAssessment] = useState(null);
+  const [assessmentStatus, setAssessmentStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      
-      const userData = getUserFromSession();
-      if (userData) {
-        setUser(userData);
-      } else {
-        setUser({ name: "Guest" });
-        setError(true);
-      }
-
       try {
-        const response = await fetchAssessment();
-        if (response?.code === 200 && response?.data) {
-          setAssessment(response.data);
+        const userData = getUserFromSession();
+        setUser(userData || { name: "Guest" });
+
+        const assessmentResponse = await fetchAssessment();
+        if (assessmentResponse?.code === 200 && assessmentResponse?.data) {
+          setAssessment(assessmentResponse.data);
         } else {
           setAssessment(null);
         }
+        const statusResponse = await getAssessmentStatus();
+        setAssessmentStatus(statusResponse || null);
       } catch (err) {
         setAssessment(null);
+        setAssessmentStatus(null);
         setError(true);
       }
       setLoading(false);
@@ -44,6 +41,42 @@ export default function Dashboard() {
   if (loading) {
     return <Skeleton className="h-[300px] w-full" />;
   }
+  let actionType = "start"; 
+
+  if (assessmentStatus && assessmentStatus.departments && assessmentStatus.departments !== "") {
+    if (assessmentStatus.total_score === 0) {
+      actionType = "continue";
+    } else {
+      actionType = "download";
+    }
+  }
+  const renderActionButton = () => {
+    if (actionType === "start") {
+      return (
+        <Button asChild>
+          <Link to={`/department`}>
+            Start Assessment
+          </Link>
+        </Button>
+      );
+    } else if (actionType === "continue") {
+      return (
+        <Button asChild>
+          <Link to={`/assessment/start?departments=${assessmentStatus.departments}&assessment_id=${assessmentStatus.assessment_id}`}>
+            Continue Assessment
+          </Link>
+        </Button>
+      );
+    } else if (actionType === "download") {
+      return (
+        <Button asChild>
+          <Link to={`/result`}>
+            Download Result
+          </Link>
+        </Button>
+      );
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -51,50 +84,42 @@ export default function Dashboard() {
         Welcome, {user?.name || "User"}
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {/* Profile */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p>Name: {user?.name}</p>
-            <p>Email: {user?.email || "Not available"}</p>
-            {user?.phone && <p>Phone: {user.phone}</p>}
-            {user?.address && <p>Address: {user.address}</p>}
-            <Button asChild>
-              <Link to="/profile">Update Profile</Link>
-            </Button>
-          </CardContent>
-        </Card>
+      <Card className="w-full ">
+        <CardHeader>
+          <CardTitle>
+            {actionType === "start" && "Commerce Scorecard: Unlock Insight. Drive Growth"}
+            {actionType === "continue" && "Your business is developing it's strengths."}
+            {actionType === "download" && "Your business is developing it's strengths."}
+          </CardTitle>
+        </CardHeader>
 
-        {/* Assessments */}
-         <Card>
-          <CardHeader>
-            <CardTitle>Assessment</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {assessment ? (
-              <>
-                <p>Organization Name: {assessment.organization_name}</p>
-                <p>Industry Sector: {assessment.industry_sector}</p>
-                <p>Annual Revenue: {assessment.annual_revenue}</p>
-                <p>Country: {assessment.country}</p>
-                <p>Market Position: {assessment.market_position}</p>
-                <p>Created At: {new Date(assessment.created_at).toLocaleString()}</p>
-              </>
-            ) : (
-              <p className="text-muted-foreground">
-                No assessment data available.{" "}
-                <Link to="/assessment-form" className="text-primary underline">
-                  Create your first assessment
-                </Link>
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+        <CardContent>
+          {!assessment && (
+            <p className="text-muted-foreground">
+              No assessment data available.{" "}
+              <Link to="/assessment-form" className="text-primary underline">
+                Create your first assessment
+              </Link>
+            </p>
+          )}
+
+          {assessment && actionType === "start" && (
+            <>
+               <p>The commerce scorecard is your personalised report card, design to highlight stengths, reveal blind spot.</p>
+            </>
+          )}
+
+          {assessment && actionType === "continue" && (
+            <p>You are on your way to building a high-performing e-commerce business. Sales and logistics are strong but your marketing strategy has room to grow.</p>
+          )}
+
+          {assessment && actionType === "download" && (
+            <p>You are on your way to building a high-performing e-commerce business. Sales and logistics are strong but your marketing strategy has room to grow.</p>
+          )}
+
+          <div className="mt-4">{renderActionButton()}</div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
