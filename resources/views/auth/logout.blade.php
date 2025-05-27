@@ -37,7 +37,7 @@
             <h3 class="mt-3">You have been logged out successfully!</h3>
             <p class="text-muted">Thank you for using E-commerce Scorecard.</p>
         </div>
-        <a href="{{ route('home') }}" class="home-link">
+        <a href="/" class="home-link">
             <i class="bi bi-house-door me-2"></i>Go to Home Page
         </a>
     </div>
