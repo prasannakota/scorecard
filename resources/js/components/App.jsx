@@ -14,6 +14,7 @@ import PublicRoute from '../routes/PublicRoute';
 
 import AssessmentForm from '../components/assessment/AssessmentForm';
 import DepartmentList from '../components/assessment/DepartmentList';
+import AssessmentScreen from '../components/assessment/AssessmentScreen';
 
 function AppContent() {
   const location = useLocation();
@@ -49,6 +50,7 @@ function AppContent() {
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
             <Route path="/department" element={<PrivateRoute><DepartmentList /></PrivateRoute>} />
+            <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
           </Routes>
         </main>
       </div>
