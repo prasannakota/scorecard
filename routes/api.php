@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group( function () {
 	Route::post('/start-assessment', [AssessmentController::class, 'startAssessment']);
 	Route::get('/assessment-status', [AssessmentController::class, 'checkAssessmentStatus']);
 	Route::get('/assessment-answers/{assessmentId}', [AssessmentController::class, 'getAnswersByAssessment']);
-	Route::put('/assessment-answers/{id}', [AssessmentAnswerController::class, 'updateAnswer']);
+	Route::put('/assessment-answers/{id}', [AssessmentController::class, 'updateAnswer']);
 	Route::post('/update-score', [AssessmentController::class, 'updateScore']);
 
 });
