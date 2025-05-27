@@ -53,15 +53,23 @@ class UserAuthController extends Controller
                 'first_name' => 'required|string',
                 'last_name'  => 'required|string',
                 'mobile'     => 'required|string',
-                'terms'      => 'accepted'
+                'terms'      => 'accepted',
+                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],[
                 'password.regex' => 'Password should contain a number or symbol.',
             ]);
+
+            // Handle file upload
+            if ($request->hasFile('profile_picture')) {
+                $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $validated['profile_picture'] = $path;
+            }
 
             $name = $request->first_name.' '.$request->last_name;
             $user = User::create([
                 'name' => $name,
                 'email' => $validated['email'],
+                'profile_picture' => $validated['profile_picture'] ?? null,
                 'password' => Hash::make($validated['password']),
                 'first_name' => $validated['first_name'],
                 'last_name'  => $validated['last_name'],
