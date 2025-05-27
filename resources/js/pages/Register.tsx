@@ -275,7 +275,7 @@ export default function Register() {
               <BsGoogle className="text-xl text-gray-700" />
             </button>
 
-            <button
+            {/*<button
               type="button"
               onClick={() => alert('Apple login coming soon...')}
               className="p-3 rounded-full border border-gray-300 hover:bg-gray-100"
@@ -290,7 +290,7 @@ export default function Register() {
               aria-label="Login with Microsoft"
             >
               <FaMicrosoft className="text-xl text-gray-700" />
-            </button>
+            </button>*/}
           </div>
 
         </CardContent>

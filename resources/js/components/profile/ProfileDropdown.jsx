@@ -8,7 +8,7 @@ export default function ProfileDropdown() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    window.location.href = '/react';
+    window.location.href = '/';
   };
 
   const handleProfileClick = () => {

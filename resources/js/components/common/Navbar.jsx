@@ -14,7 +14,7 @@ export default function Navbar({ toggleSidebar }) {
             <Menu className="w-6 h-6" />
           </button>
         )}
-        <Link to="/react">
+        <Link to="/">
           <img
             src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif"
             alt="Logo"

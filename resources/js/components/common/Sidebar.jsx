@@ -32,7 +32,7 @@ export default function Sidebar() {
         <button
           onClick={() => {
             sessionStorage.clear();
-            window.location.href = '/react';
+            window.location.href = '/';
           }}
           className="flex items-center gap-2 hover:text-gray-300"
         >

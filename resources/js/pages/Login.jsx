@@ -150,7 +150,7 @@ const Login = () => {
           <BsGoogle className="text-xl text-gray-700" />
         </button>
 
-        <button
+        {/*<button
           type="button"
           onClick={() => alert('Apple login coming soon...')}
           className="p-3 rounded-full border border-gray-300 hover:bg-gray-100"
@@ -166,7 +166,7 @@ const Login = () => {
           aria-label="Login with Microsoft"
         >
           <FaMicrosoft className="text-xl text-gray-700" />
-        </button>
+        </button>*/}
       </div>
 
       <div className="mt-6 text-center text-xs text-gray-500 px-6">
