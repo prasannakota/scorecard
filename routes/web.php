@@ -10,6 +10,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\MailSettingController;
 use App\Http\Controllers\Admin\EmailLogController;
+use App\Http\Controllers\InviteController;
 
 
 Route::get('/', function () {
@@ -170,6 +171,12 @@ Route::prefix('admin')->group(function () {
                 'destroy' => 'admin.departments.destroy'
             ]
         ]);
+        Route::get('/invite', [InviteController::class, 'create'])->name('invites.create');
+        Route::post('/invite', [InviteController::class, 'sendInvite'])->name('invites.send');
+
+        Route::get('/invites/accept/{token}', [InviteController::class, 'accept'])->name('invites.accept');
+        Route::post('/invites/accept/{token}', [InviteController::class, 'completeRegistration']);
+
 
         // Questions
         Route::resource('departments.questions', \App\Http\Controllers\Admin\QuestionController::class, [
