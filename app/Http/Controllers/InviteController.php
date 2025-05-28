@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserRegisteredMail;
 use Illuminate\Http\Request;
 use App\Models\Invite;
 use Illuminate\Support\Str;
@@ -36,30 +37,73 @@ class InviteController extends Controller
 
     public function accept($token)
     {
-        $invite = Invite::where('token', $token)->where('used', false)->where('expires_at', '>', now())->firstOrFail();
-        return view('auth.register-invite', compact('invite'));
+        $invite = Invite::where('token', $token)
+            ->where('used', false)
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
+
+        // Optional: mark as used if you want one-time invites
+        $invite->used = true;
+        $invite->save();
+
+        // Redirect to homepage
+        return redirect('/')->with('success', 'Invitation accepted!');
     }
+
 
     public function completeRegistration(Request $request, $token)
     {
-        $invite = Invite::where('token', $token)->where('used', false)->where('expires_at', '>', now())->firstOrFail();
+        // Validate the invite token
+        $invite = Invite::where('token', $token)
+            ->where('used', false)
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'password' => 'required|string|confirmed|min:8',
+        // Validate the input
+        $validated = $request->validate([
+            'email' => 'required|email|max:250|unique:users,email',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[\d\W]).+$/',
+            ],
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'mobile'     => 'required|string|max:20',
+            'terms'      => 'accepted',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'password.regex' => 'Password must contain at least one number or symbol.',
         ]);
 
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            $validated['profile_picture'] = $request->file('profile_picture')
+                ->store('profile_pictures', 'public');
+        }
+
+        // Create user
         $user = User::create([
-            'name' => $request->name,
-            'email' => $invite->email,
-            'password' => bcrypt($request->password),
+            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'mobile'     => $validated['mobile'],
+            'profile_picture' => $validated['profile_picture'] ?? null,
         ]);
 
-        $invite->update(['used' => true]);
+        // Mark the invite as used
+        $invite->used = true;
+        $invite->save();
 
-        auth()->login($user);
+        // Send welcome email
+        Mail::to($user->email)->send(new UserRegisteredMail($user));
 
-        return redirect('/home')->with('success', 'Welcome! You have been registered.');
+        // Redirect to dashboard (adjust route name if needed)
+        return redirect()->route('admin.dashboard')->with('success', 'Registration completed successfully!');
     }
 
 }

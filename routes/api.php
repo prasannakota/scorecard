@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\UserAuthController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\AdviceController;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
@@ -20,5 +22,7 @@ Route::middleware('auth:sanctum')->group( function () {
 	Route::get('/assessment-answers/{assessmentId}', [AssessmentController::class, 'getAnswersByAssessment']);
 	Route::put('/assessment-answers/{id}', [AssessmentController::class, 'updateAnswer']);
 	Route::post('/update-score', [AssessmentController::class, 'updateScore']);
+    Route::post('/user/feedback', [FeedbackController::class, 'store']);
+    Route::post('/user/advice', [AdviceController::class, 'store']);
 
 });

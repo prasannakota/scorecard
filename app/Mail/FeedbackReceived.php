@@ -9,17 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InviteUserMail extends Mailable
+class FeedbackReceived extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public $invite;
-    public function __construct($invite)
+    public $feedback;
+
+    public function __construct($feedback)
     {
-        $this->invite = $invite;
+        $this->feedback = $feedback;
     }
 
     /**
@@ -28,7 +29,7 @@ class InviteUserMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invite User Mail',
+            subject: 'Feedback Received',
         );
     }
 
@@ -38,7 +39,7 @@ class InviteUserMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.invite',
+            markdown: 'emails.feedback.received',
         );
     }
 
