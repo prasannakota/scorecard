@@ -35,7 +35,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-<<<<<<< HEAD
+
                         <a class="nav-link" href="{{ route('admin.industries.index') }}">
                             <i class="bi bi-building"></i>
                             Industries
@@ -45,11 +45,11 @@
                         <a class="nav-link" href="{{ route('admin.business_categories.index') }}">
                             <i class="bi bi-tags"></i>
                             Business Categories
-=======
+
                         <a class="nav-link" href="{{ route('invites.create') }}">
                             <span data-feather="folder"></span>
                             Invite
->>>>>>> faf2ba33861eb62eb93e085b4572de1e58ac0adc
+
                         </a>
                     </li>
 
