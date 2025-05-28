@@ -11,7 +11,7 @@ class Question extends Model
 
     protected $fillable = [
         'department_id',
-        'revenue_range',
+        'industry_id',
         'question_text',
         'question_type',
         'sequence_number',
@@ -23,11 +23,13 @@ class Question extends Model
         'option_c',
         'option_d',
         'option_e',
+        'option_f',
         'score_a',
         'score_b',
         'score_c',
         'score_d',
         'score_e',
+        'score_f',
         'is_active'
     ];
 
@@ -40,6 +42,11 @@ class Question extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function industry()
+    {
+        return $this->belongsTo(Industry::class);
     }
 
     public function conditions()

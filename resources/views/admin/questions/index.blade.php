@@ -18,11 +18,63 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Sequence</th>
-                                    <th>Question Text</th>
-                                    <th>Revenue Range</th>
-                                    <th>Status</th>
+                                    <th>
+                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'id']) }}" class="text-dark">
+                                            ID
+                                            @if(request('sort') == 'id')
+                                                @if(request('direction') == 'asc')
+                                                    <i class="fas fa-sort-up"></i>
+                                                @else
+                                                    <i class="fas fa-sort-down"></i>
+                                                @endif
+                                            @else
+                                                <i class="fas fa-sort"></i>
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'sequence_number']) }}" class="text-dark">
+                                            Sequence
+                                            @if(request('sort') == 'sequence_number')
+                                                @if(request('direction') == 'asc')
+                                                    <i class="fas fa-sort-up"></i>
+                                                @else
+                                                    <i class="fas fa-sort-down"></i>
+                                                @endif
+                                            @else
+                                                <i class="fas fa-sort"></i>
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'question_text']) }}" class="text-dark">
+                                            Question Text
+                                            @if(request('sort') == 'question_text')
+                                                @if(request('direction') == 'asc')
+                                                    <i class="fas fa-sort-up"></i>
+                                                @else
+                                                    <i class="fas fa-sort-down"></i>
+                                                @endif
+                                            @else
+                                                <i class="fas fa-sort"></i>
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th>Industry</th>
+                                    <th>
+                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'is_active']) }}" class="text-dark">
+                                            Status
+                                            @if(request('sort') == 'is_active')
+                                                @if(request('direction') == 'asc')
+                                                    <i class="fas fa-sort-up"></i>
+                                                @else
+                                                    <i class="fas fa-sort-down"></i>
+                                                @endif
+                                            @else
+                                                <i class="fas fa-sort"></i>
+                                            @endif
+                                        </a>
+                                    </th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -38,7 +90,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $question->question_text }}</td>
-                                    <td>{{ $question->revenue_range }}</td>
+                                    <td>{{ $question->industry->name ?? '-' }}</td>
 
                                     <td>{{ $question->is_active ? 'Active' : 'Inactive' }}</td>
                                     <td>
