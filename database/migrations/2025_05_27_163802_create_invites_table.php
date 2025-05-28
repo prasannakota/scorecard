@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assessments', function (Blueprint $table) {
+        Schema::create('invites', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name')->nullable();
-            $table->string('department_id')->nullable();
-            $table->float('total_score');
+            $table->string('email')->unique();
+            $table->string('token')->unique();
+            $table->timestamp('expires_at')->nullable();
+            $table->boolean('used')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assessments');
+        Schema::dropIfExists('invites');
     }
 };

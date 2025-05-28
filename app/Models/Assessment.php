@@ -9,7 +9,7 @@ class Assessment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_name', 'total_score'];
+    protected $fillable = ['user_name', 'total_score','user_id','department_id'];
 
     public function answers()
     {
