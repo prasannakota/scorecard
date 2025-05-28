@@ -33,6 +33,12 @@
                             Departments
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('invites.create') }}">
+                            <span data-feather="folder"></span>
+                            Invite
+                        </a>
+                    </li>
 
                     {{-- 📩 Email & Notification Management --}}
                     <li class="nav-item">
