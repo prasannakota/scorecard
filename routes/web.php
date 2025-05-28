@@ -43,8 +43,15 @@ Route::middleware(['web', 'guest'])->group(function () {
 
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
     Route::match(['get', 'post'], 'logout', [\App\Http\Controllers\User\UserAuthController::class, 'logout'])->name('logout');
-    Route::get('dashboard', [UserAuthController::class, 'dashboard'])->name('dashboard');
     Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'index'])->name('profile.show');
     Route::get('profile/assessment/{id}/edit', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.assessment.edit');
     Route::put('profile/assessment/{id}', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.assessment.update');
@@ -178,6 +185,19 @@ Route::prefix('admin')->group(function () {
         Route::post('/invites/accept/{token}', [InviteController::class, 'completeRegistration']);
 
 
+        // Users
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class, [
+            'names' => [
+                'index' => 'admin.users.index',
+                'create' => 'admin.users.create',
+                'store' => 'admin.users.store',
+                'show' => 'admin.users.show',
+                'edit' => 'admin.users.edit',
+                'update' => 'admin.users.update',
+                'destroy' => 'admin.users.destroy'
+            ]
+        ]);
+
         // Questions
         Route::resource('departments.questions', \App\Http\Controllers\Admin\QuestionController::class, [
             'names' => [
@@ -191,16 +211,29 @@ Route::prefix('admin')->group(function () {
             ]
         ]);
         
-        // Users
-        Route::resource('users', \App\Http\Controllers\Admin\UserController::class, [
+        // Industries
+        Route::resource('industries', \App\Http\Controllers\Admin\IndustryController::class, [
             'names' => [
-                'index' => 'admin.users.index',
-                'create' => 'admin.users.create',
-                'store' => 'admin.users.store',
-                'show' => 'admin.users.show',
-                'edit' => 'admin.users.edit',
-                'update' => 'admin.users.update',
-                'destroy' => 'admin.users.destroy'
+                'index' => 'admin.industries.index',
+                'create' => 'admin.industries.create',
+                'store' => 'admin.industries.store',
+                'show' => 'admin.industries.show',
+                'edit' => 'admin.industries.edit',
+                'update' => 'admin.industries.update',
+                'destroy' => 'admin.industries.destroy'
+            ]
+        ]);
+
+        // Business Categories
+        Route::resource('business_categories', \App\Http\Controllers\Admin\BusinessCategoryController::class, [
+            'names' => [
+                'index' => 'admin.business_categories.index',
+                'create' => 'admin.business_categories.create',
+                'store' => 'admin.business_categories.store',
+                'show' => 'admin.business_categories.show',
+                'edit' => 'admin.business_categories.edit',
+                'update' => 'admin.business_categories.update',
+                'destroy' => 'admin.business_categories.destroy'
             ]
         ]);
 
