@@ -6,6 +6,7 @@
     <title>Admin - E-commerce Scorecard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    @stack('styles')
 
 </head>
 <body>
@@ -31,6 +32,18 @@
                         <a class="nav-link" href="{{ route('admin.departments.index') }}">
                             <span data-feather="folder"></span>
                             Departments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.industries.index') }}">
+                            <i class="bi bi-building"></i>
+                            Industries
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.business_categories.index') }}">
+                            <i class="bi bi-tags"></i>
+                            Business Categories
                         </a>
                     </li>
 
@@ -91,10 +104,11 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-<script>
-    feather.replace()
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    @stack('scripts')
+    <script>
+        feather.replace()
+    </script>
 </body>
 </html>

@@ -6,19 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
+        Schema::dropIfExists('questions');
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('department_id');
-            $table->string('revenue_range')->nullable();
+            $table->foreignId('department_id')->constrained()->onDelete('cascade');
+            $table->enum('revenue_range', ['5m', '5-10m', '10m+'])->default('5m');
             $table->text('question_text');
             $table->enum('question_type', ['single_choice', 'multiple_choice', 'text', 'yes_no'])->default('single_choice');
             $table->integer('sequence_number')->nullable();
-            $table->foreignId('next_question_id')->nullable();
+            $table->foreignId('next_question_id')->nullable()->constrained('questions');
             $table->string('condition_type')->nullable();
             $table->string('condition_value')->nullable();
             $table->string('option_a');
@@ -34,13 +32,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('questions');
     }
