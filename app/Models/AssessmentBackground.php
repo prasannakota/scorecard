@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Industry;
 class AssessmentBackground extends Model
 {
     protected $fillable = [
@@ -26,11 +26,15 @@ class AssessmentBackground extends Model
 
     public function getIndustrySectorOptions()
     {
-        return [
+        /*return [
             'Sporting Goods',
             'Fishing equipments',
             'Medical supplements'
-        ];
+        ];*/
+        return Industry::where('is_active', true)
+                   ->orderBy('name')
+                   ->pluck('name')
+                   ->toArray();
     }
 
     public function getAnnualRevenueOptions()

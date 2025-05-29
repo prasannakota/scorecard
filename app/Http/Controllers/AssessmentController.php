@@ -50,7 +50,7 @@ class AssessmentController extends Controller
         $validated = $request->validate([
             'organization_name' => 'required|string|max:255',
             'website_url' => 'required|url',
-            'industry_sector' => 'required|in:Sporting Goods,Fishing equipments,Medical supplements',
+            'industry_sector' => 'required',
             'annual_revenue' => 'required|in:5 million,5-10 million,Above 10 million',
             'country' => 'required|string|max:255',
             'market_position' => 'required|in:1,2,3,4,5,6,7,8,9,10',
