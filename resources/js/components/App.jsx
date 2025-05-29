@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { UserProvider } from '../lib/UserContext'; // Import UserContext
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -24,22 +25,21 @@ function AppContent() {
   const isAuthenticated = !!sessionStorage.getItem('authorization');
   const hideNavbarOn = ['/'];
   const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true); // Default to open
-   const toggleSidebar = () => {
-    setIsSidebarOpen(prev => !prev);
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top navbar */}
-       {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
+      {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
 
       {/* Body layout with Sidebar and Main Content */}
       <div className="flex flex-1">
         {/* Sidebar always visible if authenticated */}
-         {isAuthenticated && isSidebarOpen && <Sidebar />}
+        {isAuthenticated && isSidebarOpen && <Sidebar />}
 
         {/* Main content area */}
-        <main className="flex-1 p-6 mt-0"> 
+        <main className="flex-1 p-2 mt-0">
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
@@ -53,8 +53,8 @@ function AppContent() {
             <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
             <Route path="/department" element={<PrivateRoute><DepartmentList /></PrivateRoute>} />
             <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
-              <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
-              <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
+            <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
+            <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
           </Routes>
         </main>
       </div>
@@ -65,7 +65,9 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
-      <AppContent />
+      <UserProvider>
+        <AppContent />
+      </UserProvider>
     </Router>
   );
 }

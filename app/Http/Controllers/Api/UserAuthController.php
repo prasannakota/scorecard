@@ -84,4 +84,19 @@ class UserAuthController extends Controller
             return $this->sendError('Something went wrong.', $e->getMessage(), 500);
         }
     }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $request->validate([
+            'business_category' => 'nullable|integer',
+        ]);
+        $user->business_category = $request->business_category;
+        $user->save();
+         return $this->sendResponse($user, 'User profile updated successfully.');
+    }
+
 }

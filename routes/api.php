@@ -7,6 +7,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AdviceController;
+use App\Http\Controllers\Admin\BusinessCategoryController;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
@@ -24,5 +25,6 @@ Route::middleware('auth:sanctum')->group( function () {
 	Route::post('/update-score', [AssessmentController::class, 'updateScore']);
     Route::post('/user/feedback', [FeedbackController::class, 'store']);
     Route::post('/user/advice', [AdviceController::class, 'store']);
-
+    Route::get('/business-category', [BusinessCategoryController::class, 'getBusinessCategory']);
+    Route::post('/user/update', [UserAuthController::class, 'update']);
 });

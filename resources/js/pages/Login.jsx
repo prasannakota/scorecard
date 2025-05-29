@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { BsGoogle } from "react-icons/bs";
 import { FaApple, FaMicrosoft } from 'react-icons/fa';
 import { Eye, EyeOff } from "lucide-react";
+import { useUser } from "@/lib/UserContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
+  const { updateUser } = useUser();
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -56,6 +57,7 @@ const Login = () => {
       if (response.data.success) {
         sessionStorage.setItem("authorization", response.data.token);
         sessionStorage.setItem("user", JSON.stringify(response.data.user));
+        updateUser(response.data.user);
         navigate("/dashboard");
       } else {
         setError(response.data.message || "Login failed.");
