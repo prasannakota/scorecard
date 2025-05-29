@@ -3,23 +3,52 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up()
     {
-        // First set default values for existing NULL entries
-        DB::statement('UPDATE questions SET option_a = "Option A" WHERE option_a IS NULL');
-        DB::statement('UPDATE questions SET option_b = "Option B" WHERE option_b IS NULL');
-        DB::statement('UPDATE questions SET option_c = "Option C" WHERE option_c IS NULL');
-        DB::statement('UPDATE questions SET option_d = "Option D" WHERE option_d IS NULL');
-        DB::statement('UPDATE questions SET option_e = "Option E" WHERE option_e IS NULL');
+        // First set default values for existing NULL entries using Laravel's query builder
+        DB::table('questions')
+            ->whereNull('option_a')
+            ->update(['option_a' => 'Option A']);
         
-        DB::statement('UPDATE questions SET score_a = 0 WHERE score_a IS NULL');
-        DB::statement('UPDATE questions SET score_b = 0 WHERE score_b IS NULL');
-        DB::statement('UPDATE questions SET score_c = 0 WHERE score_c IS NULL');
-        DB::statement('UPDATE questions SET score_d = 0 WHERE score_d IS NULL');
-        DB::statement('UPDATE questions SET score_e = 0 WHERE score_e IS NULL');
+        DB::table('questions')
+            ->whereNull('option_b')
+            ->update(['option_b' => 'Option B']);
+        
+        DB::table('questions')
+            ->whereNull('option_c')
+            ->update(['option_c' => 'Option C']);
+        
+        DB::table('questions')
+            ->whereNull('option_d')
+            ->update(['option_d' => 'Option D']);
+        
+        DB::table('questions')
+            ->whereNull('option_e')
+            ->update(['option_e' => 'Option E']);
+        
+        DB::table('questions')
+            ->whereNull('score_a')
+            ->update(['score_a' => 0]);
+        
+        DB::table('questions')
+            ->whereNull('score_b')
+            ->update(['score_b' => 0]);
+        
+        DB::table('questions')
+            ->whereNull('score_c')
+            ->update(['score_c' => 0]);
+        
+        DB::table('questions')
+            ->whereNull('score_d')
+            ->update(['score_d' => 0]);
+        
+        DB::table('questions')
+            ->whereNull('score_e')
+            ->update(['score_e' => 0]);
 
         // Then add NOT NULL constraints
         Schema::table('questions', function (Blueprint $table) {
