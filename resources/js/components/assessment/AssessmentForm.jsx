@@ -15,13 +15,16 @@ import { Separator } from '@/components/ui/separator';
 import { 
   fetchAssessmentOptions, 
   fetchAssessment, 
-  saveAssessment 
+  saveAssessment
 } from '@/components/api/assessment';
+import { useProfile } from "@/lib/useProfile";
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useLocation } from 'react-router-dom';
 
 export default function AssessmentForm() {
   const navigate = useNavigate();
-
+  const { updateProfile } = useProfile();
   const [organisation, setOrganisation] = useState('');
   const [companyUrl, setCompanyUrl] = useState('');
   const [industry, setIndustry] = useState('');
@@ -38,6 +41,9 @@ export default function AssessmentForm() {
   const [countryOptions, setCountryOptions] = useState([]);
   const [marketPositionOptions, setMarketPositionOptions] = useState([]);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const businessId = queryParams.get('business');
   const totalQuestions = [
     organisation,
     companyUrl,
@@ -100,6 +106,10 @@ export default function AssessmentForm() {
     try {
       await saveAssessment(payload);
       setSuccessMessage('Assessment saved successfully!');
+      // user update call to update  businessId
+      if (businessId) {
+         await updateProfile(businessId);
+      }
       setTimeout(() => {
         setSuccessMessage('');
         if (!assessmentData || !assessmentData.organization_name || assessmentData.organization_name.trim() === '') {

@@ -114,3 +114,18 @@ export const updateScore = async (assessmentId, score) => {
   );
   return response.data.data;
 };
+
+export const fetchBusinessCategories = async () => {
+  const token = getAuthToken();
+  try {
+    const response = await axios.get(`/api/business-category`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    return [];
+  }
+};
+
+

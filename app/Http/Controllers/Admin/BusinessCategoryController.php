@@ -82,4 +82,16 @@ class BusinessCategoryController extends Controller
         return redirect()->route('admin.business_categories.index')
             ->with('success', 'Business category deleted successfully');
     }
+
+    public function getBusinessCategory()
+    {
+        $businessCategory = BusinessCategory::where('is_active', 1)->get();
+        $meta = [
+            'total' => $businessCategory->count(),
+            'timestamp' => now(),
+        ];
+        return $this->sendResponse($businessCategory, $meta);
+    }
+
+
 }
