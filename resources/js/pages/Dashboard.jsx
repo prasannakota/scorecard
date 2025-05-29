@@ -10,6 +10,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useUser } from '@/lib/UserContext';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { FaGem } from 'react-icons/fa';
 
 export default function Dashboard() {
   const { user, updateUser } = useUser();
@@ -58,9 +61,7 @@ export default function Dashboard() {
   let buttonLink = "/assessment-form";
   if (assessment && assessment.organization_name.trim() != '') {
      buttonLink = `/department`;
-     console.log('assessment',assessment);
      if (assessmentStatus) {
-      console.log('assessmentStatus',assessmentStatus);
       const departments = assessmentStatus.departments;
       if (!departments || departments === "") {
         buttonLink = `/department`;
@@ -122,7 +123,6 @@ export default function Dashboard() {
     );
   };
   const filteredCards = businessCategories.filter((card) => {
-    console.log('user?.business_category',user?.business_category);
     const userCategoryId = user?.business_category ? parseInt(user.business_category) : null;
     if (userCategoryId) {
       return card.id === userCategoryId;
@@ -152,27 +152,89 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-2 max-w-[1600px]">
-      <div
-        className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col justify-center text-white p-6 md:p-12 mb-8"
-        style={{
-          backgroundImage: `url(${backgroundImg})`,
-        }}
-      >
-        <div className="text-left">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ maxWidth: "700px" }}>
-            {heading}
-          </h1>
-          <p className="text-lg md:text-xl mb-6" style={{ maxWidth: "900px" }}>
-            {description}
-          </p>
-          <div className="mt-4">
-            <Button asChild>
-              <Link to={buttonLink} className={`${buttonClasses} ${linkClasses}`}>
-                {buttonText}
-              </Link>
-            </Button>
+      <div className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
+          style={{
+            backgroundImage: `url(${backgroundImg})`,
+          }}
+        >
+          {/* Left Side */}
+          <div className="text-left max-w-2xl flex-1">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ maxWidth: "700px" }}>
+              {heading}
+            </h1>
+            <p className="text-lg md:text-xl mb-6" style={{ maxWidth: "900px" }}>
+              {description}
+            </p>
+            <div className="mt-4 flex gap-x-4">
+              <Button asChild>
+                <Link to={buttonLink} className={`${buttonClasses} ${linkClasses}`}> {buttonText} </Link>
+              </Button>
+              {assessmentStatus.total_score === 100  &&
+              <Button asChild
+                  className="bg-transparent border border-white text-white font-bold px-6 py-2 rounded-full hover:bg-white hover:text-black transition"
+                >
+                  <Link to=''> Talk to Our Experts </Link>
+                </Button>
+
+              }
+            </div>
           </div>
-        </div>
+        {/* Right Side: Progress Circle */}
+         {assessmentStatus?.total_score > 0 && (
+          <div className="flex flex-col items-center justify-center bg-white p-6 rounded-xl shadow-md">
+            <p className="text-xl font-semibold text-gray-800 p-2 flex items-center gap-4">
+              Status :{" "}
+              {assessmentStatus.total_score === 100 ? (
+                <span className="bg-green-600 text-white text-base px-3 py-1.5 rounded">Completed</span>
+              ) : (
+                <span className="bg-green-600 text-white text-base px-3 py-1.5 rounded">In Progress</span>
+              )}
+              <button
+                className="p-2 rounded hover:bg-gray-200"
+                aria-label="More actions"
+                onClick={() => {
+                }}
+              >
+                <svg
+                  className="w-6 h-6 text-gray-700"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 3a2 2 0 110-4 2 2 0 010 4zm0 3a2 2 0 110-4 2 2 0 010 4z" />
+                </svg>
+              </button>
+            </p>
+
+            <div className="w-28 h-28 mb-4">
+              <CircularProgressbar
+                value={assessmentStatus.total_score}
+                text={`${assessmentStatus.total_score}%`}
+                styles={buildStyles({
+                  pathColor: '#10B981',       // Green fill
+                  trailColor: '#E5E7EB',      // Grey unfilled portion
+                  textColor: '#10B981',       // Green text inside
+                  textSize: '16px',
+                })}
+              />
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <FaGem
+                  className={
+                    assessmentStatus.total_score === 100
+                      ? 'text-yellow-500'
+                      : 'text-gray-500'
+                  }
+                />
+                <span className="text-sm text-black">
+                  {assessmentStatus.total_score === 100 ? 'You are a Star!' : 'Almost there!'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
       {/* Business Category */}
       <section className="bg-[#dbeaf8] py-12 px-6">
