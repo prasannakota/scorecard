@@ -169,7 +169,7 @@ export default function Dashboard() {
               <Button asChild>
                 <Link to={buttonLink} className={`${buttonClasses} ${linkClasses}`}> {buttonText} </Link>
               </Button>
-              {assessmentStatus.total_score === 100  &&
+              {assessmentStatus?.total_score === 100  &&
               <Button asChild
                   className="bg-transparent border border-white text-white font-bold px-6 py-2 rounded-full hover:bg-white hover:text-black transition"
                 >
