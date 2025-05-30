@@ -27,4 +27,5 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/user/advice', [AdviceController::class, 'store']);
     Route::get('/business-category', [BusinessCategoryController::class, 'getBusinessCategory']);
     Route::post('/user/update', [UserAuthController::class, 'update']);
+    Route::post('/update-user', [UserAuthController::class, 'updateProfile']);
 });

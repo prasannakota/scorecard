@@ -128,4 +128,15 @@ export const fetchBusinessCategories = async () => {
   }
 };
 
-
+export const updateProfile = async (payload) => {
+    const token = getAuthToken();
+    try {
+        const response = await axios.post('/api/update-user', payload, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to save assessment:', error);
+        throw error;
+    }
+};
