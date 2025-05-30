@@ -99,4 +99,33 @@ class UserAuthController extends Controller
          return $this->sendResponse($user, 'User profile updated successfully.');
     }
 
+    public function updateProfile(Request $request, User $user)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            $user = auth()->user();  // Make sure you're using the authenticated user
+
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $path = $file->store('profile_pictures', 'public');
+                $user->profile_picture = $path;
+            }
+
+            $user->name = $validated['name'];
+            $user->save();  // Save the updated fields
+
+            return $this->sendResponse($user->fresh(), 'Profile updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return $this->sendError('Validation error.', $e->errors(), 422);
+        } catch (\Exception $e) {
+            return $this->sendError('Something went wrong.', $e->getMessage(), 500);
+        }
+
+    }
+
+
+
 }

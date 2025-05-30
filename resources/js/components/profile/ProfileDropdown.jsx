@@ -28,7 +28,7 @@ export default function ProfileDropdown() {
                 {/* 🔥 Show profile picture if available */}
                 {user?.profile_picture ? (
                     <img
-                        src={`${import.meta.env.APP_URL}/storage/${user.profile_picture}`}
+                        src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover"
                     />
