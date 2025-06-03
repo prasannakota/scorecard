@@ -18,6 +18,7 @@ import DepartmentList from '../components/assessment/DepartmentList';
 import AssessmentScreen from '../components/assessment/AssessmentScreen';
 import GetAdvice from "../pages/GetAdvice";
 import FeedBack from "../pages/FeedBack";
+import ManageQuestions from '../pages/ManageQuestions';
 
 function AppContent() {
   const location = useLocation();
@@ -55,6 +56,7 @@ function AppContent() {
             <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
             <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
             <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
+            <Route path="/manage-questions" element={<ManageQuestions />} />
           </Routes>
         </main>
       </div>
