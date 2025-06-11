@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Storage;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
+Route::post('/add-department', [DepartmentController::class, 'createDepartment']);
+Route::get('/fetch-departments', [DepartmentController::class, 'getAllDepartment']);
+
 Route::middleware('auth:sanctum')->group( function () {
 	Route::get('assessment/form-data', [AssessmentController::class, 'create']);
 	Route::post('assessment', [AssessmentController::class, 'store']);
@@ -30,6 +33,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/user/update', [UserAuthController::class, 'update']);
     Route::post('/update-user', [UserAuthController::class, 'updateProfile']);
 });
+
 
 // Storefront Manage Questions Endpoints
 Route::get('/admin/questions', function () {
@@ -53,8 +57,22 @@ Route::get('/admin/questions', function () {
     return response()->json($data);
 });
 
-Route::post('/admin/questions/save', function (\Illuminate\Http\Request $request) {
-    $questions = $request->input('questions');
-    Storage::disk('local')->put('questions.json', json_encode(['questions' => $questions], JSON_PRETTY_PRINT));
-    return response()->json(['success' => true]);
-});
+// Questions
+Route::post('/admin/questions/save', [\App\Http\Controllers\Admin\QuestionController::class, 'bulkStore'])
+    ->name('admin.questions.bulk-store');
+
+
+Route::post('/admin/options/saveOption', [\App\Http\Controllers\Admin\OptionController::class, 'store'])
+    ->name('admin.questions.save-option');
+
+Route::post('/admin/options/updateOption', [\App\Http\Controllers\Admin\OptionController::class, 'update'])
+    ->name('admin.options.update-option');
+
+
+Route::get('/admin/questions', [\App\Http\Controllers\Admin\QuestionController::class, 'getQuestions']);
+
+
+
+
+
+

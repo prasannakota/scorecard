@@ -58,4 +58,10 @@ class Question extends Model
     {
         return $this->belongsTo(Question::class, 'next_question_id');
     }
+
+    public function options()
+    {
+        return $this->belongsToMany(Option::class, 'question_option');
+    }
+
 }

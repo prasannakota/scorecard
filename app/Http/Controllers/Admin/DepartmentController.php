@@ -139,4 +139,40 @@ class DepartmentController extends Controller
             return $this->sendError('Failed to fetch departments', ['error' => $e->getMessage()], 500);
         }
     }
+
+
+
+    public function createDepartment(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:departments,name',
+            'description' => 'nullable|string',
+            'is_active' => 'nullable', // Changed to nullable without boolean
+        ]);
+
+        // Prepare the data
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'slug' => Str::of($validated['name'])->slug(),
+            'is_active' => $request->has('is_active'), // Changed to check if checkbox is checked
+        ];
+
+        $department = Department::create($data);
+        return response()->json([
+            'message' => 'Department created successfully!',
+            'code' => 200,
+        ]);
+    }
+
+    public function getAllDepartment()
+    {
+        try {
+            $departments = Department::select('id', 'name', 'description', 'is_active')->get();
+            $meta = (object) ['message' => 'Department list fetched successfully'];
+            return $this->sendResponse($departments, $meta);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to fetch departments', ['error' => $e->getMessage()], 500);
+        }
+    }
 }
