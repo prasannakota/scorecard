@@ -3,6 +3,7 @@ import { LayoutDashboard, Trophy, Book, FileText, PhoneCall, MessageCircle, LogO
 
 export default function Sidebar() {
   const isAuthenticated = sessionStorage.getItem('authorization');
+  const isAdmin = sessionStorage.getItem('role') === 'admin';
   if (!isAuthenticated) return null;
 
   return (
