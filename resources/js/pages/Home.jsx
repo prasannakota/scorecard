@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { BsBoxArrowInRight, BsPersonPlus, BsShieldLock } from "react-icons/bs";
@@ -9,47 +9,89 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom"
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState("login");
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-6 rounded-2xl shadow-xl">
-        <div className="flex flex-col justify-center items-center text-center p-4">
-          <div className="bg-gray-900 p-4 rounded-xl mb-4">
-            <img
-              src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif"
-              alt="Logo"
-              className="w-32 h-32 object-contain"
-            />
-          </div>
-          <h1 className="text-3xl font-bold mb-2">Welcome to E-commerce Scorecard</h1>
-          <p className="text-lg mb-3">
-            Evaluate your Commerce business's performance.
-          </p>
-          <p className="text-muted-foreground">
-            Discover how your online store performs, compare with industry benchmarks, and get expert recommendations to grow your business.
-          </p>
-          <Link to="/register" className="mt-6 block">
-            <Button className="w-full sm:w-auto">Get Started</Button>
-          </Link>
+    <div className="flex justify-center items-center min-h-screen bg-white ">
+      <div className="w-full md:max-w-[1400px] flex flex-col md:flex-row gap-10 bg-white md:p-[32px]">
+
+        <div className="hidden md:flex flex-col items-center text-center">
+          {activeTab === "login" && (
+            <section
+                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl max-w-[676px] min-h-[150px] max-md:px-5 max-md:py-24"
+                  role="banner"
+                  aria-labelledby="hero-title"
+              >
+                  <img
+                        src="/images/loginscreen.png"
+                        alt="loginscreen"
+                      className="object-cover absolute inset-0 size-full"
+                  />
+                  <h1
+                      id="hero-title"
+                      className="relative self-stretch text-5xl font-black tracking-tighter text-center text-white leading-[58px] max-md:max-w-full max-md:text-4xl max-md:leading-[54px]"
+                  >
+                      Evaluate your Commerce business's performance .
+                  </h1>
+                  <p
+                      className="relative text-2xl leading-7 text-center text-white font-[350] mt-[380px] max-md:mt-10 max-md:max-w-full"
+                  >
+                      Discover how your online store performs, compare with industry benchmarks,
+                      and get expert recommendations to grow your business.
+                  </p>
+                  <Link to="/register" className="mt-6 block">
+                      <Button className="w-full sm:w-auto">Get Started</Button>
+                    </Link>
+              </section>  
+   )}
+
+          {activeTab === "register" && (
+                      <section
+                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl max-w-[676px] min-h-[150px] max-md:px-5 max-md:py-24"
+                  role="banner"
+                  aria-labelledby="hero-title"
+              >
+                  <img
+                        src="/images/registerbg.png"
+                        alt="registerbg"
+                      className="object-cover absolute inset-0 size-full"
+                  />
+                  <h1
+                      id="hero-title"
+                      className="relative self-stretch text-5xl font-black tracking-tighter text-center text-white leading-[58px] max-md:max-w-full max-md:text-4xl max-md:leading-[54px]"
+                  >
+                      Evaluate your Commerce business's performance tyrtyurtyurty.
+                  </h1>
+                  <p
+                      className="relative text-2xl leading-7 text-center text-white font-[350] mt-[380px] max-md:mt-10 max-md:max-w-full"
+                  >
+                      Discover how your online store performs, compare with industry benchmarks,
+                      and get expert recommendations to grow your business.
+                  </p>
+                  <Link to="/register" className="mt-6 block">
+                      <Button className="w-full sm:w-auto">Get Started</Button>
+                    </Link>
+              </section> 
+              )}
         </div>
-        <div>
+
+        <div className='loginscreen py-[40px] px-[20px]'>
+          <div className='logo mb-[30px] md:mb-[75px]'>
+            <img src="/images/Kensiumlogo.svg" alt="Logo" />
+          </div>
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-4">
-              <TabsTrigger value="login" className="flex items-center justify-center gap-2">
-                <BsBoxArrowInRight className="text-lg" />
+            <TabsList className="grid grid-cols-3 mb-4 p-1 bg-gray50">
+              <TabsTrigger value="login" className="flex items-center justify-center gap-2 px-5 py-2 rounded-md !text-base">
                 Login
               </TabsTrigger>
-
-              <TabsTrigger value="register" className="flex items-center justify-center gap-2">
-                <BsPersonPlus className="text-lg" />
+              <TabsTrigger value="register" className="flex items-center justify-center gap-2 px-5 rounded-md py-2 !text-base">
                 Create an Account
               </TabsTrigger>
-                <a
+               <a
                     href="/admin/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 text-sm font-medium px-3 py-2 rounded-md bg-muted hover:bg-muted/80 transition-colors"
+                    className="flex items-center justify-center gap-2 text-base px-5 py-2 rounded-md transition-colors"
                 >
-                    <BsShieldLock className="text-lg" />
                     Admin Login
                 </a>
 
@@ -57,19 +99,15 @@ export default function Home() {
 
 
             <TabsContent value="login">
-              <Card>
-                <CardContent className="p-4">
+                <div  className="loginform">
                   <Login />
-                </CardContent>
-              </Card>
+                </div>
             </TabsContent>
 
             <TabsContent value="register">
-              <Card>
-                <CardContent className="p-4">
+                <div  className="loginform">
                   <Register />
-                </CardContent>
-              </Card>
+                  </div>
             </TabsContent>
 
             {/*<TabsContent value="admin">*/}

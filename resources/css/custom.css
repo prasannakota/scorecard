@@ -1,0 +1,28 @@
+.inputstyle input{
+    @apply  bg-white h-[56px] border border-gray100 hover:border-blue100 focus:border-blue100 focus-visible:border-blue100;
+}
+.inputstyle label{
+    @apply absolute top-[-13px] left-3 py-1 px-2 bg-white text-black100 hover:text-blue200 z-10;
+}
+.inputstyle:hover label{
+    @apply  text-blue200;
+}
+button[data-state="active"]{
+     @apply  bg-black500 text-white;
+}
+.inputchekbtn{
+    @apply !inline-flex items-center;
+}
+.inputchekbtn button{
+     @apply w-[24px] h-[24px] items-center;
+}
+button.custombtn{
+    @apply  text-white h-[56px] font-black text-xl hover:bg-primary-600;
+}
+.customlabel a{
+@apply  text-blue200;
+
+} 
+.text-destructive{
+    @apply text-red-500 text-xs mt-[-6px];
+}

@@ -40,7 +40,7 @@ function AppContent() {
         {isAuthenticated && isSidebarOpen && <Sidebar />}
 
         {/* Main content area */}
-        <main className="flex-1 p-2 mt-0">
+        <main className="flex-1 main-wrapper">
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
