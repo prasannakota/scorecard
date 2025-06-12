@@ -209,9 +209,9 @@
 
 
     return (
-      <div className="flex min-h-screen">
+      <div className="flex">
       {showSuccessPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-blue300 bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded shadow-lg max-w-sm text-center">
             <h3 className="text-lg font-semibold mb-2">Assessment Completed!</h3>
             <p>Congratulations, you have successfully completed the assessment.</p>

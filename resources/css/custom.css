@@ -19,6 +19,9 @@ button[data-state="active"]{
 button.custombtn{
     @apply  text-white h-[56px] font-black text-xl hover:bg-primary-600;
 }
+.customlabel{
+    @apply flex gap-2 flex-col;
+}
 .customlabel a{
 @apply  text-blue200;
 

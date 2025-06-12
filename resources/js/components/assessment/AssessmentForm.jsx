@@ -264,7 +264,7 @@ export default function AssessmentForm() {
     };
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex">
             {/* Left Sidebar */}
             <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
                 {/* Profile Picture or Placeholder */}
@@ -363,33 +363,35 @@ export default function AssessmentForm() {
                         )}
 
                         <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="mb-4">
-                                <Label htmlFor="organisation">Name of your organisation</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label htmlFor="organisation" className='text-neutral30'>Name of your organisation</Label>
                                 <Input
                                     id="organisation"
                                     value={organisation}
                                     onChange={(e) => setOrganisation(e.target.value)}
+                                    className="border border-neutral70 "
                                 />
                                 {getError('organization_name') && (
                                     <p className="text-sm text-red-500">{getError('organization_name')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label htmlFor="companyUrl">Company website URL</Label>
+                                 <div className="mb-4 flex flex-col gap-2">
+                                <Label htmlFor="companyUrl" className='text-neutral30'>Company website URL</Label>
                                 <Input
                                     id="companyUrl"
                                     type="url"
                                     value={companyUrl}
                                     onChange={(e) => setCompanyUrl(e.target.value)}
+                                    className="border border-neutral70"
                                 />
                                 {getError('website_url') && (
                                     <p className="text-sm text-red-500">{getError('website_url')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Industry or sector</Label>
+                           <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select industry" /></SelectTrigger>
                                     <SelectContent>
                                         {industryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -400,10 +402,10 @@ export default function AssessmentForm() {
                                     <p className="text-sm text-red-500">{getError('industry_sector')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Annual revenue</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Annual revenue</Label>
                                 <Select value={annualRevenue} onValueChange={setAnnualRevenue}>
-                                    <SelectTrigger><SelectValue placeholder="Select revenue" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select revenue" /></SelectTrigger>
                                     <SelectContent>
                                         {annualRevenueOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -414,10 +416,10 @@ export default function AssessmentForm() {
                                     <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Country</Label>
+                        <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Country</Label>
                                 <Select value={country} onValueChange={setCountry}>
-                                    <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select country" /></SelectTrigger>
                                     <SelectContent>
                                         {countryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -428,10 +430,10 @@ export default function AssessmentForm() {
                                     <p className="text-sm text-red-500">{getError('country')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Market position</Label>
+                           <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Market position</Label>
                                 <Select value={marketPosition} onValueChange={setMarketPosition}>
-                                    <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select position" /></SelectTrigger>
                                     <SelectContent>
                                         {marketPositionOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -442,7 +444,7 @@ export default function AssessmentForm() {
                                     <p className="text-sm text-red-500">{getError('market_position')}</p>
                                 )}
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-end ">
                                 <Button onClick={handleSave} disabled={loading}>
                                     {loading ? 'Saving...' : 'Next'}
                                 </Button>
