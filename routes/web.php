@@ -19,12 +19,13 @@ Route::get('/', function () {
 
 // Root route
 //Route::get('/', [HomeController::class, 'index'])->name('home');
-
 // Social Authentication Routes
 use App\Http\Controllers\Auth\SocialAuthController;
 
-Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
-Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
+Route::middleware('web')->group(function () {
+    Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
+    Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
+});
 
 // User Authentication Routes
 Route::middleware(['web', 'guest'])->group(function () {
@@ -67,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/assessment/question/{questionId}', [AssessmentController::class, 'showQuestion'])->name('assessment.question');
     Route::post('/assessment/answer/{questionId}', [AssessmentController::class, 'storeAnswer']);
-    Route::get('/assessment/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
+    //Route::get('/assessment/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
     
     //Route::get('assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
 
@@ -77,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Password Reset Routes for authenticated users
     Route::get('password/reset-form', [UserAuthController::class, 'showResetForm'])->name('password.reset.form');
-    Route::put('password/reset', [UserAuthController::class, 'resetPassword'])->name('password.reset');
+    //Route::put('password/reset', [UserAuthController::class, 'resetPassword'])->name('password.reset');
 
     Route::get('profile', [UserAuthController::class, 'showProfile'])->name('user.profile.show');
     Route::put('profile', [UserAuthController::class, 'updateProfile'])->name('user.profile.update');
@@ -263,6 +264,11 @@ Route::prefix('admin')->group(function () {
 Route::get('/test', function () {
     return view('test');
 })->name('test');
+
+// This should be the last route in web.php
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*');
 
 
 

@@ -18,10 +18,11 @@ import DepartmentList from '../components/assessment/DepartmentList';
 import AssessmentScreen from '../components/assessment/AssessmentScreen';
 import GetAdvice from "../pages/GetAdvice";
 import FeedBack from "../pages/FeedBack";
+import ManageQuestions from '../pages/ManageQuestions';
+import Department from '../pages/Department';
 
 function AppContent() {
   const location = useLocation();
-
   const isAuthenticated = !!sessionStorage.getItem('authorization');
   const hideNavbarOn = ['/'];
   const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
@@ -55,6 +56,8 @@ function AppContent() {
             <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
             <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
             <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
+            <Route path="/manage-questions" element={<ManageQuestions />} />
+            <Route path="/add-department" element={<Department />} />
           </Routes>
         </main>
       </div>

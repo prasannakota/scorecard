@@ -8,9 +8,13 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AdviceController;
 use App\Http\Controllers\Admin\BusinessCategoryController;
+use Illuminate\Support\Facades\Storage;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
+Route::post('/add-department', [DepartmentController::class, 'createDepartment']);
+Route::get('/fetch-departments', [DepartmentController::class, 'getAllDepartment']);
+
 Route::middleware('auth:sanctum')->group( function () {
 	Route::get('assessment/form-data', [AssessmentController::class, 'create']);
 	Route::post('assessment', [AssessmentController::class, 'store']);
@@ -29,3 +33,46 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/user/update', [UserAuthController::class, 'update']);
     Route::post('/update-user', [UserAuthController::class, 'updateProfile']);
 });
+
+
+// Storefront Manage Questions Endpoints
+Route::get('/admin/questions', function () {
+    // For demo, load from a JSON file or return mock data
+    $data = Storage::disk('local')->exists('questions.json')
+        ? json_decode(Storage::disk('local')->get('questions.json'), true)
+        : [
+            'questions' => [
+                [
+                    'id' => 'q1',
+                    'text' => 'What is your favorite color?',
+                    'options' => [
+                        [ 'id' => 'o1', 'text' => 'Red', 'followUps' => ['q2'] ],
+                        [ 'id' => 'o2', 'text' => 'Blue', 'followUps' => [] ],
+                    ],
+                ],
+                [ 'id' => 'q2', 'text' => 'Why do you like red?', 'options' => [] ],
+                [ 'id' => 'q3', 'text' => 'Why do you like blue?', 'options' => [] ],
+            ]
+        ];
+    return response()->json($data);
+});
+
+// Questions
+Route::post('/admin/questions/save', [\App\Http\Controllers\Admin\QuestionController::class, 'bulkStore'])
+    ->name('admin.questions.bulk-store');
+
+
+Route::post('/admin/options/saveOption', [\App\Http\Controllers\Admin\OptionController::class, 'store'])
+    ->name('admin.questions.save-option');
+
+Route::post('/admin/options/updateOption', [\App\Http\Controllers\Admin\OptionController::class, 'update'])
+    ->name('admin.options.update-option');
+
+
+Route::get('/admin/questions', [\App\Http\Controllers\Admin\QuestionController::class, 'getQuestions']);
+
+
+
+
+
+
