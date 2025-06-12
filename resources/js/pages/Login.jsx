@@ -32,7 +32,7 @@ const Login = () => {
     }));
   };
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
@@ -143,14 +143,13 @@ const Login = () => {
       <Separator />
 
       <div className="flex justify-center gap-4 mt-4">
-        <button
-          type="button"
-          onClick={() => alert('Google login coming soon...')}
-          className="p-3 rounded-full border border-gray-300 hover:bg-gray-100"
-          aria-label="Login with Google"
+        <Link
+          to="http://localhost:8000/auth/google"
+          className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 inline-flex items-center justify-center"
         >
           <BsGoogle className="text-xl text-gray-700" />
-        </button>
+        </Link>
+
 
         {/*<button
           type="button"
@@ -159,16 +158,16 @@ const Login = () => {
           aria-label="Login with Apple"
         >
           <FaApple className="text-xl text-gray-700" />
-        </button>
+        </button>}*/}
 
-        <button
+        <Link
+          to="/login/microsoft"
           type="button"
-          onClick={() => alert('Microsoft login coming soon...')}
           className="p-3 rounded-full border border-gray-300 hover:bg-gray-100"
           aria-label="Login with Microsoft"
         >
           <FaMicrosoft className="text-xl text-gray-700" />
-        </button>*/}
+        </Link>
       </div>
 
       <div className="mt-6 text-center text-xs text-gray-500 px-6">
