@@ -182,4 +182,93 @@ class QuestionController extends Controller
         return redirect()->route('admin.departments.questions.index', $department)
             ->with('success', 'Question deleted successfully');
     }
+
+
+
+    public function bulkStore(Request $request, Department $department)
+    {
+        $questions = $request->input('questions', []);
+        $savedQuestions = [];
+
+        foreach ($questions as $q) {
+            $isNew = $q['isNew'] ?? true;
+
+            // Common required fields with defaults
+            $q['question_text'] = $q['text'] ?? 'Sample Question';
+            $q['department_id'] = $q['department_id'] ?? 8;
+            $q['option_a'] = $q['option_a'] ?? 'Option A';
+            $q['option_b'] = $q['option_b'] ?? 'Option B';
+            $q['option_c'] = $q['option_c'] ?? 'Option C';
+            $q['option_d'] = $q['option_d'] ?? 'Option D';
+            $q['option_e'] = $q['option_e'] ?? 'Option E';
+            $q['option_f'] = $q['option_f'] ?? 'Option F';
+            $q['score_a'] = $q['score_a'] ?? 0;
+            $q['score_b'] = $q['score_b'] ?? 1;
+            $q['score_c'] = $q['score_c'] ?? 2;
+            $q['score_d'] = $q['score_d'] ?? 3;
+            $q['score_e'] = $q['score_e'] ?? 4;
+            $q['score_f'] = $q['score_f'] ?? 5;
+
+            $validator = Validator::make($q, [
+                'question_text' => 'required|string|max:255',
+                'department_id' => 'required|integer',
+                'option_a' => 'required|string|max:255',
+                'option_b' => 'required|string|max:255',
+                'option_c' => 'required|string|max:255',
+                'option_d' => 'required|string|max:255',
+                'option_e' => 'required|string|max:255',
+                'option_f' => 'required|string|max:255',
+                'score_a' => 'required|integer|min:0',
+                'score_b' => 'required|integer|min:0',
+                'score_c' => 'required|integer|min:0',
+                'score_d' => 'required|integer|min:0',
+                'score_e' => 'required|integer|min:0',
+                'score_f' => 'required|integer|min:0'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                    'question' => $q
+                ], 422);
+            }
+
+            $validated = $validator->validated();
+
+            if (!$isNew && !empty($q['id'])) {
+                // Only try update if isNew is false and id exists
+                $question = Question::find($q['id']);
+                if ($question) {
+                    $question->update($validated);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Question with ID {$q['id']} not found for update."
+                    ], 404);
+                }
+            } else {
+                // Always create new if isNew = true (ignore any ID sent)
+                $question = Question::create($validated);
+            }
+
+            $savedQuestions[] = [
+                'id' => $question->id,
+                'question_text' => $question->question_text,
+                'department_id' => $question->department_id,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => count($savedQuestions) . ' question(s) saved successfully.',
+            'questions' => $savedQuestions
+        ]);
+    }
+
+    public function getQuestions()
+    {
+        $questions = Question::select('id', 'question_text')->orderBy('id', 'desc')->get();
+        return response()->json($questions);
+    }
 }
