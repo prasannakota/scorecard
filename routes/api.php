@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/business-category', [BusinessCategoryController::class, 'getBusinessCategory']);
     Route::post('/user/update', [UserAuthController::class, 'update']);
     Route::post('/update-user', [UserAuthController::class, 'updateProfile']);
+    Route::get('/users-by-super/{adminId}', [UserAuthController::class, 'getUsersBySuperUserId']);
 });
 
 

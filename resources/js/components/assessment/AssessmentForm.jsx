@@ -16,9 +16,20 @@ import {
     fetchAssessmentOptions,
     fetchAssessment,
     saveAssessment,
-    updateProfile
+    updateProfile,
+    fetchUsers
 } from '@/components/api/assessment';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogFooter,
+    DialogTitle,
+    DialogDescription,
+} from '@/components/ui/dialog';
+
 
 export default function AssessmentForm() {
     const navigate = useNavigate();
@@ -40,12 +51,25 @@ export default function AssessmentForm() {
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
+    const [backgroundSuccessMessage, setBackgroundSuccessMessage] = useState('');
+    const [settingsSuccessMessage, setSettingsSuccessMessage] = useState('');
+
+
     const [industryOptions, setIndustryOptions] = useState([]);
     const [annualRevenueOptions, setAnnualRevenueOptions] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [marketPositionOptions, setMarketPositionOptions] = useState([]);
 
     const [activeTab, setActiveTab] = useState('background'); // background | additional-users
+    const [users, setUsers] = useState([]);
+    const [error, setError] = useState(null);
+
+
+    const [isEmailDialogOpen, setEmailDialogOpen] = useState(false);
+    const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [newEmail, setNewEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+
 
     const handleSaveProfile = async () => {
         // Handle saving updated name and avatar (send to backend)
@@ -62,7 +86,7 @@ export default function AssessmentForm() {
             const response = await updateProfile(formData);
             setSuccessMessage('Profile updated successfully!');
             console.log(response.data.user);
-            setUser(response.data);
+            updateUserSession(response.data);
             setEditing(false);
         } catch (error) {
             if (error.response?.data?.errors) {
@@ -80,7 +104,6 @@ export default function AssessmentForm() {
     };
 
     useEffect(() => {
-
         async function loadUser() {
             try {
                 const userData = JSON.parse(sessionStorage.getItem('user')); // or use getUserFromSession()
@@ -121,17 +144,36 @@ export default function AssessmentForm() {
         loadUser();      // new
         loadOptions();
         loadAssessment();
+        fetchUsers();
     }, []);
 
 
+    // Second Call
     useEffect(() => {
         if (user?.name) {
             setNewName(user.name);
         }
+
+        if (user?.id) {
+            const getUsersByAdmin = async () => {
+                try {
+                    const result = await fetchUsers(user.id);
+                    if (result?.code === 200) {
+                        setUsers(result.data);
+                    } else {
+                        setError("Failed to load users");
+                    }
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                    setError("Error fetching users");
+                }
+            };
+            getUsersByAdmin();
+        }
     }, [user]);
 
-    const getError = (field) => errors[field]?.[0];
 
+    const getError = (field) => errors[field]?.[0];
     const handleSave = async () => {
         const payload = {
             organization_name: organisation,
@@ -164,6 +206,61 @@ export default function AssessmentForm() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleUpdateEmail = async () => {
+        try {
+            setSettingsSuccessMessage('');
+            const formData = new FormData();
+            formData.append('email', newEmail);
+            const response = await updateProfile(formData);
+            setSettingsSuccessMessage("Email updated successfully.");
+            updateUserSession(response.data);
+            setEmailDialogOpen(false);
+        } catch (error) {
+            console.error("Error updating email", error);
+        }
+    };
+
+
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
+    const handleUpdatePassword = async () => {
+        setPasswordError("");
+
+        if (newPassword.length < 8) {
+            setPasswordError("Password must be at least 8 characters long.");
+            return;
+        }
+
+        const regex = /^(?=.*[\d\W]).+$/;
+        if (!regex.test(newPassword)) {
+            setPasswordError("Password should contain at least one number or symbol.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Passwords do not match.");
+            return;
+        }
+
+        try {
+            const response = await updateProfile({ password: newPassword, password_confirmation: confirmPassword });
+            updateUserSession(response.data);
+            setSettingsSuccessMessage("Password updated successfully.");
+            setPasswordDialogOpen(false);
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (error) {
+            console.error("Error updating password", error);
+            setPasswordError("Something went wrong. Please try again.");
+        }
+    };
+
+    const updateUserSession = (userData) => {
+        setUser(userData);
+        sessionStorage.setItem('user', JSON.stringify(userData));
     };
 
     return (
@@ -238,9 +335,17 @@ export default function AssessmentForm() {
                         className={`pb-2 ${activeTab === 'additional-users' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
                         onClick={() => setActiveTab('additional-users')}
                     >
-                        Manage Access
+                        Manage Collaborators
+                    </button>
+                    <button
+                        className={`pb-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        Settings
                     </button>
                 </div>
+
+
 
                 {/* Tab Content */}
                 {activeTab === 'background' && (
@@ -348,9 +453,103 @@ export default function AssessmentForm() {
 
                 {activeTab === 'additional-users' && (
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Add Additional Users</h3>
-                        <p>Here you can add additional users to the assessment. (Placeholder content)</p>
-                        {/* Additional Users Form or Table Here */}
+                        <h2 className="text-xl font-bold mb-4">Collaborators</h2>
+                        <table className="min-w-full bg-white border">
+                            <thead>
+                            <tr className="bg-gray-100">
+                                <th className="py-2 px-4 border">First Name</th>
+                                <th className="py-2 px-4 border">Last Name</th>
+                                <th className="py-2 px-4 border">Last Updated</th>
+                                <th className="py-2 px-4 border">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {users.length > 0 ? (
+                                users.map((user) => (
+                                    <tr key={user.id} className="text-center">
+                                        <td className="py-2 px-4 border">{user.first_name}</td>
+                                        <td className="py-2 px-4 border">{user.last_name}</td>
+                                        <td className="py-2 px-4 border">
+                                            {new Date(user.updated_at).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'short',
+                                            year: 'numeric'
+                                        })}
+                                        </td>
+                                        <td className="py-2 px-4 border">
+                                            {user.email_verified_at ? 'Active' : 'Inactive'}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="3" className="py-2 px-4 border text-center">
+                                        No users found.
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {activeTab === 'settings' && (
+                    <div className="flex flex-col gap-6 max-w-md">
+                        {settingsSuccessMessage && (
+                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <AlertTitle className="font-semibold">Success</AlertTitle>
+                                <AlertDescription>{settingsSuccessMessage}</AlertDescription>
+                            </Alert>
+                        )}
+
+                        <div>
+                            <Label>Email</Label>
+                            <p className="mt-1">{user?.email}</p>
+                            <Dialog open={isEmailDialogOpen} onOpenChange={setEmailDialogOpen}>
+                                <DialogTrigger asChild><Button variant="outline" className="mt-2">Update Email</Button></DialogTrigger>
+                                <DialogContent>
+                                    <DialogTitle>Update Email</DialogTitle>
+                                    <DialogDescription>Enter your new email address</DialogDescription>
+                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+                                    <Button onClick={handleUpdateEmail}>Save</Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                        <div>
+                            <Label>Password</Label>
+                            <p className="mt-1">********</p>
+
+                            <Dialog open={isPasswordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="mt-2">Update Password</Button>
+                                </DialogTrigger>
+
+                                <DialogContent>
+                                    <DialogTitle>Update Password</DialogTitle>
+                                    <DialogDescription>Enter a new password</DialogDescription>
+
+                                    <div className="space-y-2">
+                                        <Input
+                                            type="password"
+                                            placeholder="New Password"
+                                            value={newPassword}
+                                            onChange={e => setNewPassword(e.target.value)}
+                                        />
+                                        <Input
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            value={confirmPassword}
+                                            onChange={e => setConfirmPassword(e.target.value)}
+                                        />
+                                        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+                                    </div>
+
+                                    <Button onClick={handleUpdatePassword}>Save</Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+
                     </div>
                 )}
             </main>
