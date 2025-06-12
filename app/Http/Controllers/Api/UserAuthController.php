@@ -23,11 +23,11 @@ class UserAuthController extends Controller
 
         if (Auth::guard('web')->attempt($credentials)) {
             $user = Auth::guard('web')->user();
-             $token = $user->createToken('api-token')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken;
             return response()->json([
                 'success' => true,
                 'user' => $user,
-                 'token' => $token,
+                'token' => $token,
                 'message' => 'Login successful'
             ], 200);
         }
@@ -65,6 +65,9 @@ class UserAuthController extends Controller
                 $validated['profile_picture'] = $path;
             }
 
+            $adminId = $request->input('super_user_id') ?  $request->input('super_user_id') : null;
+
+
             $name = $request->first_name.' '.$request->last_name;
             $user = User::create([
                 'name' => $name,
@@ -73,7 +76,8 @@ class UserAuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'first_name' => $validated['first_name'],
                 'last_name'  => $validated['last_name'],
-                'mobile'     => $validated['mobile']
+                'mobile'     => $validated['mobile'],
+                'super_user_id'     => $adminId
             ]);
 
             Mail::to($user->email)->send(new UserRegisteredMail($user));
@@ -96,36 +100,95 @@ class UserAuthController extends Controller
         ]);
         $user->business_category = $request->business_category;
         $user->save();
-         return $this->sendResponse($user, 'User profile updated successfully.');
+        return $this->sendResponse($user, 'User profile updated successfully.');
     }
 
     public function updateProfile(Request $request, User $user)
     {
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
+            $user = auth()->user(); //Always use authenticated user
+
+            // Dynamically build validation rules based on inputs present
+            $rules = [];
+
+            if ($request->has('name')) {
+                $rules['name'] = 'required|string|max:255';
+            }
+
+            if ($request->has('email')) {
+                $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+            }
+
+            if ($request->has('password')) {
+                $rules['password'] = [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                    'regex:/^(?=.*[\d\W]).+$/'
+                ];
+            }
+
+            $validated = $request->validate($rules, [
+                'password.regex' => 'Password should contain a number or symbol.',
             ]);
 
-            $user = auth()->user();  // Make sure you're using the authenticated user
+            // Update name
+            if (isset($validated['name'])) {
+                $user->name = $validated['name'];
+            }
 
+            // Update email
+            if (isset($validated['email'])) {
+                $user->email = $validated['email'];
+            }
+
+            // Update password
+            if (isset($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+
+            // Handle avatar upload
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $path = $file->store('profile_pictures', 'public');
                 $user->profile_picture = $path;
             }
 
-            $user->name = $validated['name'];
-            $user->save();  // Save the updated fields
+            $user->save();
 
             return $this->sendResponse($user->fresh(), 'Profile updated successfully.');
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->sendError('Validation error.', $e->errors(), 422);
         } catch (\Exception $e) {
             return $this->sendError('Something went wrong.', $e->getMessage(), 500);
         }
-
     }
 
+    public function getUsersBySuperUserId($superUserId)
+    {
+        try {
+            // Fetch users with this super_user_id
+            $users = User::where('super_user_id', $superUserId)->get();
 
-
+            return response()->json([
+                'code' => 200,
+                'data' => $users,
+                'meta' => 'Users fetched successfully.'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'code' => 422,
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

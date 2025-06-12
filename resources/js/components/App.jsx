@@ -17,6 +17,7 @@ import AssessmentForm from '../components/assessment/AssessmentForm';
 import DepartmentList from '../components/assessment/DepartmentList';
 import AssessmentScreen from '../components/assessment/AssessmentScreen';
 import GetAdvice from "../pages/GetAdvice";
+import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
@@ -58,6 +59,7 @@ function AppContent() {
             <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
             <Route path="/manage-questions" element={<ManageQuestions />} />
             <Route path="/add-department" element={<Department />} />
+	     <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
           </Routes>
         </main>
       </div>
