@@ -8,15 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 
 class SocialAuthController extends Controller
 {
-    protected $socialite;
-
-    public function __construct(SocialiteManager $socialite)
-    {
-        $this->socialite = $socialite;
-    }
 
     public function redirectToProvider($provider)
     {
@@ -24,7 +20,7 @@ class SocialAuthController extends Controller
             abort(404);
         }
 
-        return $this->socialite->driver($provider)->redirect();
+        return Socialite::driver($provider)->redirect();
     }
 
     public function handleProviderCallback($provider)
@@ -33,22 +29,23 @@ class SocialAuthController extends Controller
             if ($provider !== 'google') {
                 abort(404);
             }
-
-            $googleUser = $this->socialite->driver($provider)->user();
-
-            // Check if user exists by email
-            $user = User::where('email', $googleUser->getEmail())->first();
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            $user = User::where('email', $googleUser->email)->first();
+            $fullName = $googleUser->name;
+            $nameParts = explode(' ', $fullName, 2);
+            $firstName = $nameParts[0];
+            $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
             if (!$user) {
-                // Create new user
                 $user = User::create([
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
+                    "first_name"=> $firstName,
+                    "last_name"=>$lastName,
+                    'name' => $fullName,
+                    'email' => $googleUser->email,
                     'password' => Hash::make(Str::random(16)),
-                    'google_id' => $googleUser->getId(),
+                    'google_id' => $googleUser->id,
                 ]);
             }
-
             auth()->login($user);
             return redirect()->route('dashboard');
 
