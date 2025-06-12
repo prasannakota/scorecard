@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,9 +20,9 @@
 
         <!-- Right Panel -->
         <div class="col-md-6 bg-white p-5">
-            <div class="text-center mb-4 bg-black p-3">
-                <img src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif" alt="Kensium" height="40">
-            </div>
+            <div className='customlogo'>
+            <img src="/images/Kensiumlogo.svg" alt="Logo" />
+          </div>
 
             <!-- Tabs -->
             <ul class="nav nav-tabs justify-content-center mb-4" id="loginTabs" role="tablist">
