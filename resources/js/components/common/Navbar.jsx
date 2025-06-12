@@ -7,7 +7,7 @@ export default function Navbar({ toggleSidebar }) {
   const isAuthenticated = sessionStorage.getItem('authorization');
 
   return (
-    <nav className="flex items-center justify-between bg-black text-white p-4 shadow">
+    <nav className="flex items-center justify-between bg-blue300 text-white py-4 px-8 shadow">
       <div className="flex items-center gap-4">
         {isAuthenticated && (
           <button onClick={toggleSidebar}>
@@ -15,10 +15,7 @@ export default function Navbar({ toggleSidebar }) {
           </button>
         )}
         <Link to="/">
-          <img
-            src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif"
-            alt="Logo"
-            className="w-32 h-16 object-contain"
+          <img src="/images/kensiumlogo-blue.svg" alt="Logo" className="w-32 object-contain"
           />
         </Link>
       </div>

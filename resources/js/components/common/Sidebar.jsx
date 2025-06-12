@@ -7,29 +7,29 @@ export default function Sidebar() {
   if (!isAuthenticated) return null;
 
   return (
-    <aside className="w-64 bg-gray-800 text-white h-full pt-6 shadow-md">
-      <nav className="flex flex-col gap-4 p-4">
-        <Link to="/dashboard" className="flex items-center gap-2 hover:text-gray-300">
+    <aside className="w-64 bg-gray10 text-neutral50 dvh-full pt-6 flex flex-col justify-between shadow-md pb-6">
+      <nav className="flex flex-col">
+        <Link to="/dashboard" className="flex items-center gap-2 text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <LayoutDashboard size={18} /> Dashboard
         </Link>
-        <Link to="/my-scoreboard" className="flex items-center gap-2 hover:text-gray-300">
+        <Link to="/my-scoreboard" className="flex items-center gap-2  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <Trophy size={18} /> My Scoreboard
         </Link>
-        <Link to="/methodology" className="flex items-center gap-2 hover:text-gray-300">
+        <Link to="/methodology" className="flex items-center gap-2  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <Book size={18} /> Methodology
         </Link>
-        <Link to="/resources" className="flex items-center gap-2 hover:text-gray-300">
+        <Link to="/resources" className="flex items-center gap-2  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <FileText size={18} /> Resources
         </Link>
-        <Link to="/get-advice" className="flex items-center gap-2 hover:text-gray-300">
+        <Link to="/get-advice" className="flex items-center gap-2  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <PhoneCall size={18} /> Get Advice
         </Link>
-        <Link to="/feedback" className="flex items-center gap-2 hover:text-gray-300">
+        <Link to="/feedback" className="flex items-center gap-2  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <MessageCircle size={18} /> Feedback
         </Link>
       </nav>
 
-      <div className="mt-auto p-4 border-t border-gray-700">
+      <div className="mt-auto p-4 border-t border-gray-700  text-neutral50 hover:bg-black hover:text-white px-8 py-4">
         <button
           onClick={() => {
             sessionStorage.clear();

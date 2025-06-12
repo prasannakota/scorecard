@@ -273,7 +273,7 @@ export default function AddUser() {
                                 control={form.control}
                                 name="terms"
                                 render={({ field }) => (
-                                    <FormItem className="flex items-start space-x-2">
+                                    <FormItem className="flex items-start space-x-2 inputchekbtn">
                                         <FormControl>
                                             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                         </FormControl>
