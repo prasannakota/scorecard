@@ -5,7 +5,12 @@ import { Link } from "react-router-dom";
 import { fetchAssessment, getAssessmentStatus, fetchBusinessCategories } from "@/components/api/assessment";
 import backgroundImg from "@/assets/banner/bannerBackground.jpg";
 import image1 from "@/assets/business/image3.jpg";
-
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import Overview from "@/components/dashboard/Overview";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -150,6 +155,103 @@ export default function Dashboard() {
     ],
   };
 
+  function ExpertForm() {
+    const form = useForm({
+      defaultValues: {
+        name: "",
+        email: "",
+        company: "",
+        message: "",
+      },
+    });
+    const { handleSubmit, register, formState: { errors } } = form;
+
+    const onSubmit = (data) => {
+      console.log("Form data:", data);
+    };
+
+    return (
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              rules={{
+                required: "Name is required",
+              }}
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Name*</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage>{errors.name?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[^@]+@[^@]+\.[^@]+$/,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Email*</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage>{errors.email?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="company"
+            rules={{
+              required: "Company is required",
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company*</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage>{errors.company?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="message"
+            rules={{
+              required: "Message is required",
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Message*</FormLabel>
+                <FormControl>
+                  <Textarea rows={4} {...field} />
+                </FormControl>
+                <FormMessage>{errors.message?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="w-full">Submit</Button>
+        </form>
+      </Form>
+
+    );
+  }
   return (
     <div className="container mx-auto p-2 max-w-[1600px]">
       <div className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
@@ -170,13 +272,32 @@ export default function Dashboard() {
                 <Link to={buttonLink} className={`${buttonClasses} ${linkClasses}`}> {buttonText} </Link>
               </Button>
               {assessmentStatus?.total_score === 100  &&
-              <Button asChild
-                  className="bg-transparent border border-white text-white font-bold px-6 py-2 rounded-full hover:bg-white hover:text-black transition"
-                >
-                  <Link to=''> Talk to Our Experts </Link>
-                </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        className="bg-transparent border border-white text-white font-bold px-6 py-2 rounded-full hover:bg-white hover:text-black transition"
+                      >
+                        Talk to Our Experts
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Let's Get The Conversation Satrted </DialogTitle>
+                        <DialogDescription>Fill out the form, and recieve an immediate follow-up from one of our
+                          expertsso we can set you on the right path.
+                        </DialogDescription>
+                      </DialogHeader>
 
-              }
+                      <ExpertForm />
+
+                      <DialogFooter className="mt-6 text-sm text-center">
+                        <div className="w-full text-gray-500">
+                          (877)536-7486  | info@kensium.com
+                        </div>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                }
             </div>
           </div>
         {/* Right Side: Progress Circle */}
@@ -236,6 +357,11 @@ export default function Dashboard() {
         )}
 
       </div>
+
+      <div className="my-8">
+        <Overview />
+      </div>
+      
       {/* Business Category */}
       <section className="bg-[#dbeaf8] py-12 px-6">
         <h2 className="text-3xl font-bold mb-8 text-center">
