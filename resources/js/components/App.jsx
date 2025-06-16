@@ -21,6 +21,7 @@ import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
+import ProfileForm from '../components/profile/ProfileForm';
 
 function AppContent() {
   const location = useLocation();
@@ -59,7 +60,8 @@ function AppContent() {
             <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
             <Route path="/manage-questions" element={<ManageQuestions />} />
             <Route path="/add-department" element={<Department />} />
-	     <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
+            <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
+	        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
           </Routes>
         </main>
       </div>

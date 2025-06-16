@@ -262,295 +262,131 @@ export default function AssessmentForm() {
         setUser(userData);
         sessionStorage.setItem('user', JSON.stringify(userData));
     };
-    return (      
-          
-        <div className="flex">
-            {/* Left Sidebar */}
-            <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
-                {/* Profile Picture or Placeholder */}
-                {
-                    user?.profile_picture || newAvatar
-                        ? <span className='rounded-full border'><img
-                             src={ newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}` }
-                            alt={user?.name || 'User'}
-                            className="w-24 h-24 rounded-full object-cover"
-                        /></span>
+    return (
 
-                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
-                }
+        <div className="p-6 space-y-6">
+            <header className="flex items-center gap-3 mb-8">
+                <button
+                    onClick={() => navigate('/dashboard')}
+                    aria-label="Back to Dashboard"
+                    className="text-gray-600 hover:text-gray-900"
+                >
+                    <ArrowLeft className="w-6 h-6" />
+                </button>
+                <h1 className="text-2xl font-semibold">
+                    Background
+                    <span className="text-sm text-gray-500 font-normal ml-2">
+                        Total Questions: 6
+                      </span>
+                </h1>
+            </header>
+            <p>A few quick answers will enable us to better support your assessment journey.</p>
 
-                {editing ? (
-                    <>
-                        {/* Name Input */}
+            <div className="flex flex-col w-full max-w-2xl">
+                {successMessage && (
+                    <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <AlertTitle className="font-semibold">Success</AlertTitle>
+                        <AlertDescription>{successMessage}</AlertDescription>
+                    </Alert>
+                )}
+
+                {errors.general && (
+                    <p className="text-red-600 mb-4">{errors.general[0]}</p>
+                )}
+
+                <form onSubmit={(e) => e.preventDefault()}>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label htmlFor="organisation" className='text-neutral30'>Name of your Organisation</Label>
                         <Input
-                            value={newName ?? user?.name ?? ''} // Use fallback
-                            onChange={(e) => setNewName(e.target.value)}
-                            className="mt-4 text-center"
+                            id="organisation"
+                            value={organisation}
+                            onChange={(e) => setOrganisation(e.target.value)}
+                            className="border border-neutral80 "
+                            placeholder="xyz"
                         />
-
-                        {/* Avatar Upload */}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setNewAvatar(e.target.files[0])}
-                            className="mt-2"
+                        {getError('organization_name') && (
+                            <p className="text-sm text-red-500">{getError('organization_name')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label htmlFor="companyUrl" className='text-neutral30'>What is your company website(URL)</Label>
+                        <Input
+                            id="companyUrl"
+                            type="url"
+                            value={companyUrl}
+                            onChange={(e) => setCompanyUrl(e.target.value)}
+                            className="border border-neutral80"
+                            placeholder="example@mail.com"
                         />
-
-                        {/* Save and Cancel Buttons */}
-                        <div className="flex gap-2 mt-4">
-                            <Button onClick={handleSaveProfile}>Save</Button>
-                            <Button variant="secondary" onClick={() => setEditing(false)}>Cancel</Button>
-                        </div>
-                    </>
-                )    : (
-                    <>
-                        <h6 className="mt-4 text-xs font-medium rounded-full border border-violet100 text-violet100 bg-violet50 px-3 py-1">Administrator</h6>
-                        <h2 className="mt-4 text-lg text-black350 font-black capitalize">{user?.name}</h2>
-                        <Separator className="my-4" />
-                        <div className="text-sm text- black350 flex items-center gap-3 py-3 border-b border-neutral90 w-full text-left"><Mail size={16} /> {user?.email || 'user@company.com'}</div>
-                        <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</div>
-
-                        <Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base" onClick={() => setEditing(true)}>
-                            Edit Profile
+                        {getError('website_url') && (
+                            <p className="text-sm text-red-500">{getError('website_url')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label className='text-neutral30'>Which industry or sector do you primarily operate in?</Label>
+                        <Select value={industry} onValueChange={setIndustry}>
+                            <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent>
+                                {industryOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('industry_sector') && (
+                            <p className="text-sm text-red-500">{getError('industry_sector')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label className='text-neutral30'>What is you annual total revenue?</Label>
+                        <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
+                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent>
+                                {annualRevenueOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('annual_revenue') && (
+                            <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label className='text-neutral30'>What country do you operate from?</Label>
+                        <Select value={country} onValueChange={setCountry}>
+                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent>
+                                {countryOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('country') && (
+                            <p className="text-sm text-red-500">{getError('country')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4 flex flex-col gap-2">
+                        <Label className='text-neutral30'>How are you positioned in the market?</Label>
+                        <Select value={marketPosition} onValueChange={setMarketPosition}>
+                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent>
+                                {marketPositionOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('market_position') && (
+                            <p className="text-sm text-red-500">{getError('market_position')}</p>
+                        )}
+                    </div>
+                    <div className="flex justify-end ">
+                        <Button onClick={handleSave} disabled={loading}>
+                            {loading ? 'Saving...' : 'Next'}
                         </Button>
-                    </>
-                )}
-            </aside>
-
-            {/* Right Content with Tabs */}
-            <main className="w-3/4 p-6 flex flex-col">
-                {/* Tab Headers */}
-                <div className="flex gap-4 mb-6 border-b">
-                    <button
-                        className={`pb-2 ${activeTab === 'background' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('background')}
-                    >
-                        About Company
-                    </button>
-                    <button
-                        className={`pb-2 ${activeTab === 'additional-users' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('additional-users')}
-                    >
-                        Manage Collaborators
-                    </button>
-                    <button
-                        className={`pb-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('settings')}
-                    >
-                        Settings
-                    </button>
-                </div>
-
-
-
-                {/* Tab Content */}
-                {activeTab === 'background' && (
-                    <div className="flex flex-col w-full max-w-2xl">
-                        {successMessage && (
-                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <AlertTitle className="font-semibold">Success</AlertTitle>
-                                <AlertDescription>{successMessage}</AlertDescription>
-                            </Alert>
-                        )}
-
-                        {errors.general && (
-                            <p className="text-red-600 mb-4">{errors.general[0]}</p>
-                        )}
-
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="mb-4 flex flex-col gap-2">
-                                <Label htmlFor="organisation" className='text-neutral30'>Name of your organisation</Label>
-                                <Input
-                                    id="organisation"
-                                    value={organisation}
-                                    onChange={(e) => setOrganisation(e.target.value)}
-                                    className="border border-neutral80 "
-                                />
-                                {getError('organization_name') && (
-                                    <p className="text-sm text-red-500">{getError('organization_name')}</p>
-                                )}
-                            </div>
-                                 <div className="mb-4 flex flex-col gap-2">
-                                <Label htmlFor="companyUrl" className='text-neutral30'>Company website URL</Label>
-                                <Input
-                                    id="companyUrl"
-                                    type="url"
-                                    value={companyUrl}
-                                    onChange={(e) => setCompanyUrl(e.target.value)}
-                                    className="border border-neutral80"
-                                />
-                                {getError('website_url') && (
-                                    <p className="text-sm text-red-500">{getError('website_url')}</p>
-                                )}
-                            </div>
-                           <div className="mb-4 flex flex-col gap-2">
-                                <Label className='text-neutral30'> Industry or sector</Label>
-                                <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select industry" /></SelectTrigger>
-                                    <SelectContent>
-                                        {industryOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('industry_sector') && (
-                                    <p className="text-sm text-red-500">{getError('industry_sector')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4 flex flex-col gap-2">
-                                <Label className='text-neutral30'>Annual revenue</Label>
-                                <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select revenue" /></SelectTrigger>
-                                    <SelectContent>
-                                        {annualRevenueOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('annual_revenue') && (
-                                    <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
-                                )}
-                            </div>
-                        <div className="mb-4 flex flex-col gap-2">
-                                <Label className='text-neutral30'>Country</Label>
-                                <Select value={country} onValueChange={setCountry}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select country" /></SelectTrigger>
-                                    <SelectContent>
-                                        {countryOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('country') && (
-                                    <p className="text-sm text-red-500">{getError('country')}</p>
-                                )}
-                            </div>
-                           <div className="mb-4 flex flex-col gap-2">
-                                <Label className='text-neutral30'>Market position</Label>
-                                <Select value={marketPosition} onValueChange={setMarketPosition}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select position" /></SelectTrigger>
-                                    <SelectContent>
-                                        {marketPositionOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('market_position') && (
-                                    <p className="text-sm text-red-500">{getError('market_position')}</p>
-                                )}
-                            </div>
-                            <div className="flex justify-end ">
-                                <Button onClick={handleSave} disabled={loading}>
-                                    {loading ? 'Saving...' : 'Next'}
-                                </Button>
-                            </div>
-                        </form>
                     </div>
-                )}
+                </form>
+            </div>
 
-                {activeTab === 'additional-users' && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-4">Collaborators</h2>
-                        <table className="min-w-full bg-white border">
-                            <thead>
-                            <tr className="bg-gray-100">
-                                <th className="py-2 px-4 border">First Name</th>
-                                <th className="py-2 px-4 border">Last Name</th>
-                                <th className="py-2 px-4 border">Last Updated</th>
-                                <th className="py-2 px-4 border">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {users.length > 0 ? (
-                                users.map((user) => (
-                                    <tr key={user.id} className="text-center">
-                                        <td className="py-2 px-4 border">{user.first_name}</td>
-                                        <td className="py-2 px-4 border">{user.last_name}</td>
-                                        <td className="py-2 px-4 border">
-                                            {new Date(user.updated_at).toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: 'short',
-                                            year: 'numeric'
-                                        })}
-                                        </td>
-                                        <td className="py-2 px-4 border">
-                                            {user.email_verified_at ? 'Active' : 'Inactive'}
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="3" className="py-2 px-4 border text-center">
-                                        No users found.
-                                    </td>
-                                </tr>
-                            )}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-
-                {activeTab === 'settings' && (
-                    <div className="flex flex-col gap-6 max-w-md">
-                        {settingsSuccessMessage && (
-                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <AlertTitle className="font-semibold">Success</AlertTitle>
-                                <AlertDescription>{settingsSuccessMessage}</AlertDescription>
-                            </Alert>
-                        )}
-
-                        <div>
-                            <Label>Email</Label>
-                            <p className="mt-1">{user?.email}</p>
-                            <Dialog open={isEmailDialogOpen} onOpenChange={setEmailDialogOpen}>
-                                <DialogTrigger asChild><Button variant="outline" className="mt-2">Update Email</Button></DialogTrigger>
-                                <DialogContent>
-                                    <DialogTitle>Update Email</DialogTitle>
-                                    <DialogDescription>Enter your new email address</DialogDescription>
-                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
-                                    <Button onClick={handleUpdateEmail}>Save</Button>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                        <div>
-                            <Label>Password</Label>
-                            <p className="mt-1">********</p>
-
-                            <Dialog open={isPasswordDialogOpen} onOpenChange={setPasswordDialogOpen}>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" className="mt-2">Update Password</Button>
-                                </DialogTrigger>
-
-                                <DialogContent>
-                                    <DialogTitle>Update Password</DialogTitle>
-                                    <DialogDescription>Enter a new password</DialogDescription>
-
-                                    <div className="space-y-2">
-                                        <Input
-                                            type="password"
-                                            placeholder="New Password"
-                                            value={newPassword}
-                                            onChange={e => setNewPassword(e.target.value)}
-                                        />
-                                        <Input
-                                            type="password"
-                                            placeholder="Confirm Password"
-                                            value={confirmPassword}
-                                            onChange={e => setConfirmPassword(e.target.value)}
-                                        />
-                                        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-                                    </div>
-
-                                    <Button onClick={handleUpdatePassword}>Save</Button>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                    </div>
-                )}
-            </main>
         </div>
     );
 }
