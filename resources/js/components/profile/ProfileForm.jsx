@@ -16,9 +16,20 @@ import {
     fetchAssessmentOptions,
     fetchAssessment,
     saveAssessment,
-    updateProfile
+    updateProfile,
+    fetchUsers
 } from '@/components/api/assessment';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogFooter,
+    DialogTitle,
+    DialogDescription,
+} from '@/components/ui/dialog';
+
 
 export default function ProfileForm() {
     const navigate = useNavigate();
@@ -40,12 +51,25 @@ export default function ProfileForm() {
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
+    const [backgroundSuccessMessage, setBackgroundSuccessMessage] = useState('');
+    const [settingsSuccessMessage, setSettingsSuccessMessage] = useState('');
+
+
     const [industryOptions, setIndustryOptions] = useState([]);
     const [annualRevenueOptions, setAnnualRevenueOptions] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [marketPositionOptions, setMarketPositionOptions] = useState([]);
 
     const [activeTab, setActiveTab] = useState('background'); // background | additional-users
+    const [users, setUsers] = useState([]);
+    const [error, setError] = useState(null);
+
+
+    const [isEmailDialogOpen, setEmailDialogOpen] = useState(false);
+    const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [newEmail, setNewEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+
 
     const handleSaveProfile = async () => {
         // Handle saving updated name and avatar (send to backend)
@@ -62,7 +86,7 @@ export default function ProfileForm() {
             const response = await updateProfile(formData);
             setSuccessMessage('Profile updated successfully!');
             console.log(response.data.user);
-            setUser(response.data);
+            updateUserSession(response.data);
             setEditing(false);
         } catch (error) {
             if (error.response?.data?.errors) {
@@ -80,7 +104,6 @@ export default function ProfileForm() {
     };
 
     useEffect(() => {
-
         async function loadUser() {
             try {
                 const userData = JSON.parse(sessionStorage.getItem('user')); // or use getUserFromSession()
@@ -121,17 +144,36 @@ export default function ProfileForm() {
         loadUser();      // new
         loadOptions();
         loadAssessment();
+        fetchUsers();
     }, []);
 
 
+    // Second Call
     useEffect(() => {
         if (user?.name) {
             setNewName(user.name);
         }
+
+        if (user?.id) {
+            const getUsersByAdmin = async () => {
+                try {
+                    const result = await fetchUsers(user.id);
+                    if (result?.code === 200) {
+                        setUsers(result.data);
+                    } else {
+                        setError("Failed to load users");
+                    }
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                    setError("Error fetching users");
+                }
+            };
+            getUsersByAdmin();
+        }
     }, [user]);
 
-    const getError = (field) => errors[field]?.[0];
 
+    const getError = (field) => errors[field]?.[0];
     const handleSave = async () => {
         const payload = {
             organization_name: organisation,
@@ -166,24 +208,75 @@ export default function ProfileForm() {
         }
     };
 
+    const handleUpdateEmail = async () => {
+        try {
+            setSettingsSuccessMessage('');
+            const formData = new FormData();
+            formData.append('email', newEmail);
+            const response = await updateProfile(formData);
+            setSettingsSuccessMessage("Email updated successfully.");
+            updateUserSession(response.data);
+            setEmailDialogOpen(false);
+        } catch (error) {
+            console.error("Error updating email", error);
+        }
+    };
+
+
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
+    const handleUpdatePassword = async () => {
+        setPasswordError("");
+
+        if (newPassword.length < 8) {
+            setPasswordError("Password must be at least 8 characters long.");
+            return;
+        }
+
+        const regex = /^(?=.*[\d\W]).+$/;
+        if (!regex.test(newPassword)) {
+            setPasswordError("Password should contain at least one number or symbol.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Passwords do not match.");
+            return;
+        }
+
+        try {
+            const response = await updateProfile({ password: newPassword, password_confirmation: confirmPassword });
+            updateUserSession(response.data);
+            setSettingsSuccessMessage("Password updated successfully.");
+            setPasswordDialogOpen(false);
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (error) {
+            console.error("Error updating password", error);
+            setPasswordError("Something went wrong. Please try again.");
+        }
+    };
+
+    const updateUserSession = (userData) => {
+        setUser(userData);
+        sessionStorage.setItem('user', JSON.stringify(userData));
+    };
     return (
-        <div className="flex min-h-screen">
+
+        <div className="flex">
             {/* Left Sidebar */}
             <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
                 {/* Profile Picture or Placeholder */}
                 {
                     user?.profile_picture || newAvatar
-                        ? <img
-                            src={
-                                newAvatar
-                                    ? URL.createObjectURL(newAvatar)
-                                    : `${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}?t=${Date.now()}`
-                            }
+                        ? <span className='rounded-full border'><img
+                            src={ newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}` }
                             alt={user?.name || 'User'}
                             className="w-24 h-24 rounded-full object-cover"
-                        />
+                        /></span>
 
-                        : <UserCircle className="w-24 h-24 text-gray-500" />
+                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
                 }
 
                 {editing ? (
@@ -211,14 +304,14 @@ export default function ProfileForm() {
                     </>
                 )    : (
                     <>
-                        <h6 className="mt-4 text-sm font-semibold rounded-full bg-gray-200 px-3 py-1">Administrator</h6>
-                        <h2 className="mt-4 text-lg font-semibold">{user?.name}</h2>
+                        <h6 className="mt-4 text-xs font-medium rounded-full border border-violet100 text-violet100 bg-violet50 px-3 py-1">Administrator</h6>
+                        <h2 className="mt-4 text-lg text-black350 font-black capitalize">{user?.name}</h2>
                         <Separator className="my-4" />
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Mail size={16} /> {user?.email || 'user@company.com'}</p>
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</p>
+                        <div className="text-sm text- black350 flex items-center gap-3 py-3 border-b border-neutral90 w-full text-left"><Mail size={16} /> {user?.email || 'user@company.com'}</div>
+                        <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</div>
 
-                        <Button variant="outline" className="mt-2" onClick={() => setEditing(true)}>
-                            <Pencil size={16} className="mr-1" /> Edit Profile
+                        <Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base" onClick={() => setEditing(true)}>
+                            Edit Profile
                         </Button>
                     </>
                 )}
@@ -238,9 +331,17 @@ export default function ProfileForm() {
                         className={`pb-2 ${activeTab === 'additional-users' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
                         onClick={() => setActiveTab('additional-users')}
                     >
-                        Manage Access
+                        Manage Collaborators
+                    </button>
+                    <button
+                        className={`pb-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        Settings
                     </button>
                 </div>
+
+
 
                 {/* Tab Content */}
                 {activeTab === 'background' && (
@@ -258,33 +359,35 @@ export default function ProfileForm() {
                         )}
 
                         <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="mb-4">
-                                <Label htmlFor="organisation">Name of your organisation</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label htmlFor="organisation" className='text-neutral30'>Name of your organisation</Label>
                                 <Input
                                     id="organisation"
                                     value={organisation}
                                     onChange={(e) => setOrganisation(e.target.value)}
+                                    className="border border-neutral80 "
                                 />
                                 {getError('organization_name') && (
                                     <p className="text-sm text-red-500">{getError('organization_name')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label htmlFor="companyUrl">Company website URL</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label htmlFor="companyUrl" className='text-neutral30'>Company website URL</Label>
                                 <Input
                                     id="companyUrl"
                                     type="url"
                                     value={companyUrl}
                                     onChange={(e) => setCompanyUrl(e.target.value)}
+                                    className="border border-neutral80"
                                 />
                                 {getError('website_url') && (
                                     <p className="text-sm text-red-500">{getError('website_url')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Industry or sector</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select industry" /></SelectTrigger>
                                     <SelectContent>
                                         {industryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -295,10 +398,10 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('industry_sector')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Revenue</Label>
-                                <Select value={annualRevenue} onValueChange={setAnnualRevenue}>
-                                    <SelectTrigger><SelectValue placeholder="Select revenue" /></SelectTrigger>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Annual revenue</Label>
+                                <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select revenue" /></SelectTrigger>
                                     <SelectContent>
                                         {annualRevenueOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -309,10 +412,10 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Country</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Country</Label>
                                 <Select value={country} onValueChange={setCountry}>
-                                    <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select country" /></SelectTrigger>
                                     <SelectContent>
                                         {countryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -323,10 +426,10 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('country')}</p>
                                 )}
                             </div>
-                            <div className="mb-4">
-                                <Label>Positioning</Label>
+                            <div className="mb-4 flex flex-col gap-2">
+                                <Label className='text-neutral30'>Market position</Label>
                                 <Select value={marketPosition} onValueChange={setMarketPosition}>
-                                    <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select position" /></SelectTrigger>
                                     <SelectContent>
                                         {marketPositionOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -337,15 +440,114 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('market_position')}</p>
                                 )}
                             </div>
+                            <div className="flex justify-end ">
+                                <Button onClick={handleSave} disabled={loading}>
+                                    {loading ? 'Saving...' : 'Next'}
+                                </Button>
+                            </div>
                         </form>
                     </div>
                 )}
 
                 {activeTab === 'additional-users' && (
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Add Additional Users</h3>
-                        <p>Here you can add additional users to the assessment. (Placeholder content)</p>
-                        {/* Additional Users Form or Table Here */}
+                        <h2 className="text-xl font-bold mb-4">Collaborators</h2>
+                        <table className="min-w-full bg-white border">
+                            <thead>
+                            <tr className="bg-gray-100">
+                                <th className="py-2 px-4 border">First Name</th>
+                                <th className="py-2 px-4 border">Last Name</th>
+                                <th className="py-2 px-4 border">Last Updated</th>
+                                <th className="py-2 px-4 border">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {users.length > 0 ? (
+                                users.map((user) => (
+                                    <tr key={user.id} className="text-center">
+                                        <td className="py-2 px-4 border">{user.first_name}</td>
+                                        <td className="py-2 px-4 border">{user.last_name}</td>
+                                        <td className="py-2 px-4 border">
+                                            {new Date(user.updated_at).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })}
+                                        </td>
+                                        <td className="py-2 px-4 border">
+                                            {user.email_verified_at ? 'Active' : 'Inactive'}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="3" className="py-2 px-4 border text-center">
+                                        No users found.
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {activeTab === 'settings' && (
+                    <div className="flex flex-col gap-6 max-w-md">
+                        {settingsSuccessMessage && (
+                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <AlertTitle className="font-semibold">Success</AlertTitle>
+                                <AlertDescription>{settingsSuccessMessage}</AlertDescription>
+                            </Alert>
+                        )}
+
+                        <div>
+                            <Label>Email</Label>
+                            <p className="mt-1">{user?.email}</p>
+                            <Dialog open={isEmailDialogOpen} onOpenChange={setEmailDialogOpen}>
+                                <DialogTrigger asChild><Button variant="outline" className="mt-2">Update Email</Button></DialogTrigger>
+                                <DialogContent>
+                                    <DialogTitle>Update Email</DialogTitle>
+                                    <DialogDescription>Enter your new email address</DialogDescription>
+                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+                                    <Button onClick={handleUpdateEmail}>Save</Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                        <div>
+                            <Label>Password</Label>
+                            <p className="mt-1">********</p>
+
+                            <Dialog open={isPasswordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="mt-2">Update Password</Button>
+                                </DialogTrigger>
+
+                                <DialogContent>
+                                    <DialogTitle>Update Password</DialogTitle>
+                                    <DialogDescription>Enter a new password</DialogDescription>
+
+                                    <div className="space-y-2">
+                                        <Input
+                                            type="password"
+                                            placeholder="New Password"
+                                            value={newPassword}
+                                            onChange={e => setNewPassword(e.target.value)}
+                                        />
+                                        <Input
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            value={confirmPassword}
+                                            onChange={e => setConfirmPassword(e.target.value)}
+                                        />
+                                        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+                                    </div>
+
+                                    <Button onClick={handleUpdatePassword}>Save</Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+
                     </div>
                 )}
             </main>

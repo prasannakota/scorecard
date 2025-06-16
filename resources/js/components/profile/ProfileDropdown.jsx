@@ -23,19 +23,31 @@ export default function ProfileDropdown() {
     };
 
     return (
-        <div className="relative">
-            <button onClick={() => setOpen(!open)} className="flex items-center gap-1">
+        <div className="relative p-2 rounded-full hidden sm:flex bg-white">
+            <button onClick={() => setOpen(!open)} className="flex items-center gap-2">
                 {/* 🔥 Show profile picture if available */}
                 {console.log('user',user)}
                 {user?.profile_picture ? (
                     <img
-                        src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}
+                        //src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}
+                        src="/images/profile_placeholder.png" 
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover"
                     />
+                    
                 ) : (
-                    <User className="w-5 h-5" />
+                    <span className='rounded-full border border-dark100'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
                 )}
+                <span className="text-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
+                    <mask id="mask0_2735_7276" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="0" width="17" height="18">
+                        <rect y="0.5" width="17" height="17" fill="#D9D9D9" />
+                    </mask>
+                    <g mask="url(#mask0_2735_7276)">
+                        <path d="M8.50016 11.1249L4.9585 7.58325H12.0418L8.50016 11.1249Z" fill="#444748" />
+                    </g>
+                    </svg>
+                </span>
             </button>
             {open && (
                 <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow z-10">

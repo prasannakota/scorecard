@@ -7,7 +7,7 @@ export default function Navbar({ toggleSidebar }) {
   const isAuthenticated = sessionStorage.getItem('authorization');
 
   return (
-    <nav className="flex items-center justify-between bg-black text-white p-4 shadow">
+    <nav className="flex items-center justify-between bg-blue300 text-white py-4 px-8 shadow">
       <div className="flex items-center gap-4">
         {isAuthenticated && (
           <button onClick={toggleSidebar}>
@@ -15,35 +15,30 @@ export default function Navbar({ toggleSidebar }) {
           </button>
         )}
         <Link to="/">
-          <img
-            src="https://cdn.prod.website-files.com/664c3c71d7e537047464d70b/664eb3db1955b085f0f26768_Kensium%20Solutions%20Horizontal%20%20logo-blue%201.avif"
-            alt="Logo"
-            className="w-32 h-16 object-contain"
+          <img src="/images/kensiumlogo-blue.svg" alt="Logo" className="w-32 object-contain"
           />
         </Link>
       </div>
-
-      <div className="flex items-center gap-4">
-        <div className="relative">
+        <div className="relative hidden sm:flex">
           <input
             type="text"
             placeholder="Search..."
-            className="pl-10 pr-4 py-1 rounded bg-white text-black"
+            className="pl-8 pr-4 py-2 rounded bg-transparent border border-dark100 hover:border-dark100 focus:border-dark100 focus-visible:border-dark100  text-white100 md:w-[500px]"
           />
-          <Search className="absolute left-2 top-2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2 top-3 h-4 w-4 text-white100" />
         </div>
-
+      <div className="flex items-center gap-1 md:gap-10">
         {isAuthenticated && (
           <>
-            <Link to="/" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/" className="text-white hover:text-gray-300  items-center gap-2 text-sm hidden sm:flex">
               <Home className="w-4 h-4" />
               Home
             </Link>
-            <Link to="/get-advice" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/get-advice" className="text-white hover:text-gray-300 hidden sm:flex items-center gap-2 text-sm">
               <PhoneCall className="w-4 h-4" />
               Get Advice
             </Link>
-            <Link to="/add-user" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/add-user" className="text-white hover:text-gray-300 p-3 border border-white hover:border-dark100 rounded-md flex items-center gap-2 text-sm">
               <Plus className="w-4 h-4" />
               Add User
             </Link>

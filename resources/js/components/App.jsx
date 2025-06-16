@@ -17,6 +17,7 @@ import AssessmentForm from '../components/assessment/AssessmentForm';
 import DepartmentList from '../components/assessment/DepartmentList';
 import AssessmentScreen from '../components/assessment/AssessmentScreen';
 import GetAdvice from "../pages/GetAdvice";
+import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
@@ -41,7 +42,7 @@ function AppContent() {
         {isAuthenticated && isSidebarOpen && <Sidebar />}
 
         {/* Main content area */}
-        <main className="flex-1 p-2 mt-0">
+        <main className="flex-1 main-wrapper">
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
@@ -60,6 +61,7 @@ function AppContent() {
             <Route path="/manage-questions" element={<ManageQuestions />} />
             <Route path="/add-department" element={<Department />} />
             <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
+	        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
           </Routes>
         </main>
       </div>

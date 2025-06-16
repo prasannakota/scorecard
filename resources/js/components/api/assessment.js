@@ -140,3 +140,19 @@ export const updateProfile = async (payload) => {
         throw error;
     }
 };
+
+export const fetchUsers = async (adminId) => {
+    const token = getAuthToken();
+    try {
+        const response = await axios.get(`/api/users-by-super/${adminId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Users:", error);
+        return [];
+    }
+};
+
+
+

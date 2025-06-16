@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff } from "lucide-react";
 import { BsGoogle } from "react-icons/bs";
-import { FaApple, FaMicrosoft } from 'react-icons/fa';
+// import { FaApple, FaMicrosoft } from 'react-icons/fa';
 
 const usMobileRegex = /^(\+1)?\d{10}$/;
 
@@ -41,10 +41,26 @@ const formSchema = z
         path: ["password_confirmation"],
     });
 
-export default function Register() {
+export default function AddUser() {
+    const [adminId, setAdminId] = useState(null);
+    useEffect(() => {
+        //if (typeof window !== "undefined") {
+            const userData = sessionStorage.getItem("user");
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log(user);
+                    setAdminId(user?.id || null);
+                } catch (error) {
+                    console.error("Failed to parse user data from sessionStorage:", error);
+                }
+            }
+       // }
+    }, []);
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [formMessage, setFormMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+    const [formMessage, setFormMessage] = useState(null);
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -60,7 +76,7 @@ export default function Register() {
         },
     });
 
-    async function onSubmit(data: any) {
+    async function onSubmit(data) {
         setFormMessage(null);
         try {
             const formData = new FormData();
@@ -75,6 +91,10 @@ export default function Register() {
                 formData.append("profile_picture", data.profile_picture[0]);
             }
 
+            if (adminId) {
+                formData.append("super_user_id", adminId); // Make sure your backend accepts this field
+            }
+
             const response = await fetch("/api/register", {
                 method: "POST",
                 body: formData,
@@ -84,20 +104,28 @@ export default function Register() {
 
             if (!response.ok) {
                 if (result?.data && typeof result.data === "object") {
-                    // Inject API errors into react-hook-form
                     Object.entries(result.data).forEach(([field, messages]) => {
                         const msg = Array.isArray(messages) ? messages.join(", ") : String(messages);
-                        form.setError(field as any, { type: "server", message: msg });
+                        form.setError(field, { type: "server", message: msg });
                     });
                 } else {
-                    // Fallback global error
                     setFormMessage({ type: "error", text: result.message || "Registration failed." });
                 }
                 return;
             }
 
-            // Success case
-            setFormMessage({ type: "success", text: result.meta || "Registration successful!" });
+            // Success block:
+            setFormMessage({ type: "success", text: "User added successfully!" });
+
+            // Optionally reset form if desired:
+            // form.reset();
+
+            // Redirect to /dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = "/assessment-form";
+            }, 2000); // 2-second delay for user to read message
+
+
             form.reset();
         } catch (error) {
             console.error("Registration error:", error);
@@ -106,28 +134,28 @@ export default function Register() {
     }
 
     return (
-        <div className="flex items-center justify-center flex-col ">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+            <Card className="w-full max-w-md">
+                <CardContent>
                     <Form {...form}>
-
                         {formMessage && (
                             <div
                                 className={`p-2 mb-4 rounded ${
                                     formMessage.type === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-                                    }`}
+                                }`}
                             >
                                 {formMessage.text}
                             </div>
                         )}
 
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
-                            {/* First and Last Name */}
-                            <div className="flex flex-col md:flex-row gap-4">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <div className="flex gap-4">
                                 <FormField
                                     control={form.control}
                                     name="first_name"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>First Name<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1">
+                                            <FormLabel>First Name</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="John" {...field} />
                                             </FormControl>
@@ -139,8 +167,8 @@ export default function Register() {
                                     control={form.control}
                                     name="last_name"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Last Name<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1">
+                                            <FormLabel>Last Name</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Doe" {...field} />
                                             </FormControl>
@@ -150,14 +178,13 @@ export default function Register() {
                                 />
                             </div>
 
-                            {/* Email and Mobile */}
-                            <div className="flex flex-col md:flex-row gap-4">
+                            <div className="flex gap-4">
                                 <FormField
                                     control={form.control}
                                     name="email"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Work Email<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1">
+                                            <FormLabel>Work Email</FormLabel>
                                             <FormControl>
                                                 <Input type="email" placeholder="you@company.com" {...field} />
                                             </FormControl>
@@ -169,14 +196,10 @@ export default function Register() {
                                     control={form.control}
                                     name="mobile"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Mobile<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1">
+                                            <FormLabel>Mobile</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    type="tel"
-                                                    placeholder="+11234567890"
-                                                    {...field}
-                                                />
+                                                <Input type="tel" placeholder="+11234567890" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -184,34 +207,33 @@ export default function Register() {
                                 />
                             </div>
 
-                            {/* Profile Picture Upload */}
-                            <FormField control={form.control} name="profile_picture" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Profile Picture</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => field.onChange(e.target.files)}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
+                            <FormField
+                                control={form.control}
+                                name="profile_picture"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Profile Picture</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => field.onChange(e.target.files)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <FormItem className="flex-1 inputstyle relative mb-4">
-                                        <FormLabel>Password<em className="text-blue200">*</em></FormLabel>
+                                    <FormItem className="flex-1">
+                                        <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <div className="inputstyle relative mb-4">
-                                                <Input
-                                                    type={showPassword ? "text" : "password"}
-                                                    placeholder="******"
-                                                    {...field}
-                                                />
+                                            <div className="relative">
+                                                <Input type={showPassword ? "text" : "password"} placeholder="******" {...field} />
                                                 <button
                                                     type="button"
                                                     className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -229,15 +251,11 @@ export default function Register() {
                                 control={form.control}
                                 name="password_confirmation"
                                 render={({ field }) => (
-                                    <FormItem className="flex-1 inputstyle relative mb-4">
-                                        <FormLabel>Confirm Password<em className="text-blue200">*</em></FormLabel>
+                                    <FormItem className="flex-1">
+                                        <FormLabel>Confirm Password</FormLabel>
                                         <FormControl>
                                             <div className="relative">
-                                                <Input
-                                                    type={showConfirmPassword ? "text" : "password"}
-                                                    placeholder="******"
-                                                    {...field}
-                                                />
+                                                <Input type={showConfirmPassword ? "text" : "password"} placeholder="******" {...field} />
                                                 <button
                                                     type="button"
                                                     className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -255,28 +273,18 @@ export default function Register() {
                                 control={form.control}
                                 name="terms"
                                 render={({ field }) => (
-                                    <FormItem className="flex items-start space-x-2 relative mb-4 inputchekbtn">
+                                    <FormItem className="flex items-start space-x-2 inputchekbtn">
                                         <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                                
-                                            />
+                                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                         </FormControl>
-                                        <div className="inline-flex text-base customlabel">
+                                        <div className="text-sm">
                                             <FormLabel>
                                                 I agree to commerce scorecard{" "}
-                                                <Link
-                                                    to="/privacy-policy"
-                                                    className="underline hover:no-underline"
-                                                >
+                                                <Link to="/privacy-policy" className="text-blue-600 underline hover:text-blue-800">
                                                     Privacy Policy
                                                 </Link>{" "}
                                                 &{" "}
-                                                <Link
-                                                    to="/terms"
-                                                    className="underline hover:no-underline"
-                                                >
+                                                <Link to="/terms" className="text-blue-600 underline hover:text-blue-800">
                                                     Terms
                                                 </Link>
                                             </FormLabel>
@@ -286,50 +294,17 @@ export default function Register() {
                                 )}
                             />
 
-                            <Button type="submit" className="w-full custombtn">
-                                Create Account
+                            <Button type="submit" className="w-full">
+                                Add User
                             </Button>
                         </form>
                     </Form>
 
-                <div className="flex justify-center gap-4 mt-4">
-                        <Link
-                        to="http://localhost:8000/auth/google"
-                     className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
-                        >
-                        
-                        <svg  className="text-xl" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M23.52 12.2727C23.52 11.4218 23.4436 10.6036 23.3018 9.81818H12V14.46H18.4582C18.18 15.96 17.3345 17.2309 16.0636 18.0818V21.0927H19.9418C22.2109 19.0036 23.52 15.9273 23.52 12.2727Z" fill="#4285F4"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C15.24 24 17.9564 22.9254 19.9418 21.0927L16.0636 18.0818C14.9891 18.8018 13.6145 19.2272 12 19.2272C8.87455 19.2272 6.22909 17.1163 5.28546 14.28H1.27637V17.3891C3.25091 21.3109 7.30909 24 12 24Z" fill="#34A853"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.28545 14.28C5.04545 13.56 4.90909 12.7909 4.90909 12C4.90909 11.2091 5.04545 10.44 5.28545 9.71999V6.6109H1.27636C0.463636 8.2309 0 10.0636 0 12C0 13.9364 0.463636 15.7691 1.27636 17.3891L5.28545 14.28Z" fill="#FBBC05"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.77273C13.7618 4.77273 15.3436 5.37818 16.5873 6.56727L20.0291 3.12545C17.9509 1.18909 15.2345 0 12 0C7.30909 0 3.25091 2.68909 1.27637 6.61091L5.28546 9.72C6.22909 6.88364 8.87455 4.77273 12 4.77273Z" fill="#EA4335"/>
-                            </svg>
-                        </Link>
-
-
-                        {/*<button
-                        type="button"
-                        onClick={() => alert('Apple login coming soon...')}
-                        className="p-3 rounded-full border border-gray-300 hover:bg-gray-100"
-                        aria-label="Login with Apple"
-                        >
-                        <FaApple className="text-xl text-gray-700" />
-                        </button>}*/}
-
-                        <Link
-                        to="/login/microsoft"
-                        type="button"
-                        className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
-                        aria-label="Login with Microsoft"
-                        >
-                        <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10.5 1H1.5V10H10.5V1Z" fill="#F25022"/>
-                        <path d="M10.5 11H1.5V20H10.5V11Z" fill="#00A4EF"/>
-                        <path d="M20.5 1H11.5V10H20.5V1Z" fill="#7FBA00"/>
-                        <path d="M20.5 11H11.5V20H20.5V11Z" fill="#FFB900"/>
-                        </svg>
-                        </Link>
-                </div>
+                    <div className="flex justify-center gap-4 mt-4">
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }
+
