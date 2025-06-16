@@ -23,7 +23,7 @@ export default function ProfileDropdown() {
     };
 
     return (
-        <div className="relative p-2 rounded-full bg-white">
+        <div className="relative p-2 rounded-full hidden sm:flex bg-white">
             <button onClick={() => setOpen(!open)} className="flex items-center gap-2">
                 {/* 🔥 Show profile picture if available */}
                 {user?.profile_picture ? (

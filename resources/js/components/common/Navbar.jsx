@@ -19,7 +19,7 @@ export default function Navbar({ toggleSidebar }) {
           />
         </Link>
       </div>
-        <div className="relative">
+        <div className="relative hidden sm:flex">
           <input
             type="text"
             placeholder="Search..."
@@ -27,14 +27,14 @@ export default function Navbar({ toggleSidebar }) {
           />
           <Search className="absolute left-2 top-3 h-4 w-4 text-white100" />
         </div>
-      <div className="flex items-center gap-10">
+      <div className="flex items-center gap-1 md:gap-10">
         {isAuthenticated && (
           <>
-            <Link to="/" className="text-white hover:text-gray-300 flex items-center gap-2 text-sm">
+            <Link to="/" className="text-white hover:text-gray-300  items-center gap-2 text-sm hidden sm:flex">
               <Home className="w-4 h-4" />
               Home
             </Link>
-            <Link to="/get-advice" className="text-white hover:text-gray-300 flex items-center gap-2 text-sm">
+            <Link to="/get-advice" className="text-white hover:text-gray-300 hidden sm:flex items-center gap-2 text-sm">
               <PhoneCall className="w-4 h-4" />
               Get Advice
             </Link>

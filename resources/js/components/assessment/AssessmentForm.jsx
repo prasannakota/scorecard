@@ -262,21 +262,21 @@ export default function AssessmentForm() {
         setUser(userData);
         sessionStorage.setItem('user', JSON.stringify(userData));
     };
-
-    return (
+    return (      
+          
         <div className="flex">
             {/* Left Sidebar */}
             <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
                 {/* Profile Picture or Placeholder */}
                 {
                     user?.profile_picture || newAvatar
-                        ? <span className='rounded-full border border-dark100'><img
+                        ? <span className='rounded-full border'><img
                              src={ newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}` }
                             alt={user?.name || 'User'}
                             className="w-24 h-24 rounded-full object-cover"
                         /></span>
 
-                        : <span className='rounded-full border border-dark100'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
+                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
                 }
 
                 {editing ? (
@@ -365,7 +365,7 @@ export default function AssessmentForm() {
                                     id="organisation"
                                     value={organisation}
                                     onChange={(e) => setOrganisation(e.target.value)}
-                                    className="border border-neutral70 "
+                                    className="border border-neutral80 "
                                 />
                                 {getError('organization_name') && (
                                     <p className="text-sm text-red-500">{getError('organization_name')}</p>
@@ -378,7 +378,7 @@ export default function AssessmentForm() {
                                     type="url"
                                     value={companyUrl}
                                     onChange={(e) => setCompanyUrl(e.target.value)}
-                                    className="border border-neutral70"
+                                    className="border border-neutral80"
                                 />
                                 {getError('website_url') && (
                                     <p className="text-sm text-red-500">{getError('website_url')}</p>
@@ -387,7 +387,7 @@ export default function AssessmentForm() {
                            <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select industry" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select industry" /></SelectTrigger>
                                     <SelectContent>
                                         {industryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
