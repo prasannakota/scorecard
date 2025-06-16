@@ -253,7 +253,7 @@ export default function Dashboard() {
     );
   }
   return (
-    <div className="container mx-auto p-2 max-w-[1600px]">
+    <div className="container mx-auto p-2 max-w-[1440px]">
       <div className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
           style={{
             backgroundImage: `url(${backgroundImg})`,
