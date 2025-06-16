@@ -144,7 +144,7 @@ const Login = () => {
 
       <div className="flex justify-center gap-4 mt-4">
         <Link
-          to="http://localhost:8000/auth/google"
+          to="http://scorecard.com/auth/google"
           className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
         >
         
@@ -167,7 +167,7 @@ const Login = () => {
         </button>}*/}
 
         <Link
-          to="/auth/microsoft"
+          to="http://scorecard.com/auth/microsoft"
           type="button"
           className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
           aria-label="Login with Microsoft"

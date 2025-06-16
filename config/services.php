@@ -38,14 +38,14 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI'),
+        'redirect' => env('APP_URL') . '/' . env('GOOGLE_REDIRECT_URI'),
         'with' => ['access_type' => 'offline'],
         'stateless' => true,
     ],
     'microsoft' => [
         'client_id' => env('MICROSOFT_CLIENT_ID'),
-        'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
-        'redirect' => env('MICROSOFT_REDIRECT_URI'),
+        'client_secret' =>env('MICROSOFT_CLIENT_SECRET'),
+        'redirect' => env('APP_URL') . '/' . env('MICROSOFT_REDIRECT_URI'),
     ],
 
 ];
