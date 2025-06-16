@@ -253,23 +253,23 @@ export default function Dashboard() {
     );
   }
   return (
-    <div className="container mx-auto p-2 max-w-[1440px]">
+    <div className="container mx-auto p-2 pt-8 max-w-[1440px]">
       <div className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
           style={{
             backgroundImage: `url(${backgroundImg})`,
           }}
         >
           {/* Left Side */}
-          <div className="text-left max-w-2xl flex-1">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ maxWidth: "700px" }}>
+          <div className="text-left max-w-2xl md:max-w-3xl flex-1">
+            <h1 className="text-4xl md:text-[40px] font-bold mb-4" style={{ maxWidth: "700px" }}>
               {heading}
             </h1>
-            <p className="text-lg md:text-xl mb-6" style={{ maxWidth: "900px" }}>
+            <p className="text-lg md:text-lg mb-6" style={{ maxWidth: "900px" }}>
               {description}
             </p>
             <div className="mt-4 flex gap-x-4">
               <Button asChild>
-                <Link to={buttonLink} className={`${buttonClasses} ${linkClasses}`}> {buttonText} </Link>
+                <Link to={buttonLink} className='py-3 px-8 uppercase text-black600 !rounded-full bg-white text-base font-black'> {buttonText} </Link>
               </Button>
               {assessmentStatus?.total_score === 100  &&
                   <Dialog>
@@ -423,7 +423,7 @@ export default function Dashboard() {
             ))}
         </Slider>
       </section>
-      <section class="flex flex-col px-10 pt-16 pb-24 bg-neutral-100 max-md:px-5">
+      <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
           <h2 class="self-start text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
             Adapting Products and Services for the Next Wave of Innovation
           </h2>
@@ -446,7 +446,7 @@ export default function Dashboard() {
                     </span>
                 </div>
                   <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                   <h3 class="w-full text-gary70 text-xl md:text-2xl">
                       Optimizing Supply Chain Efficiency for E-commerce Businesses
                     </h3>
                 </div>
@@ -467,14 +467,14 @@ export default function Dashboard() {
                     </span>
                 </div>
                   <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                   <h3 class="w-full text-gary70 text-xl md:text-2xl">
                       Leveraging Data Analytics for Improved Customer Engagement
                     </h3>
                 </div>
               </div>
             </article>
 
-            <article class="grow shrink min-h-[492px] min-w-60 w-[342px] max-md:max-w-full">
+            <article class="grow shrink min-w-60 w-[342px] max-md:max-w-full">
               <div class="w-full">
                 <img
                   src="/images/ecommerce.png"
@@ -489,7 +489,7 @@ export default function Dashboard() {
                     </span>
                 </div>
                   <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                    <h3 class="w-full text-gary70 text-xl md:text-2xl">
                       Navigating the Challenges of Cross-Border E-commerce
                     </h3>
                 </div>
@@ -500,7 +500,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-          <section class="flex flex-col justify-center px-10 py-14 max-md:px-5">
+           <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
             <div class="w-full">
                 <h2 class="text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
                     AI in Action: Designing Smarter Futures
@@ -522,14 +522,14 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                                    <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                         Reimagining Product Design with Generative AI
                                     </h3>
                                 </div>
                             </div>
                     </article>
 
-                    <article class="grow shrink min-h-[492px] min-w-60 w-[342px] max-md:max-w-full">
+                    <article class="grow shrink min-w-60 w-[342px] max-md:max-w-full">
                        <div class="w-full">
                             <img
                                src="/images/artificial_intelligence.png"
@@ -544,14 +544,14 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                   <h3 class="w-full text-gary70 max-md:max-w-full">
+                                  <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                         AI-Enhanced Services: From Reactive to Predictive
                                     </h3>
                                 </div>
                         </div>
                     </article>
 
-                    <article class="grow shrink min-h-[492px] min-w-60 w-[342px] max-md:max-w-full">
+                    <article class="grow shrink min-w-60 w-[342px] max-md:max-w-full">
                         <div class="w-full">
                             <img
                                 src="/images/generative_ai.png"
@@ -566,7 +566,7 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                                   <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                         The Next Frontier: Embedding AI in Everyday Products
                                     </h3>
                                 </div>
@@ -578,7 +578,7 @@ export default function Dashboard() {
         </section>
 
 
-         <section class="flex flex-col justify-center px-10 py-14 max-md:px-5">
+        <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
             <div class="w-full">
                 <h2 class="text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
                    Latest Research for Your Role
@@ -600,14 +600,14 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                                    <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                        Magic Quadrant for Source-to-Pay Suites
                                     </h3>
                             </div>
                         </div>
                     </article>
 
-                    <article class="grow shrink min-h-[492px] min-w-60 w-[342px] max-md:max-w-full">
+                    <article class="grow shrink min-w-60 w-[342px] max-md:max-w-full">
                         <div class="w-full">
                             <img
                                 src="/images/Ecommerce_2.png"
@@ -622,14 +622,14 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                                   <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                         How to Hire a CIO Who Fits Your Business Needs
                                     </h3>
                             </div>
                         </div>
                     </article>
 
-                    <article class="grow shrink min-h-[492px] min-w-60 w-[342px] max-md:max-w-full">
+                    <article class="grow shrink min-w-60 w-[342px] max-md:max-w-full">
                        <div class="w-full">
                             <img
                                 src="/images/Ecommerce_3.png"
@@ -639,12 +639,12 @@ export default function Dashboard() {
                         </div>
                         <div class="mt-5 w-full">
                                 <div class="flex gap-4 items-center w-full text-sm leading-snug text-center text-white uppercase h-[27px] max-w-[423px] max-md:max-w-full">
-                                    <span class="gap-2.5 self-stretch px-2 py-1 my-auto text-white bg-orage100 rounded">
+                                    <span class="gap-2.5 self-stretch px-2 py-1 my-auto text-white bg-orage100 rounded  ">
                                         Ecommerce
                                     </span>
                                 </div>
                                 <div class="flex flex-col justify-center mt-2.5 w-full text-2xl font-black tracking-normal leading-9 text-stone-700 max-md:max-w-full">
-                                    <h3 class="w-full text-gary70 max-md:max-w-full">
+                                  <h3 class="w-full text-gary70 text-xl md:text-2xl">
                                         How to Operate and Manage a Collaborative Support Hub
                                     </h3>
                             </div>

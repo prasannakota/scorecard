@@ -76,16 +76,16 @@ const tabContent = [
 ];
 
 return (
-  <div className="space-y-4">
-    <div className="flex justify-between border-b border-gray-300">
+  <div className="space-y-4 md:max-w-[1000px] m-auto">
+    <div className="flex justify-between ">
       {tabContent.map((tab) => (
         <Button
           key={tab.id}
           variant="ghost"
           onClick={() => setActiveTab(tab.id)}
-          className={`flex-1 text-lg font-medium transition-all duration-300 ${
+          className={`flex-1 text-xl font-medium rounded-none transition-all  border-b-2 border-transparent duration-300 ${
             activeTab === tab.id
-              ? "font-bold text-primary border-b-2 border-primary"
+              ? "font-bold text-black650  !border-green100"
               : "text-muted-foreground"
           }`}
         >
@@ -94,11 +94,9 @@ return (
       ))}
     </div>
 
-    <Card>
-      <CardContent className="p-4 text-base">
+      <div className="py-8 px-4 text-lg">
         {tabContent.find((tab) => tab.id === activeTab)?.content}
-      </CardContent>
-    </Card>
+      </div>
   </div>
 );
 
