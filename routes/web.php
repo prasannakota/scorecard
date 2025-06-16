@@ -158,9 +158,26 @@ Route::prefix('admin')->group(function () {
 
     // Protected admin routes
     Route::middleware(['auth:admin'])->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        // Original Laravel dashboard (will be replaced by React)
+        // Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         
-        // Profile
+        // New React dashboard - Main entry point for React Admin
+        Route::get('dashboard', function() {
+            return view('admin.react');
+        })->name('admin.dashboard');
+        
+        // React Pages
+        Route::get('users', function() {
+            return view('admin.react');
+        })->name('admin.users');
+        
+        Route::get('departments', function() {
+            return view('admin.react');
+        })->name('admin.departments');
+        
+
+        
+        // Profile API endpoints
         Route::get('profile', [AdminAuthController::class, 'show'])->name('profile.show');
         Route::put('profile', [AdminAuthController::class, 'update'])->name('profile.update');
         
@@ -173,10 +190,16 @@ Route::prefix('admin')->group(function () {
         Route::get('password/reset', [AdminAuthController::class, 'adminShowResetForm'])->name('admin.password.reset.form');
         Route::put('password/reset', [AdminAuthController::class, 'adminResetPassword'])->name('admin.password.reset');
 
-        // Departments
-        Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class, [
+        // Departments - Direct route now
+        Route::get('departments', function() {
+            return view('admin.react');
+        })->name('admin.departments.index');
+        
+        // Legacy Departments routes
+        Route::get('departments-legacy', [\App\Http\Controllers\Admin\DepartmentController::class, 'legacyIndex'])->name('admin.departments.legacy.index');
+        Route::resource('departments-legacy', \App\Http\Controllers\Admin\DepartmentController::class, [
+            'except' => ['index'],
             'names' => [
-                'index' => 'admin.departments.index',
                 'create' => 'admin.departments.create',
                 'store' => 'admin.departments.store',
                 'show' => 'admin.departments.show',
@@ -192,10 +215,16 @@ Route::prefix('admin')->group(function () {
         Route::post('/invites/accept/{token}', [InviteController::class, 'completeRegistration']);
 
 
-        // Users
-        Route::resource('users', \App\Http\Controllers\Admin\UserController::class, [
+        // Users - Direct route now
+        Route::get('users', function() {
+            return view('admin.react');
+        })->name('admin.users.index');
+        
+        // Legacy Users routes (not used anymore but kept for backward compatibility)
+        Route::get('users-legacy', [\App\Http\Controllers\Admin\UserController::class, 'legacyIndex'])->name('admin.users.legacy.index');
+        Route::resource('users-legacy', \App\Http\Controllers\Admin\UserController::class, [
+            'except' => ['index'],
             'names' => [
-                'index' => 'admin.users.index',
                 'create' => 'admin.users.create',
                 'store' => 'admin.users.store',
                 'show' => 'admin.users.show',
@@ -262,14 +291,32 @@ Route::prefix('admin')->group(function () {
 
         Route::get('email-logs', [EmailLogController::class, 'index'])->name('admin.email_logs.index');
 
-
+        // Catch-all route for React admin routes
+        Route::get('{path}', function() {
+            return view('admin.react');
+        })->where('path', '.*')->name('admin.react');
     });
 });
 
-// Test route
+// Test routes
 Route::get('/test', function () {
     return view('test');
 })->name('test');
+
+// Test React Admin route (no auth required for testing)
+Route::get('/admin/test-react', function() {
+    return view('admin.test-react');
+});
+
+// Simple Admin test (no auth required)
+Route::get('/admin/simple-admin', function() {
+    return view('admin.simple-admin');
+});
+
+// Simple React test (no auth required)
+Route::get('/simple-test', function() {
+    return view('simple-test');
+});
 
 // This should be the last route in web.php
 /*Route::get('/{any}', function () {

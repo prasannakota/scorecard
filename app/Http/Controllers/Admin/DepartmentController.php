@@ -12,6 +12,15 @@ class DepartmentController extends Controller
 {
     public function index(Request $request)
     {
+        // Redirect to React departments page
+        return redirect()->route('admin.react.departments');
+    }
+    
+    /**
+     * Display a listing of departments (legacy version)
+     */
+    public function legacyIndex(Request $request)
+    {
         $sortBy = $request->get('sort_by', 'id');
         $direction = $request->get('direction', 'asc');
 
@@ -174,5 +183,108 @@ class DepartmentController extends Controller
         } catch (\Exception $e) {
             return $this->sendError('Failed to fetch departments', ['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * API Methods for React Admin
+     */
+
+    /**
+     * Display a listing of departments for API
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = Department::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by active status
+        if ($request->has('is_active')) {
+            $query->where('is_active', $request->boolean('is_active'));
+        }
+
+        // Pagination
+        $departments = $query->latest()->paginate(10);
+
+        return response()->json($departments);
+    }
+
+    /**
+     * Display the specified department for API
+     */
+    public function apiShow($id)
+    {
+        $department = Department::findOrFail($id);
+        return response()->json($department);
+    }
+
+    /**
+     * Store a newly created department for API
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:departments,name',
+            'description' => 'nullable|string',
+            'is_active' => 'boolean',
+        ]);
+
+        $department = Department::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'slug' => Str::slug($validated['name']),
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        return response()->json([
+            'message' => 'Department created successfully',
+            'department' => $department
+        ], 201);
+    }
+
+    /**
+     * Update the specified department for API
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        $department = Department::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('departments')->ignore($department->id)],
+            'description' => 'nullable|string',
+            'is_active' => 'boolean',
+        ]);
+
+        $department->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'slug' => Str::slug($validated['name']),
+            'is_active' => $validated['is_active'] ?? $department->is_active,
+        ]);
+
+        return response()->json([
+            'message' => 'Department updated successfully',
+            'department' => $department
+        ]);
+    }
+
+    /**
+     * Remove the specified department for API
+     */
+    public function apiDestroy($id)
+    {
+        $department = Department::findOrFail($id);
+        $department->delete();
+
+        return response()->json([
+            'message' => 'Department deleted successfully'
+        ]);
     }
 }
