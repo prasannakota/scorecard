@@ -18,7 +18,7 @@ export default function ProfileDropdown() {
     };
 
     const handleProfileClick = () => {
-        navigate('/assessment-form');
+        navigate('/profile');
         setOpen(false);
     };
 
@@ -26,6 +26,7 @@ export default function ProfileDropdown() {
         <div className="relative">
             <button onClick={() => setOpen(!open)} className="flex items-center gap-1">
                 {/* 🔥 Show profile picture if available */}
+                {console.log('user',user)}
                 {user?.profile_picture ? (
                     <img
                         src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}

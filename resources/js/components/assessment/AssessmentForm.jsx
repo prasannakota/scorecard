@@ -167,193 +167,123 @@ export default function AssessmentForm() {
     };
 
     return (
-        <div className="flex min-h-screen">
-            {/* Left Sidebar */}
-            <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
-                {/* Profile Picture or Placeholder */}
-                {
-                    user?.profile_picture || newAvatar
-                        ? <img
-                            src={
-                                newAvatar
-                                    ? URL.createObjectURL(newAvatar)
-                                    : `${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}?t=${Date.now()}`
-                            }
-                            alt={user?.name || 'User'}
-                            className="w-24 h-24 rounded-full object-cover"
-                        />
+        <div className="p-6 space-y-6">
+            <header className="flex items-center gap-3 mb-8">
+                <button
+                    onClick={() => navigate('/dashboard')}
+                    aria-label="Back to Dashboard"
+                    className="text-gray-600 hover:text-gray-900"
+                >
+                    <ArrowLeft className="w-6 h-6" />
+                </button>
+                <h1 className="text-2xl font-semibold">
+                    Background
+                    <span className="text-sm text-gray-500 font-normal ml-2">
+                        Total Questions: 6
+                      </span>
+                </h1>
+            </header>
+            <p>A few quick answers will enable us to better support your assessment journey.</p>
+            <div className="flex flex-col w-full max-w-2xl">
+                {successMessage && (
+                    <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <AlertTitle className="font-semibold">Success</AlertTitle>
+                        <AlertDescription>{successMessage}</AlertDescription>
+                    </Alert>
+                )}
 
-                        : <UserCircle className="w-24 h-24 text-gray-500" />
-                }
+                {errors.general && (
+                    <p className="text-red-600 mb-4">{errors.general[0]}</p>
+                )}
 
-                {editing ? (
-                    <>
-                        {/* Name Input */}
+                <form onSubmit={(e) => e.preventDefault()}>
+                    <div className="mb-4">
+                        <Label htmlFor="organisation">Name of your Organisation</Label>
                         <Input
-                            value={newName ?? user?.name ?? ''} // Use fallback
-                            onChange={(e) => setNewName(e.target.value)}
-                            className="mt-4 text-center"
+                            id="organisation"
+                            value={organisation}
+                            onChange={(e) => setOrganisation(e.target.value)}
                         />
-
-                        {/* Avatar Upload */}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setNewAvatar(e.target.files[0])}
-                            className="mt-2"
+                        {getError('organization_name') && (
+                            <p className="text-sm text-red-500">{getError('organization_name')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <Label htmlFor="companyUrl">What is your company website(URL)</Label>
+                        <Input
+                            id="companyUrl"
+                            type="url"
+                            value={companyUrl}
+                            onChange={(e) => setCompanyUrl(e.target.value)}
                         />
-
-                        {/* Save and Cancel Buttons */}
-                        <div className="flex gap-2 mt-4">
-                            <Button onClick={handleSaveProfile}>Save</Button>
-                            <Button variant="secondary" onClick={() => setEditing(false)}>Cancel</Button>
-                        </div>
-                    </>
-                )    : (
-                    <>
-                        <h6 className="mt-4 text-sm font-semibold rounded-full bg-gray-200 px-3 py-1">Administrator</h6>
-                        <h2 className="mt-4 text-lg font-semibold">{user?.name}</h2>
-                        <Separator className="my-4" />
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Mail size={16} /> {user?.email || 'user@company.com'}</p>
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</p>
-
-                        <Button variant="outline" className="mt-2" onClick={() => setEditing(true)}>
-                            <Pencil size={16} className="mr-1" /> Edit Profile
+                        {getError('website_url') && (
+                            <p className="text-sm text-red-500">{getError('website_url')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <Label>Which industry or sector do you primarily operate in?</Label>
+                        <Select value={industry} onValueChange={setIndustry}>
+                            <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
+                            <SelectContent>
+                                {industryOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('industry_sector') && (
+                            <p className="text-sm text-red-500">{getError('industry_sector')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <Label>What is you annual total revenue?</Label>
+                        <Select value={annualRevenue} onValueChange={setAnnualRevenue}>
+                            <SelectTrigger><SelectValue placeholder="Select revenue" /></SelectTrigger>
+                            <SelectContent>
+                                {annualRevenueOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('annual_revenue') && (
+                            <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <Label>What country do you operate from?</Label>
+                        <Select value={country} onValueChange={setCountry}>
+                            <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
+                            <SelectContent>
+                                {countryOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('country') && (
+                            <p className="text-sm text-red-500">{getError('country')}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <Label>How are you positioned in the market?</Label>
+                        <Select value={marketPosition} onValueChange={setMarketPosition}>
+                            <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
+                            <SelectContent>
+                                {marketPositionOptions.map((item) => (
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {getError('market_position') && (
+                            <p className="text-sm text-red-500">{getError('market_position')}</p>
+                        )}
+                    </div>
+                    <div className="flex justify-end">
+                        <Button onClick={handleSave} disabled={loading}>
+                            {loading ? 'Saving...' : 'Next'}
                         </Button>
-                    </>
-                )}
-            </aside>
-
-            {/* Right Content with Tabs */}
-            <main className="w-3/4 p-6 flex flex-col">
-                {/* Tab Headers */}
-                <div className="flex gap-4 mb-6 border-b">
-                    <button
-                        className={`pb-2 ${activeTab === 'background' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('background')}
-                    >
-                        About Company
-                    </button>
-                    <button
-                        className={`pb-2 ${activeTab === 'additional-users' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('additional-users')}
-                    >
-                        Manage Access
-                    </button>
-                </div>
-
-                {/* Tab Content */}
-                {activeTab === 'background' && (
-                    <div className="flex flex-col w-full max-w-2xl">
-                        {successMessage && (
-                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <AlertTitle className="font-semibold">Success</AlertTitle>
-                                <AlertDescription>{successMessage}</AlertDescription>
-                            </Alert>
-                        )}
-
-                        {errors.general && (
-                            <p className="text-red-600 mb-4">{errors.general[0]}</p>
-                        )}
-
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="mb-4">
-                                <Label htmlFor="organisation">Name of your organisation</Label>
-                                <Input
-                                    id="organisation"
-                                    value={organisation}
-                                    onChange={(e) => setOrganisation(e.target.value)}
-                                />
-                                {getError('organization_name') && (
-                                    <p className="text-sm text-red-500">{getError('organization_name')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Label htmlFor="companyUrl">Company website URL</Label>
-                                <Input
-                                    id="companyUrl"
-                                    type="url"
-                                    value={companyUrl}
-                                    onChange={(e) => setCompanyUrl(e.target.value)}
-                                />
-                                {getError('website_url') && (
-                                    <p className="text-sm text-red-500">{getError('website_url')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Label>Industry or sector</Label>
-                                <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
-                                    <SelectContent>
-                                        {industryOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('industry_sector') && (
-                                    <p className="text-sm text-red-500">{getError('industry_sector')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Label>Annual revenue</Label>
-                                <Select value={annualRevenue} onValueChange={setAnnualRevenue}>
-                                    <SelectTrigger><SelectValue placeholder="Select revenue" /></SelectTrigger>
-                                    <SelectContent>
-                                        {annualRevenueOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('annual_revenue') && (
-                                    <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Label>Country</Label>
-                                <Select value={country} onValueChange={setCountry}>
-                                    <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
-                                    <SelectContent>
-                                        {countryOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('country') && (
-                                    <p className="text-sm text-red-500">{getError('country')}</p>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Label>Market position</Label>
-                                <Select value={marketPosition} onValueChange={setMarketPosition}>
-                                    <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
-                                    <SelectContent>
-                                        {marketPositionOptions.map((item) => (
-                                            <SelectItem key={item} value={item}>{item}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {getError('market_position') && (
-                                    <p className="text-sm text-red-500">{getError('market_position')}</p>
-                                )}
-                            </div>
-                            <div className="flex justify-end">
-                                <Button onClick={handleSave} disabled={loading}>
-                                    {loading ? 'Saving...' : 'Next'}
-                                </Button>
-                            </div>
-                        </form>
                     </div>
-                )}
-
-                {activeTab === 'additional-users' && (
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">Add Additional Users</h3>
-                        <p>Here you can add additional users to the assessment. (Placeholder content)</p>
-                        {/* Additional Users Form or Table Here */}
-                    </div>
-                )}
-            </main>
+                </form>
+            </div>
         </div>
     );
 }
