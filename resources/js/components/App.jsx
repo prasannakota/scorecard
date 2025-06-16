@@ -12,6 +12,7 @@ import Navbar from '../components/common/Navbar';
 import Sidebar from '../components/common/Sidebar';
 import PrivateRoute from '../routes/PrivateRoute';
 import PublicRoute from '../routes/PublicRoute';
+import Footer from '../components/common/Footer';
 
 import AssessmentForm from '../components/assessment/AssessmentForm';
 import DepartmentList from '../components/assessment/DepartmentList';
@@ -63,6 +64,7 @@ function AppContent() {
           </Routes>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

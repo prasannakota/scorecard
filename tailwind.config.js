@@ -9,7 +9,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray10: '#E1E3E3',
         gray50: '#ECF0FF',
         gary70: '#383432',
         gray100: '#ECECEC',
@@ -36,12 +35,16 @@ module.exports = {
         white60: '#F6F6F6',
         white100: '#F8F8F8',
         
-        black100: '#131525',
+        black100: '#131525',      
         black200: '#0A2540',
         black300: '#0D0D0D',
         black400: '#26203B',
         black350: '#2E3132',
         black500: '#0C1E2E',
+        black600: '#011917',
+        black650: '#01100F',
+
+        green100: '#01473D',
 
         orage100: '#DF9F20',
 
