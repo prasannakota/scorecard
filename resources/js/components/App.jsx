@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { UserProvider } from '../lib/UserContext'; // Import UserContext
+import FlashMessage from './common/FlashMessage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -22,6 +23,7 @@ import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
+import ProfileForm from '../components/profile/ProfileForm';
 
 function AppContent() {
   const location = useLocation();
@@ -33,6 +35,9 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Flash Messages */}
+      <FlashMessage />
+      
       {/* Top navbar */}
       {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
 
@@ -43,9 +48,16 @@ function AppContent() {
 
         {/* Main content area */}
         <main className="flex-1 main-wrapper">
+          {/* Public routes */}
           <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+            <Route path="/" element={
+              <PublicRoute>
+                <>
+                  <FlashMessage />
+                  <Home />
+                </>
+              </PublicRoute>
+            } />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -60,7 +72,8 @@ function AppContent() {
             <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
             <Route path="/manage-questions" element={<ManageQuestions />} />
             <Route path="/add-department" element={<Department />} />
-	     <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
+            <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
+	        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
           </Routes>
         </main>
       </div>

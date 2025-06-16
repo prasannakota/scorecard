@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff } from "lucide-react";
 import { BsGoogle } from "react-icons/bs";
 import { FaApple, FaMicrosoft } from 'react-icons/fa';
+import { useCallback, useRef } from "react";
 
 const usMobileRegex = /^(\+1)?\d{10}$/;
 
@@ -31,10 +32,13 @@ const formSchema = z
         }),
         password: z.string().min(6, "Password must be at least 6 characters"),
         password_confirmation: z.string(),
-        profile_picture: z.any().optional(),
-        terms: z.literal(true, {
-            errorMap: () => ({ message: "You must agree to the terms and policies" }),
-        }),
+        profile_picture_preview: z.any().optional(),
+        terms: z.boolean().refine(
+            (val) => val === true,
+            {
+                message: "You must agree to the terms and policies",
+            }
+        ),
     })
     .refine((data) => data.password === data.password_confirmation, {
         message: "Passwords do not match",
@@ -56,7 +60,7 @@ export default function Register() {
             password: "",
             password_confirmation: "",
             terms: false,
-            profile_picture: null,
+            profile_picture_preview: null,
         },
     });
 
@@ -71,8 +75,8 @@ export default function Register() {
             formData.append("password", data.password);
             formData.append("password_confirmation", data.password_confirmation);
             formData.append("terms", data.terms);
-            if (data.profile_picture && data.profile_picture[0]) {
-                formData.append("profile_picture", data.profile_picture[0]);
+            if (data.profile_picture_preview) {
+                formData.append("profile_picture", data.profile_picture_preview);
             }
 
             const response = await fetch("/api/register", {
@@ -185,14 +189,19 @@ export default function Register() {
                             </div>
 
                             {/* Profile Picture Upload */}
-                            <FormField control={form.control} name="profile_picture" render={({ field }) => (
+                            <FormField control={form.control} name="profile_picture_preview" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Profile Picture</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="file"
                                             accept="image/*"
-                                            onChange={(e) => field.onChange(e.target.files)}
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    field.onChange(file);
+                                                }
+                                            }}
                                         />
                                     </FormControl>
                                     <FormMessage />

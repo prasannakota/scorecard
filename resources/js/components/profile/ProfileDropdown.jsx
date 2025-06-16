@@ -18,7 +18,7 @@ export default function ProfileDropdown() {
     };
 
     const handleProfileClick = () => {
-        navigate('/assessment-form');
+        navigate('/profile');
         setOpen(false);
     };
 
