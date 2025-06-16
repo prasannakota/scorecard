@@ -272,9 +272,9 @@ Route::get('/test', function () {
 })->name('test');
 
 // This should be the last route in web.php
-Route::get('/{any}', function () {
+/*Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*');
+})->where('any', '.*');*/
 
 
 
