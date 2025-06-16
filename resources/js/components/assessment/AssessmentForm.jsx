@@ -262,25 +262,21 @@ export default function AssessmentForm() {
         setUser(userData);
         sessionStorage.setItem('user', JSON.stringify(userData));
     };
-
-    return (
+    return (      
+          
         <div className="flex">
             {/* Left Sidebar */}
             <aside className="w-1/4 bg-gray-100 p-6 flex flex-col items-center">
                 {/* Profile Picture or Placeholder */}
                 {
                     user?.profile_picture || newAvatar
-                        ? <img
-                            src={
-                                newAvatar
-                                    ? URL.createObjectURL(newAvatar)
-                                    : `${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}?t=${Date.now()}`
-                            }
+                        ? <span className='rounded-full border'><img
+                             src={ newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}` }
                             alt={user?.name || 'User'}
                             className="w-24 h-24 rounded-full object-cover"
-                        />
+                        /></span>
 
-                        : <UserCircle className="w-24 h-24 text-gray-500" />
+                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
                 }
 
                 {editing ? (
@@ -308,14 +304,14 @@ export default function AssessmentForm() {
                     </>
                 )    : (
                     <>
-                        <h6 className="mt-4 text-sm font-semibold rounded-full bg-gray-200 px-3 py-1">Administrator</h6>
-                        <h2 className="mt-4 text-lg font-semibold">{user?.name}</h2>
+                        <h6 className="mt-4 text-xs font-medium rounded-full border border-violet100 text-violet100 bg-violet50 px-3 py-1">Administrator</h6>
+                        <h2 className="mt-4 text-lg text-black350 font-black capitalize">{user?.name}</h2>
                         <Separator className="my-4" />
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Mail size={16} /> {user?.email || 'user@company.com'}</p>
-                        <p className="text-sm text-gray-600 flex items-center gap-1"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</p>
+                        <div className="text-sm text- black350 flex items-center gap-3 py-3 border-b border-neutral90 w-full text-left"><Mail size={16} /> {user?.email || 'user@company.com'}</div>
+                        <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</div>
 
-                        <Button variant="outline" className="mt-2" onClick={() => setEditing(true)}>
-                            <Pencil size={16} className="mr-1" /> Edit Profile
+                        <Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base" onClick={() => setEditing(true)}>
+                            Edit Profile
                         </Button>
                     </>
                 )}
@@ -369,7 +365,7 @@ export default function AssessmentForm() {
                                     id="organisation"
                                     value={organisation}
                                     onChange={(e) => setOrganisation(e.target.value)}
-                                    className="border border-neutral70 "
+                                    className="border border-neutral80 "
                                 />
                                 {getError('organization_name') && (
                                     <p className="text-sm text-red-500">{getError('organization_name')}</p>
@@ -382,7 +378,7 @@ export default function AssessmentForm() {
                                     type="url"
                                     value={companyUrl}
                                     onChange={(e) => setCompanyUrl(e.target.value)}
-                                    className="border border-neutral70"
+                                    className="border border-neutral80"
                                 />
                                 {getError('website_url') && (
                                     <p className="text-sm text-red-500">{getError('website_url')}</p>
@@ -391,7 +387,7 @@ export default function AssessmentForm() {
                            <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select industry" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select industry" /></SelectTrigger>
                                     <SelectContent>
                                         {industryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -404,7 +400,7 @@ export default function AssessmentForm() {
                             </div>
                             <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'>Annual revenue</Label>
-                                <Select value={annualRevenue} onValueChange={setAnnualRevenue}>
+                                <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
                                     <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select revenue" /></SelectTrigger>
                                     <SelectContent>
                                         {annualRevenueOptions.map((item) => (

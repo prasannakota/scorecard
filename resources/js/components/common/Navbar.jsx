@@ -19,28 +19,26 @@ export default function Navbar({ toggleSidebar }) {
           />
         </Link>
       </div>
-
-      <div className="flex items-center gap-4">
-        <div className="relative">
+        <div className="relative hidden sm:flex">
           <input
             type="text"
             placeholder="Search..."
-            className="pl-10 pr-4 py-1 rounded bg-white text-black"
+            className="pl-8 pr-4 py-2 rounded bg-transparent border border-dark100 hover:border-dark100 focus:border-dark100 focus-visible:border-dark100  text-white100 md:w-[500px]"
           />
-          <Search className="absolute left-2 top-2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2 top-3 h-4 w-4 text-white100" />
         </div>
-
+      <div className="flex items-center gap-1 md:gap-10">
         {isAuthenticated && (
           <>
-            <Link to="/" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/" className="text-white hover:text-gray-300  items-center gap-2 text-sm hidden sm:flex">
               <Home className="w-4 h-4" />
               Home
             </Link>
-            <Link to="/get-advice" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/get-advice" className="text-white hover:text-gray-300 hidden sm:flex items-center gap-2 text-sm">
               <PhoneCall className="w-4 h-4" />
               Get Advice
             </Link>
-            <Link to="/add-user" className="hover:text-gray-300 flex items-center gap-1">
+            <Link to="/add-user" className="text-white hover:text-gray-300 p-3 border border-white hover:border-dark100 rounded-md flex items-center gap-2 text-sm">
               <Plus className="w-4 h-4" />
               Add User
             </Link>
