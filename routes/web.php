@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\MailSettingController;
 use App\Http\Controllers\Admin\EmailLogController;
 use App\Http\Controllers\InviteController;
+use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\Auth\MicrosoftController;
 
 
 Route::get('/', function () {
@@ -20,8 +22,12 @@ Route::get('/', function () {
 // Root route
 //Route::get('/', [HomeController::class, 'index'])->name('home');
 // Social Authentication Routes
-use App\Http\Controllers\Auth\SocialAuthController;
 
+
+Route::middleware('web')->group(function () {
+    Route::get('/auth/microsoft', [MicrosoftController::class, 'redirectToMicrosoft']);
+    Route::get('/auth/microsoft/callback', [MicrosoftController::class, 'handleMicrosoftCallback']);
+});
 Route::middleware('web')->group(function () {
     Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
     Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
