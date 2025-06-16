@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { UserProvider } from '../lib/UserContext'; // Import UserContext
+import FlashMessage from './common/FlashMessage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -33,6 +34,9 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Flash Messages */}
+      <FlashMessage />
+      
       {/* Top navbar */}
       {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
 
@@ -43,9 +47,16 @@ function AppContent() {
 
         {/* Main content area */}
         <main className="flex-1 main-wrapper">
+          {/* Public routes */}
           <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+            <Route path="/" element={
+              <PublicRoute>
+                <>
+                  <FlashMessage />
+                  <Home />
+                </>
+              </PublicRoute>
+            } />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

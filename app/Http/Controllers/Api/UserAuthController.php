@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Mail\UserRegisteredMail;
+use App\Mail\UserVerificationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,6 +23,14 @@ class UserAuthController extends Controller
 
         if (Auth::guard('web')->attempt($credentials)) {
             $user = Auth::guard('web')->user();
+            
+            if (!$user->email_verified_at) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please verify your email address before logging in.'
+                ], 403);
+            }
+
             $token = $user->createToken('api-token')->plainTextToken;
             return response()->json([
                 'success' => true,
@@ -80,8 +88,13 @@ class UserAuthController extends Controller
                 'super_user_id'     => $adminId
             ]);
 
-            Mail::to($user->email)->send(new UserRegisteredMail($user));
-            return $this->sendResponse($user, 'User registered successfully.');
+            // Generate verification URL using web route
+            $verificationUrl = route('verify', ['token' => $user->id]);
+            
+            // Send verification email
+            Mail::to($user->email)->send(new UserVerificationMail($user, $verificationUrl));
+            return $this->sendResponse($user, 'User registered successfully. Please verify your email to complete registration.');
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->sendError('Validation error.', $e->errors(), 422);
         } catch (\Exception $e) {
@@ -189,6 +202,68 @@ class UserAuthController extends Controller
                 'message' => 'Server error',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Verify user's email
+     *
+     * @param string $token
+     * @return \Illuminate\Http\Response
+     */
+    public function verify($token)
+    {
+        try {
+            $user = User::findOrFail($token);
+            
+            if ($user->email_verified_at) {
+                // Set Laravel session message
+                session()->flash('success', 'Your email is already verified. You can now login.');
+                
+                // Set message in JavaScript
+                echo '<script>
+                    window.sessionStorage.setItem("flash_success", "Your email is already verified. You can now login.");
+                    window.location.href = "/?message=" + encodeURIComponent("Your email is already verified. You can now login.") + "&type=success";
+                </script>';
+                
+                return response()->view('auth.verification-message');
+            }
+
+            $user->email_verified_at = now();
+            $user->save();
+
+            // Set Laravel session message
+            session()->flash('success', 'Your email has been verified. You can now login.');
+            
+            // Set message in JavaScript
+            echo '<script>
+                window.sessionStorage.setItem("flash_success", "Your email has been verified. You can now login.");
+                window.location.href = "/?message=" + encodeURIComponent("Your email has been verified. You can now login.") + "&type=success";
+            </script>';
+            
+            return response()->view('auth.verification-message');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Set Laravel session message
+            session()->flash('error', 'Invalid verification link.');
+            
+            // Set message in JavaScript
+            echo '<script>
+                window.sessionStorage.setItem("flash_error", "Invalid verification link.");
+                window.location.href = "/?message=" + encodeURIComponent("Invalid verification link.") + "&type=error";
+            </script>';
+            
+            return response()->view('auth.verification-message');
+        } catch (\Exception $e) {
+            // Set Laravel session message
+            session()->flash('error', 'An error occurred while verifying your email. Please try again later.');
+            
+            // Set message in JavaScript
+            echo '<script>
+                window.sessionStorage.setItem("flash_error", "An error occurred while verifying your email. Please try again later.");
+                window.location.href = "/?message=" + encodeURIComponent("An error occurred while verifying your email. Please try again later.") + "&type=error";
+            </script>';
+            
+            return response()->view('auth.verification-message');
         }
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
+Route::get('/verify/{token}', [UserAuthController::class, 'verify'])->name('verify');
 Route::post('/add-department', [DepartmentController::class, 'createDepartment']);
 Route::get('/fetch-departments', [DepartmentController::class, 'getAllDepartment']);
 
