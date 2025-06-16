@@ -6,7 +6,13 @@ import path from "path";
 export default defineConfig({
   plugins: [
     laravel({
-      input: ["resources/css/app.css", "resources/js/app.jsx"],
+      input: [
+        "resources/css/app.css", 
+        "resources/js/app.jsx",
+        "resources/js/admin.jsx",
+        "resources/js/admin-test.jsx",
+        "resources/js/simple-test.jsx"
+      ],
       refresh: true,
     }),
     react(),
@@ -14,6 +20,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "resources/js"),
+      "@admin": path.resolve(__dirname, "resources/js/admin"),
     },
   },
 });

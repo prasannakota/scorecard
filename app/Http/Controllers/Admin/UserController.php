@@ -15,6 +15,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // Redirect to React users page
+        return redirect()->route('admin.react.users');
+    }
+    
+    /**
+     * Display a listing of users (legacy version)
+     */
+    public function legacyIndex(Request $request)
+    {
         $query = User::query();
 
         if ($request->filled('name')) {
@@ -131,5 +140,131 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * API Methods for React Admin
+     */
+
+    /**
+     * Display a listing of users for API
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = User::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by role
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Include department relationship
+        $query->with('department');
+
+        // Pagination
+        $users = $query->latest()->paginate(10);
+
+        return response()->json($users);
+    }
+
+    /**
+     * Display the specified user for API
+     */
+    public function apiShow($id)
+    {
+        $user = User::with('department')->findOrFail($id);
+        return response()->json($user);
+    }
+
+    /**
+     * Store a newly created user for API
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required|same:password',
+            'department_id' => 'nullable|exists:departments,id',
+            'role' => ['required', Rule::in(['user', 'collaborator', 'admin'])],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'department_id' => $validated['department_id'] ?? null,
+            'role' => $validated['role'],
+        ]);
+
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user
+        ], 201);
+    }
+
+    /**
+     * Update the specified user for API
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|string|min:8',
+            'password_confirmation' => 'nullable|required_with:password|same:password',
+            'department_id' => 'nullable|exists:departments,id',
+            'role' => ['required', Rule::in(['user', 'collaborator', 'admin'])],
+        ]);
+
+        $updateData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'department_id' => $validated['department_id'] ?? null,
+            'role' => $validated['role'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Remove the specified user for API
+     */
+    public function apiDestroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->role === 'admin') {
+            return response()->json([
+                'message' => 'Cannot delete admin users'
+            ], 403);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
     }
 }
