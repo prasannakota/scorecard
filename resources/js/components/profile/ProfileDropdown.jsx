@@ -26,7 +26,6 @@ export default function ProfileDropdown() {
         <div className="relative p-2 rounded-full hidden sm:flex bg-white">
             <button onClick={() => setOpen(!open)} className="flex items-center gap-2">
                 {/* 🔥 Show profile picture if available */}
-                {console.log('user',user)}
                 {user?.profile_picture ? (
                     <img
                         //src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}
