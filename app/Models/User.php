@@ -28,7 +28,9 @@ class User extends Authenticatable
         'last_name',
         'mobile',
         'google_id',
-        'business_category'
+        'business_category',
+        'provider',
+        'provider_id',
     ];
 
     /**

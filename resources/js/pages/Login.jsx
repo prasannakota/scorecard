@@ -13,8 +13,9 @@ import { useUser } from "@/lib/UserContext";
 
 const Login = () => {
   const navigate = useNavigate();
+    const backendUrl = import.meta.env.VITE_APP_URL;
 
-  const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
     email: "",
     password: "",
     remember: false,
@@ -144,7 +145,7 @@ const Login = () => {
 
       <div className="flex justify-center gap-4 mt-4">
         <Link
-          to="http://localhost:8000/auth/google"
+          to={`${backendUrl}/auth/google`}
           className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
         >
         
@@ -167,7 +168,7 @@ const Login = () => {
         </button>}*/}
 
         <Link
-          to="/login/microsoft"
+          to={`${backendUrl}/auth/microsoft`}
           type="button"
           className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
           aria-label="Login with Microsoft"
