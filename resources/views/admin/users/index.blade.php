@@ -4,6 +4,10 @@
 
 @section('content')
 <div class="container-fluid">
+    <div class="alert alert-info mb-4">
+        <strong>Legacy View:</strong> You are viewing the legacy user management interface. 
+        <a href="{{ route('admin.react.users') }}" class="alert-link">Return to Modern UI</a>
+    </div>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2> View Users</h2>
     </div>

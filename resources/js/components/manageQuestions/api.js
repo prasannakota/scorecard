@@ -26,11 +26,3 @@ export async function updateOption(options) {
     });
     return res.data.data;
 }
-
-export async function saveFollowUpQuestions(nodes) {
-    const res = await axios.post('/api/follow-ups/save', {
-        nodes
-    });
-    return res.data.data;
-}
-

@@ -48,13 +48,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.users.index') }}">
+                    <a class="nav-link" href="{{ route('admin.react.users') }}">
                         <span data-feather="users"></span>
                         Users
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.departments.index') }}">
+                    <a class="nav-link" href="{{ route('admin.react.departments') }}">
                         <span data-feather="folder"></span>
                         Departments
                     </a>
