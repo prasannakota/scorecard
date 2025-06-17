@@ -263,8 +263,8 @@ export default function AssessmentForm() {
         sessionStorage.setItem('user', JSON.stringify(userData));
     };
     return (
-
-        <div className="p-6 space-y-6">
+        
+        <div className="container m-auto  px-4  py-6 space-y-6">
             <header className="flex items-center gap-3 mb-8">
                 <button
                     onClick={() => navigate('/dashboard')}
@@ -296,27 +296,27 @@ export default function AssessmentForm() {
                 )}
 
                 <form onSubmit={(e) => e.preventDefault()}>
-                    <div className="mb-4 flex flex-col gap-2">
+                    <div className="mb-4 flex flex-col gap-2 custominput">
                         <Label htmlFor="organisation" className='text-neutral30'>Name of your Organisation</Label>
                         <Input
                             id="organisation"
                             value={organisation}
                             onChange={(e) => setOrganisation(e.target.value)}
-                            className="border border-neutral80 "
+                            className="border border-neutral70  px-3 py-4 md:px-4 md:py-6"
                             placeholder="xyz"
                         />
                         {getError('organization_name') && (
                             <p className="text-sm text-red-500">{getError('organization_name')}</p>
                         )}
                     </div>
-                    <div className="mb-4 flex flex-col gap-2">
+                    <div className="mb-4 flex flex-col gap-2 custominput">
                         <Label htmlFor="companyUrl" className='text-neutral30'>What is your company website(URL)</Label>
                         <Input
                             id="companyUrl"
                             type="url"
                             value={companyUrl}
                             onChange={(e) => setCompanyUrl(e.target.value)}
-                            className="border border-neutral80"
+                              className="border border-neutral70  px-3 py-4 md:px-4 md:py-6"
                             placeholder="example@mail.com"
                         />
                         {getError('website_url') && (
@@ -326,7 +326,7 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className='text-neutral30'>Which industry or sector do you primarily operate in?</Label>
                         <Select value={industry} onValueChange={setIndustry}>
-                            <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
                                 {industryOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -340,7 +340,7 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className='text-neutral30'>What is you annual total revenue?</Label>
                         <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
-                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-46"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
                                 {annualRevenueOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -354,7 +354,7 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className='text-neutral30'>What country do you operate from?</Label>
                         <Select value={country} onValueChange={setCountry}>
-                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
                                 {countryOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -368,7 +368,7 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className='text-neutral30'>How are you positioned in the market?</Label>
                         <Select value={marketPosition} onValueChange={setMarketPosition}>
-                            <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
                                 {marketPositionOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -379,8 +379,8 @@ export default function AssessmentForm() {
                             <p className="text-sm text-red-500">{getError('market_position')}</p>
                         )}
                     </div>
-                    <div className="flex justify-end ">
-                        <Button onClick={handleSave} disabled={loading}>
+                    <div className="flex  md:justify-end">
+                        <Button className="w-full md:w-24 custombtn px-8" onClick={handleSave} disabled={loading}>
                             {loading ? 'Saving...' : 'Next'}
                         </Button>
                     </div>
