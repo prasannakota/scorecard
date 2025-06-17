@@ -36,11 +36,11 @@ class MicrosoftController extends Controller
                 ]);
             }
             auth()->login($user);
-            return redirect()->route('dashboard');
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return redirect(env('APP_URL') . "/social-login?token={$token}");
 
         } catch (\Exception $e) {
-            return redirect()->route('login')
-                ->with('error', 'Failed to login with Google. Please try again.');
+            return redirect(env('APP_URL') . '/login?error=google_failed');
         }
     }
 
