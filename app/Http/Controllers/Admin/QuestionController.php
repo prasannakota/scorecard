@@ -195,7 +195,7 @@ class QuestionController extends Controller
 
             // Common required fields with defaults
             $q['question_text'] = $q['text'] ?? 'Sample Question';
-            $q['department_id'] = $q['department_id'] ?? 1;
+            $q['department_id'] = $q['department_id'] ?? 8;
             $q['option_a'] = $q['option_a'] ?? 'Option A';
             $q['option_b'] = $q['option_b'] ?? 'Option B';
             $q['option_c'] = $q['option_c'] ?? 'Option C';
