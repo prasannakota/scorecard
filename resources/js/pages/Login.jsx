@@ -14,6 +14,7 @@ import FlashMessage from "@/components/common/FlashMessage";
 
 const Login = () => {
   const navigate = useNavigate();
+    const backendUrl = import.meta.env.VITE_APP_URL;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -207,16 +208,14 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <Button
-            variant="outline"
+          <a
+
             className="w-full flex items-center justify-center gap-2"
-            onClick={() => {
-              window.location.href = "/auth/google";
-            }}
+            href={`${backendUrl}/auth/google`}
           >
             <BsGoogle size={20} />
             Continue with Google
-          </Button>
+          </a>
 
           <Button
             variant="outline"
@@ -229,16 +228,13 @@ const Login = () => {
             Continue with Apple
           </Button>
 
-          <Button
-            variant="outline"
+          <a
             className="w-full flex items-center justify-center gap-2"
-            onClick={() => {
-              window.location.href = "/auth/microsoft";
-            }}
+            href={`${backendUrl}/auth/microsoft`}
           >
             <FaMicrosoft size={20} />
             Continue with Microsoft
-          </Button>
+          </a>
         </div>
 
         <div className="text-center">

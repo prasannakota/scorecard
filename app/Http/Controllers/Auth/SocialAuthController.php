@@ -29,7 +29,9 @@ class SocialAuthController extends Controller
             if ($provider !== 'google') {
                 abort(404);
             }
+
             $googleUser = Socialite::driver('google')->stateless()->user();
+
             $user = User::where('email', $googleUser->email)->first();
             $fullName = $googleUser->name;
             $nameParts = explode(' ', $fullName, 2);
@@ -39,19 +41,20 @@ class SocialAuthController extends Controller
             if (!$user) {
                 $user = User::create([
                     "first_name"=> $firstName,
-                    "last_name"=>$lastName,
+                    "last_name"=> $lastName,
                     'name' => $fullName,
                     'email' => $googleUser->email,
                     'password' => Hash::make(Str::random(16)),
                     'google_id' => $googleUser->id,
                 ]);
             }
-            auth()->login($user);
-            return redirect()->route('dashboard');
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return redirect(env('APP_URL') . "/social-login?token={$token}");
 
         } catch (\Exception $e) {
-            return redirect()->route('login')
-                ->with('error', 'Failed to login with Google. Please try again.');
+            return redirect(env('APP_URL') . '/login?error=google_failed');
         }
     }
+
 }
