@@ -14,7 +14,7 @@ export default function Home() {
     <div className="flex justify-center items-center min-h-screen bg-white ">
       <div className="w-full md:max-w-[1400px] flex flex-col md:flex-row gap-10 bg-white md:p-[32px]">
 
-        <div className="hidden md:flex flex-col items-center text-center">
+        <div className="hidden md:flex flex-col items-center text-center md:w-[50%]">
           {activeTab === "login" && (
             <section
                   className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl max-w-[676px] min-h-[150px] max-md:px-5 max-md:py-24"
@@ -38,9 +38,9 @@ export default function Home() {
                       Discover how your online store performs, compare with industry benchmarks,
                       and get expert recommendations to grow your business.
                   </p>
-                  <Link to="/register" className="mt-6 block">
-                      <Button className="w-full sm:w-auto">Get Started</Button>
-                    </Link>
+                  {/*<Link to="/register" className="mt-6 block">
+                      <Button className="w-full sm:w-auto border border-white">Get Started</Button>
+                    </Link> */}
               </section>  
    )}
 
@@ -74,7 +74,7 @@ export default function Home() {
               )}
         </div>
 
-        <div className='loginscreen py-[40px] px-[20px]'>
+        <div className='loginscreen py-[40px] px-[20px] md:w-[50%]'>
           <div className='logo mb-[30px] md:mb-[75px]'>
             <img src="/images/Kensiumlogo.svg" alt="Logo" />
           </div>

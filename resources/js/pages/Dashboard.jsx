@@ -253,8 +253,9 @@ export default function Dashboard() {
     );
   }
   return (
-    <div className="container mx-auto p-2 pt-8 max-w-[1440px]">
-      <div className="w-full h-64 md:h-80 lg:h-96 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
+    <div className="container mx-auto  pt-8 max-w-[1440px]">
+      <div className="px-6">
+        <div className="w-full  min-h-64 bg-cover bg-center rounded-xl overflow-hidden flex flex-col md:flex-row justify-between items-center text-white p-6 md:p-12 mb-8"
           style={{
             backgroundImage: `url(${backgroundImg})`,
           }}
@@ -357,13 +358,13 @@ export default function Dashboard() {
         )}
 
       </div>
-
+  </div>
       <div className="my-8">
         <Overview />
       </div>
       
       {/* Business Category */}
-      <section className="bg-[#dbeaf8] py-12 px-6">
+      <section className="bg-[#dbeaf8] py-12 px-5 md:px-6">
         <h2 className="text-3xl font-bold mb-8 text-center">
           Scorecards for Every Business strategy
         </h2>
@@ -423,7 +424,7 @@ export default function Dashboard() {
             ))}
         </Slider>
       </section>
-      <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
+      <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-6">
           <h2 class="self-start text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
             Adapting Products and Services for the Next Wave of Innovation
           </h2>
@@ -500,7 +501,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-           <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
+           <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-6">
             <div class="w-full">
                 <h2 class="text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
                     AI in Action: Designing Smarter Futures
@@ -578,7 +579,7 @@ export default function Dashboard() {
         </section>
 
 
-        <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-5">
+        <section class="flex flex-col px-10 pt-10 pb-10 md:pt-14 md:pb-14 bg-neutral-100 max-md:px-6">
             <div class="w-full">
                 <h2 class="text-3xl font-black tracking-tighter leading-tight text-center text-black max-md:max-w-full">
                    Latest Research for Your Role

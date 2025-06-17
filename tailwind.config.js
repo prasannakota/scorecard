@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gray10: '#CFCFCF',
         gray50: '#ECF0FF',
         gary70: '#383432',
         gray100: '#ECECEC',
@@ -45,6 +46,7 @@ module.exports = {
         black650: '#01100F',
 
         green100: '#01473D',
+        green200: '#12B28C',
 
         orage100: '#DF9F20',
 
