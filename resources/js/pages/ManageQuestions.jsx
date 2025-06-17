@@ -1,104 +1,9 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Plus, Settings, X, Save, ArrowRight, Edit2, Search, Filter, Tag, ChevronDown, ChevronUp } from 'lucide-react';
-import { fetchQuestions, saveQuestions, saveOption,updateOption } from '../components/manageQuestions/api';
+import { fetchQuestions, saveQuestions, saveOption, updateOption, saveFollowUpQuestions } from '../components/manageQuestions/api';
 
 // Mock large dataset of follow-up questions with categories
-const generateFollowUpQuestions = () => {
-    const categories = {
-        'Technical SEO': [
-            'Is your website mobile-friendly and responsive?',
-            'Do you have an XML sitemap submitted to search engines?',
-            'Are there any crawl errors reported in Google Search Console?',
-            'Is your site using HTTPS/SSL?',
-            'Are your page load times optimized?'
-        ],
-        'On-Page SEO': [
-            'Are title tags unique and optimized for all pages?',
-            'Do all pages have unique meta descriptions?',
-            'Are heading tags (H1, H2, etc.) used appropriately?',
-            'Are product and category pages optimized for target keywords?',
-            'Is structured data (schema.org) implemented for products?'
-        ],
-        'Content Strategy': [
-            'Do you have a blog or resource section for content marketing?',
-            'Is your content regularly updated and relevant?',
-            'Are product descriptions unique and detailed?',
-            'Do you have landing pages for key categories or campaigns?',
-            'Is duplicate content avoided across the site?'
-        ],
-        'Link Building': [
-            'Do you have a strategy for acquiring backlinks?',
-            'Are there any toxic or spammy backlinks to your site?',
-            'Are internal links optimized for user experience and SEO?',
-            'Do you monitor and disavow harmful links?',
-            'Are you listed in relevant business directories?'
-        ],
-        'Analytics & Tracking': [
-            'Is Google Analytics (or similar) properly installed?',
-            'Are e-commerce conversion goals set up and tracked?',
-            'Do you use Google Tag Manager for event tracking?',
-            'Are you monitoring organic search performance regularly?',
-            'Is site search data analyzed for user intent?'
-        ],
-        'Local SEO': [
-            'Is your Google My Business profile claimed and optimized?',
-            'Are NAP (Name, Address, Phone) details consistent across the web?',
-            'Do you have location-specific landing pages?',
-            'Are you collecting and responding to customer reviews?',
-            'Is your business listed in local directories?'
-        ],
-        'E-commerce SEO': [
-            'Are product URLs clean and keyword-rich?',
-            'Do you use canonical tags to prevent duplicate content?',
-            'Are out-of-stock products handled with SEO best practices?',
-            'Is pagination SEO-friendly?',
-            'Are product images optimized with alt text and compression?'
-        ]
-    };
 
-    // Generate 500+ questions by expanding each category
-    const expandedQuestions = [];
-    let id = 1;
-
-    Object.entries(categories).forEach(([category, baseQuestions]) => {
-        const variations = [
-            'How often do you',
-            'What is your experience with',
-            'How would you rate',
-            'What challenges do you face with',
-            'How important is',
-            'What improvements would you suggest for',
-            'How satisfied are you with',
-            'What additional features do you need for'
-        ];
-
-        baseQuestions.forEach(question => {
-            expandedQuestions.push({
-                id: id++,
-                text: question,
-                category,
-                tags: [category.toLowerCase().replace(' ', '-'), 'original'],
-                relevanceScore: Math.random()
-            });
-
-            // Add variations
-            variations.forEach(variation => {
-                if (expandedQuestions.length < 600) {
-                    const variedQuestion = `${variation} ${question.toLowerCase()}?`;
-                    expandedQuestions.push({
-                        id: id++,
-                        text: variedQuestion.charAt(0).toUpperCase() + variedQuestion.slice(1),
-                        category,
-                        tags: [category.toLowerCase().replace(' ', '-'), 'variation'],
-                        relevanceScore: Math.random()
-                    });
-                }
-            });
-        });
-    });
-
-    return expandedQuestions.slice(0, 600);
-};
 
 // Virtualized list component for performance
 const VirtualizedQuestionList = ({ questions, selectedQuestions, onToggle, height = 300 }) => {
@@ -529,41 +434,7 @@ const FlowEdge = ({ edge, nodes }) => {
 };
 
 export default function QuestionOptionFlowBuilder() {
-    /*const [nodes, setNodes] = useState([
-      {
-        id: '1',
-        type: 'question',
-        data: { text: 'What are your primary SEO focus areas for your ecommerce site?', isFollowUp: false },
-        position: { x: 150, y: 100 }
-      },
-      {
-        id: '2',
-        type: 'option',
-        data: { text: 'Technical SEO' },
-        position: { x: 500, y: 20 }
-      },
-      {
-        id: '3',
-        type: 'option',
-        data: { text: 'On-Page SEO' },
-        position: { x: 500, y: 70 }
-      },
-      {
-        id: '4',
-        type: 'option',
-        data: { text: 'Content Strategy' },
-        position: { x: 500, y: 120 }
-      },
-      {
-        id: '5',
-        type: 'option',
-        data: { text: 'Analytics & Tracking' },
-        position: { x: 500, y: 220 }
-      },
-
-    ]);*/
     const [nodes, setNodes] = useState([],[]);
-
     const [edges, setEdges] = useState([
         { id: 'e1-2', source: '1', target: '2' },
         { id: 'e1-3', source: '1', target: '3' },
@@ -577,11 +448,36 @@ export default function QuestionOptionFlowBuilder() {
     const [editingNode, setEditingNode] = useState(null);
     const [editText, setEditText] = useState('');
     const [configuringFollowUps, setConfiguringFollowUps] = useState(null);
-    const [allFollowUpQuestions] = useState(() => generateFollowUpQuestions());
+
     const [filteredQuestions, setFilteredQuestions] = useState([]);
     const [selectedFollowUpIds, setSelectedFollowUpIds] = useState([]);
     const [newQuestionText, setNewQuestionText] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
+
+    const [allFollowUpQuestions, setAllFollowUpQuestions] = useState([]);
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const response = await fetchQuestions(); // this should return an array of questions
+                if (response && Array.isArray(response)) {
+                    const formattedQuestions = response.map((q, index) => ({
+                        id: q.id,
+                        text: q.question_text, // adjust field names if needed
+                        category: q.category || 'General', // optional fallback if no category
+                        tags: ['dynamic'],
+                        relevanceScore: Math.random(), // or remove if not needed
+                    }));
+
+                    setAllFollowUpQuestions(formattedQuestions);
+                }
+            } catch (error) {
+                console.error("Failed to load questions:", error);
+            }
+        }
+
+        load();
+    }, []);
 
     useEffect(() => {
         const positions = calculateLayout(nodes, edges);
@@ -593,13 +489,6 @@ export default function QuestionOptionFlowBuilder() {
         );
     }, [nodes.length, edges.length]);
 
-    useEffect(() => {
-        async function load() {
-            const data = await fetchQuestions();
-            // Set your state with data.questions or whatever structure you expect
-        }
-        load();
-    }, []);
 
     const getNextId = () => {
         const numericIds = nodes
@@ -840,7 +729,9 @@ export default function QuestionOptionFlowBuilder() {
                         text: question.text,
                         isFollowUp: true,
                         followUpQuestionId: questionId,
-                        category: question.category
+                        category: question.category,
+                        optionId: configuringFollowUps  // <-- this line links the follow-up to the option
+
                     },
                     position: { x: 850, y: index * 120 + 100 }
                 });
@@ -853,14 +744,25 @@ export default function QuestionOptionFlowBuilder() {
             }
         });
 
-        setNodes([...newNodes, ...followUpNodes]);
-        setEdges([...newEdges, ...followUpEdges]);
+        const updatedNodes = [...newNodes, ...followUpNodes];
+        const updatedEdges = [...newEdges, ...followUpEdges];
+
+        setNodes(updatedNodes);
+        setEdges(updatedEdges);
         setConfiguringFollowUps(null);
         setSelectedFollowUpIds([]);
+
+        handleFollowupSave(updatedNodes);
+
     };
 
-    const handleSave = async () => {
-        await saveQuestions(nodes);
+    const handleFollowupSave = async (updatedNodes) => {
+        try {
+            await saveFollowUpQuestions(updatedNodes);
+            console.log('Follow-up questions saved successfully');
+        } catch (error) {
+            console.error('Error saving follow-up questions:', error);
+        }
     };
 
     const questions = nodes.filter(n => n.type === 'question' && !n.data.isFollowUp);
@@ -882,7 +784,7 @@ export default function QuestionOptionFlowBuilder() {
                     </div>
                 </div>
 
-               {/*<div className="p-4">
+              {/* <div className="p-4">
                     <h2 className="text-sm font-semibold mb-2">Debug Nodes:</h2>
                     <pre className="text-xs bg-gray-200 p-3 rounded overflow-x-auto">
       {JSON.stringify(nodes, null, 2)}

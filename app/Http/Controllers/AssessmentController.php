@@ -45,6 +45,12 @@ class AssessmentController extends Controller
         return $this->sendResponse($assessment, ['message' => 'Assessment fetched successfully']);
     }
 
+    public function getAllQuestions()
+    {
+        $questions = Question::select('id', 'question_text')->get();
+        return response()->json($questions);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
