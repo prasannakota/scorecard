@@ -266,4 +266,36 @@ class UserAuthController extends Controller
             return response()->view('auth.verification-message');
         }
     }
+
+    /**
+     * Resend verification email
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resendVerification(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && !$user->email_verified_at) {
+            // Generate verification URL using web route
+            $verificationUrl = route('verify', ['token' => $user->id]);
+            
+            Mail::to($user->email)->send(new UserVerificationMail($user, $verificationUrl));
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Verification email has been resent. Please check your inbox.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Email not found or already verified.'
+        ], 400);
+    }
 }

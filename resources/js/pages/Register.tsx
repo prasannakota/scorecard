@@ -190,20 +190,57 @@ export default function Register() {
 
                             {/* Profile Picture Upload */}
                             <FormField control={form.control} name="profile_picture_preview" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Profile Picture</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (file) {
+                                <FormItem className="w-full">
+                                    <div className="w-full">
+                                        <div 
+                                            className="relative w-24 h-24 bg-gray-100 rounded-full overflow-hidden cursor-pointer"
+                                            onDragOver={(e) => e.preventDefault()}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                const file = e.dataTransfer.files[0];
+                                                if (file && file.type.startsWith('image/')) {
                                                     field.onChange(file);
                                                 }
                                             }}
-                                        />
-                                    </FormControl>
+                                            onClick={() => document.getElementById('profile-upload')?.click()}
+                                        >
+                                            {field.value && typeof field.value !== 'string' ? (
+                                                <img 
+                                                    src={URL.createObjectURL(field.value)} 
+                                                    alt="Preview" 
+                                                    className="w-full h-full object-cover" 
+                                                />
+                                            ) : (
+                                                <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <p className="text-xs">Add profile picture</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="mt-2">
+                                            <Button 
+                                                variant="outline" 
+                                                className="w-full"
+                                                onClick={() => document.getElementById('profile-upload')?.click()}
+                                            >
+                                                {field.value ? 'Change Photo' : 'Upload Photo'}
+                                            </Button>
+                                            <input
+                                                type="file"
+                                                id="profile-upload"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) {
+                                                        field.onChange(file);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )} />
