@@ -7,7 +7,8 @@ export default function Navbar({ toggleSidebar }) {
   const isAuthenticated = sessionStorage.getItem('authorization');
 
   return (
-    <nav className="flex items-center justify-between bg-blue300 text-white py-4 px-8 shadow">
+    <nav className="w-full bg-blue300 text-white py-4 px-4  md:px-8 shadow">
+      <div className='container m-auto flex items-center justify-between'>
       <div className="flex items-center gap-4">
         {isAuthenticated && (
           <button onClick={toggleSidebar}>
@@ -45,6 +46,7 @@ export default function Navbar({ toggleSidebar }) {
             <ProfileDropdown />
           </>
         )}
+      </div>
       </div>
     </nav>
   );
