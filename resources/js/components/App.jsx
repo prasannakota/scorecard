@@ -26,68 +26,68 @@ import Department from '../pages/Department';
 import ProfileForm from '../components/profile/ProfileForm';
 
 function AppContent() {
-  const location = useLocation();
-  const isAuthenticated = !!sessionStorage.getItem('authorization');
-  const hideNavbarOn = ['/'];
-  const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+    const location = useLocation();
+    const isAuthenticated = !!sessionStorage.getItem('authorization');
+    const hideNavbarOn = ['/'];
+    const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+    const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Flash Messages */}
-      <FlashMessage />
-      
-      {/* Top navbar */}
-      {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
+    return (
+        <div className="min-h-screen flex flex-col">
+            {/* Flash Messages */}
+            <FlashMessage />
 
-      {/* Body layout with Sidebar and Main Content */}
-      <div className="flex flex-1">
-        {/* Sidebar always visible if authenticated */}
-        {isAuthenticated && isSidebarOpen && <Sidebar />}
+            {/* Top navbar */}
+            {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
 
-        {/* Main content area */}
-        <main className="flex-1 main-wrapper">
-          {/* Public routes */}
-          <Routes>
-            <Route path="/" element={
-              <PublicRoute>
-                <>
-                  <FlashMessage />
-                  <Home />
-                </>
-              </PublicRoute>
-            } />
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
-            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-            <Route path="/forget-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+            {/* Body layout with Sidebar and Main Content */}
+            <div className="flex flex-1">
+                {/* Sidebar always visible if authenticated */}
+                {isAuthenticated && isSidebarOpen && <Sidebar />}
 
-            {/* Private routes */}
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
-            <Route path="/department" element={<PrivateRoute><DepartmentList /></PrivateRoute>} />
-            <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
-            <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
-            <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
-            <Route path="/manage-questions" element={<ManageQuestions />} />
-            <Route path="/add-department" element={<Department />} />
-            <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
-	        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
-          </Routes>
-        </main>
-      </div>
-      <Footer />
-    </div>
-  );
+                {/* Main content area */}
+                <main className="flex-1 main-wrapper">
+                    {/* Public routes */}
+                    <Routes>
+                        <Route path="/" element={
+                            <PublicRoute>
+                              <>
+                                  <FlashMessage />
+                                  <Home />
+                              </>
+                            </PublicRoute>
+                        } />
+                        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                        <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
+                        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+                        <Route path="/forget-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+                        <Route path="/admin/manage-questions" element={<PublicRoute><ManageQuestions /></PublicRoute>}/>
+                        <Route path="/admin/add-department" element={<PublicRoute><Department /></PublicRoute>} />
+
+                        {/* Private routes */}
+                        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                        <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />
+                        <Route path="/department" element={<PrivateRoute><DepartmentList /></PrivateRoute>} />
+                        <Route path="/assessment/start" element={<PrivateRoute><AssessmentScreen /></PrivateRoute>} />
+                        <Route path="/get-advice" element={<PrivateRoute><GetAdvice /></PrivateRoute>} />
+                        <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
+                        <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
+                        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
+                    </Routes>
+                </main>
+            </div>
+            <Footer />
+        </div>
+    );
 }
 
 export default function App() {
-  return (
-    <Router>
-      <UserProvider>
-        <AppContent />
-      </UserProvider>
-    </Router>
-  );
+    return (
+        <Router>
+            <UserProvider>
+                <AppContent />
+            </UserProvider>
+        </Router>
+    );
 }
