@@ -276,6 +276,10 @@ Route::get('/test', function () {
     return view('app');
 })->where('any', '.*');*/
 
+Route::get('/admin/{any}', function () {
+    return view('app');
+})->where('any', '.*')->middleware('auth:admin');
+
 
 
 
