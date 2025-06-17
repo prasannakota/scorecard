@@ -9,6 +9,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AdviceController;
 use App\Http\Controllers\Admin\BusinessCategoryController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Admin\FollowUpController;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
@@ -16,6 +17,7 @@ Route::get('/verify/{token}', [UserAuthController::class, 'verify'])->name('veri
 Route::post('/resend-verification', [UserAuthController::class, 'resendVerification']);
 Route::post('/add-department', [DepartmentController::class, 'createDepartment']);
 Route::get('/fetch-departments', [DepartmentController::class, 'getAllDepartment']);
+Route::get('/fetch-questions', [AssessmentController::class, 'getAllQuestions']);
 
 // React Admin API Routes (public)
 Route::prefix('react-admin')->group(function () {
@@ -90,6 +92,8 @@ Route::post('/admin/options/updateOption', [\App\Http\Controllers\Admin\OptionCo
 
 
 Route::get('/admin/questions', [\App\Http\Controllers\Admin\QuestionController::class, 'getQuestions']);
+
+Route::post('/follow-ups/save', [FollowUpController::class, 'saveFollowUps']);
 
 // Admin API Routes
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {

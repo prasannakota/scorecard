@@ -273,7 +273,7 @@ Route::prefix('admin')->group(function () {
             ]
         ]);
 
-        // 📩 Email Templates, Mail Settings, Email Logs
+        // Email Templates, Mail Settings, Email Logs
         Route::resource('email-templates', EmailTemplateController::class, [
             'names' => [
                 'index' => 'admin.email_templates.index',
