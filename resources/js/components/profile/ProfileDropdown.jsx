@@ -23,13 +23,12 @@ export default function ProfileDropdown() {
     };
 
     return (
-        <div className="relative p-2 rounded-full hidden sm:flex bg-white">
-            <button onClick={() => setOpen(!open)} className="flex items-center gap-2">
-                {/* 🔥 Show profile picture if available */}
+        <div className="relative p-1 rounded-full hidden sm:flex bg-white">
+            <button onClick={() => setOpen(!open)} className="flex items-center gap-1">
+                {/*  Show profile picture if available */}
                 {user?.profile_picture ? (
                     <img
-                        //src={`${import.meta.env.VITE_BACKEND_URL}/storage/${user.profile_picture}`}
-                        src="/images/profile_placeholder.png" 
+                        src={user?.profile_picture ? `/storage/${user.profile_picture}?t=${Date.now()}` : '/images/profile_placeholder.png'}
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover"
                     />
