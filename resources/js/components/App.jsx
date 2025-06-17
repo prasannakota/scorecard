@@ -24,6 +24,7 @@ import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
 import ProfileForm from '../components/profile/ProfileForm';
+import SocialLoginRedirect from "../routes/SocialLoginRedirect";
 
 function AppContent() {
     const location = useLocation();
@@ -58,6 +59,7 @@ function AppContent() {
                               </>
                             </PublicRoute>
                         } />
+                        <Route path="/social-login" element={<PublicRoute><SocialLoginRedirect /></PublicRoute>} />
                         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                         <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
                         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

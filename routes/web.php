@@ -15,9 +15,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\MicrosoftController;
 
 
-Route::get('/', function () {
-    return view('app');
-});
+
 
 // Root route
 //Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -54,9 +52,9 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     });*/
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+//    Route::get('/dashboard', function () {
+//        return view('dashboard');
+//    })->name('dashboard');
 
     Route::match(['get', 'post'], 'logout', [\App\Http\Controllers\User\UserAuthController::class, 'logout'])->name('logout');
     Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'index'])->name('profile.show');
@@ -319,13 +317,11 @@ Route::get('/simple-test', function() {
 });
 
 // This should be the last route in web.php
-/*Route::get('/{any}', function () {
+Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*');*/
+})->where('any', '.*');
 
-Route::get('/admin/{any}', function () {
-    return view('app');
-})->where('any', '.*')->middleware('auth:admin');
+
 
 
 
