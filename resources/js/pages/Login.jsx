@@ -201,7 +201,7 @@ const Login = () => {
 
         <div className="flex items-center justify-center">
           <Separator className="flex-grow" />
-          <span className="mx-4 text-sm text-gray-500">OR</span>
+          <span class="text-sm text-center  block text-gary300 my-3 mb-6 w-[180px] relative :before:content-[''] before:block before:w-full before:h-[1px] before:bg-gary300 before:relative before:top-2.5"><span className="bg-white text-gary300 p-1 relative z-1">OR</span></span>
           <Separator className="flex-grow" />
         </div>
 
@@ -236,7 +236,7 @@ const Login = () => {
                               </svg>
                 </a>
           </div>                
-          <div className="mt-6 text-center text-xs text-gray-500 px-6">
+          <div className="pt-4 md:pt-20 text-center text-xs text-gray-500 px-6">
               By signing up to create an account, I accept the Company’s{" "}<br/>
               <Link to="/terms" className="underline text-black400 hover:no-underline">
                   Terms of Use

@@ -47,6 +47,7 @@ module.exports = {
 
         green100: '#01473D',
         green200: '#12B28C',
+        green300: '#22B72C',
 
         orage100: '#DF9F20',
 

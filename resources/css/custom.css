@@ -44,3 +44,6 @@ button.custombtn{
 .forgotinput label{
     @apply absolute top-[-13px] left-3 py-1 px-2 bg-white text-black100 hover:text-blue200 z-10;
 }
+.page-forget-password .main-wrapper{
+    @apply flex  items-center justify-center;
+}
