@@ -10,12 +10,6 @@ class AdminAuthController extends Controller
 {
     protected $guard = 'admin';
 
-    // Authentication Methods
-    public function showLoginForm()
-    {
-        return view('auth.admin-login');
-    }
-
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -23,27 +17,31 @@ class AdminAuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Attempt to authenticate with admin guard
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $user = Auth::guard('admin')->user();
-            
+        if (Auth::guard($this->guard)->attempt($credentials)) {
+            $user = Auth::guard($this->guard)->user();
+
             if ($user->role === 'admin') {
-                // Set the default guard to admin
-                Auth::shouldUse('admin');
-                
+                Auth::shouldUse($this->guard);
                 $request->session()->regenerate();
-                return redirect()->intended(route('admin.dashboard'));
+
+                return response()->json([
+                    'success' => true,
+                    'token' => session()->getId(),
+                    'user' => $user,
+                ]);
             }
-            
-            Auth::guard('admin')->logout();
-            return back()->withErrors([
-                'email' => 'The provided credentials do not belong to an admin account.',
-            ]);
+
+            Auth::guard($this->guard)->logout();
+            return response()->json([
+                'success' => false,
+                'message' => 'Only admin accounts can log in.',
+            ], 403);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid email or password.',
+        ], 401);
     }
 
     public function logout(Request $request)

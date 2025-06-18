@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
 
-export default function Department() {
+export default function Industries() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -103,7 +103,7 @@ export default function Department() {
 
             {/* Department List */}
             <div className="bg-white shadow rounded p-4">
-                <h3 className="text-lg font-semibold mb-3">Departments</h3>
+                <h3 className="text-lg font-semibold mb-3">Industries</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(departments.length === 0 ? sampleDepartments : departments).map((dept) => (
                         <div
@@ -135,7 +135,7 @@ export default function Department() {
                             <X size={20} />
                         </button>
 
-                        <h2 className="text-xl font-semibold mb-4">Create New Department</h2>
+                        <h2 className="text-xl font-semibold mb-4">Create New Industries</h2>
 
                         {error && <div className="text-red-500 mb-2">{error}</div>}
                         {success && <div className="text-green-600 mb-2">{success}</div>}
