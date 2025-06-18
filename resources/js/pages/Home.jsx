@@ -87,7 +87,7 @@ export default function Home() {
                 Create an Account
               </TabsTrigger>
                <a
-                    href="/admin/login"
+                    href="/admin-login"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 text-base px-5 py-2 rounded-md transition-colors"

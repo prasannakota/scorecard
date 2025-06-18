@@ -25,6 +25,7 @@ import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
 import ProfileForm from '../components/profile/ProfileForm';
 import SocialLoginRedirect from "../routes/SocialLoginRedirect";
+import AdminDashBoard from "../pages/Admin/DashBoard/AdminDashBoard";
 
 function AppContent() {
     const location = useLocation();
@@ -76,6 +77,11 @@ function AppContent() {
                         <Route path="/feedback" element={<PrivateRoute><FeedBack /></PrivateRoute>} />
                         <Route path="/profile" element={<PrivateRoute><ProfileForm /></PrivateRoute>} />
                         <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
+
+                        {/* Admin Routes */}
+                        <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
+                        <Route path="/admin-dashboard" element={<PublicRoute><AdminDashBoard /></PublicRoute>} />
+
                     </Routes>
                 </main>
             </div>
