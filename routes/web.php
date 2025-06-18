@@ -313,14 +313,9 @@ Route::get('/simple-test', function() {
     return view('simple-test');
 });
 
-//// This should be the last route in web.php
 Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*');
-
-Route::get('/admin/{any}', function () {
-    return view('app');
-})->where('any', '.*')->middleware('auth:admin');
+})->where('any', '^(?!api).*$');
 
 
 

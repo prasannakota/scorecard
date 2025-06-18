@@ -137,7 +137,7 @@ const AdminDashBoard = () => {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">Users</h3>
                             <p className="text-gray-600 mb-4">Manage user accounts, permissions and roles</p>
-                            <Link to="/admin/users" className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
+                            <Link to="/admin-users" className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
                                 View Users
                                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -155,7 +155,7 @@ const AdminDashBoard = () => {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">Departments</h3>
                             <p className="text-gray-600 mb-4">Manage departments and organizational structure</p>
-                            <Link to="/admin/departments" className="text-purple-600 hover:text-purple-800 font-medium inline-flex items-center">
+                            <Link to="/admin-departments" className="text-purple-600 hover:text-purple-800 font-medium inline-flex items-center">
                                 View Departments
                                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -173,7 +173,7 @@ const AdminDashBoard = () => {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">Assessments</h3>
                             <p className="text-gray-600 mb-4">View and manage assessment results and analytics</p>
-                            <Link to="/admin/assessments" className="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                            <Link to="/admin-assessments" className="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                                 View Assessments
                                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
