@@ -11,7 +11,8 @@ use App\Http\Controllers\Admin\BusinessCategoryController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Admin\FollowUpController;
 use App\Http\Controllers\Auth\AdminAuthController;
-use App\Http\Controllers\Admin\Departments\Main;
+use App\Http\Controllers\Admin\React\Industries;
+
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
 Route::get('/verify/{token}', [UserAuthController::class, 'verify'])->name('verify');
@@ -36,9 +37,15 @@ Route::prefix('react-admin')->group(function () {
     Route::post('/departments', [\App\Http\Controllers\ReactAdminController::class, 'storeDepartment']);
     Route::put('/departments/{id}', [\App\Http\Controllers\ReactAdminController::class, 'updateDepartment']);
     Route::delete('/departments/{id}', [\App\Http\Controllers\ReactAdminController::class, 'deleteDepartment']);
-});
 
-Route::get('/admin/react-departments',[Main::class,'index']);
+
+    Route::prefix('industries')->group(function () {
+        Route::get('/', [Industries::class, 'getIndustries']);
+        Route::post('/', [Industries::class, 'storeIndustry']);
+        Route::put('/{id}', [Industries::class, 'updateIndustry']);
+        Route::delete('/{id}', [Industries::class, 'deleteIndustry']);
+    });
+});
 
 Route::middleware('auth:sanctum')->group( function () {
 	Route::get('assessment/form-data', [AssessmentController::class, 'create']);
