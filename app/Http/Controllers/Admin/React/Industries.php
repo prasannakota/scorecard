@@ -94,7 +94,7 @@ class Industries extends Controller
         try {
             $industry = Industry::findOrFail($id);
 
-            if ($industry->users()->count() > 0) {
+            if ($industry->count() > 0) {
                 return response()->json([
                     'error' => 'Cannot delete industry with associated users. Please reassign them first.'
                 ], 422);
