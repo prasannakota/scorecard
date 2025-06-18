@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Plus, Settings, X, Save, ArrowRight, Edit2, Search, Filter, Tag, ChevronDown, ChevronUp } from 'lucide-react';
-import { fetchQuestions, saveQuestions, saveOption, updateOption, saveFollowUpQuestions } from '../components/manageQuestions/api';
-
+import { fetchQuestions, saveQuestions, saveOption, updateOption, saveFollowUpQuestions } from '../../../components/manageQuestions/api';
+import AdminSidebarLayout from "./AdminSidebarLayout";
 // Mock large dataset of follow-up questions with categories
 
 
@@ -768,6 +768,7 @@ export default function QuestionOptionFlowBuilder() {
     const questions = nodes.filter(n => n.type === 'question' && !n.data.isFollowUp);
 
     return (
+        <AdminSidebarLayout>
         <div className="w-full h-screen bg-gray-50 relative overflow-hidden">
             {/* Header */}
             <div className="bg-white border-b p-4 relative z-10">
@@ -994,5 +995,6 @@ export default function QuestionOptionFlowBuilder() {
                 </div>
             )}
         </div>
+        </AdminSidebarLayout>
     );
 }
