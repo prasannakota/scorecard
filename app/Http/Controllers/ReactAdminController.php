@@ -191,14 +191,14 @@ class ReactAdminController extends Controller
             }
 
             // Include user count
-            $query->withCount('users');
+            //$query->withCount('users');
 
             // Pagination
             $departments = $query->latest()->paginate(10);
 
             // Add manager field for compatibility with our frontend
             $departments->getCollection()->transform(function ($dept) {
-                $dept->manager = 'Not Assigned'; // Default manager
+               // $dept->manager = 'Not Assigned'; // Default manager
                 $dept->status = $dept->is_active ? 'Active' : 'Inactive';
                 return $dept;
             });
@@ -270,16 +270,12 @@ class ReactAdminController extends Controller
     {
         try {
             $department = Department::findOrFail($id);
-            
-            // Check if department has users
-            if ($department->users()->count() > 0) {
+            if ($department->count() > 0) {
                 return response()->json([
                     'error' => 'Cannot delete department with associated users. Please reassign users first.'
                 ], 422);
             }
-            
             $department->delete();
-            
             return response()->json(['message' => 'Department deleted successfully']);
         } catch (\Exception $e) {
             \Log::error('Error deleting department: ' . $e->getMessage());
