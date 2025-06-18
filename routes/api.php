@@ -10,6 +10,7 @@ use App\Http\Controllers\AdviceController;
 use App\Http\Controllers\Admin\BusinessCategoryController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Admin\FollowUpController;
+use App\Http\Controllers\Auth\AdminAuthController;
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
@@ -97,12 +98,15 @@ Route::post('/follow-ups/save', [FollowUpController::class, 'saveFollowUps']);
 
 // Admin API Routes
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
-    // Check authentication status
+
     Route::get('/check-auth', function () {
         return response()->json(['authenticated' => true]);
     });
 
-    // Dashboard stats
+    // Admin Routes are starting from here ...
+    Route::post('/login', [AdminAuthController::class, 'login']);
+
+
     Route::get('/dashboard/stats', [\App\Http\Controllers\Admin\DashboardController::class, 'getStats']);
 
     // Users
@@ -140,5 +144,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     // Email Logs
     Route::get('/email-logs', [\App\Http\Controllers\Admin\EmailLogController::class, 'apiIndex']);
 });
+
+
+
 
 
