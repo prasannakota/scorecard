@@ -14,9 +14,6 @@ use App\Http\Controllers\InviteController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\MicrosoftController;
 
-
-
-
 // Root route
 //Route::get('/', [HomeController::class, 'index'])->name('home');
 // Social Authentication Routes
@@ -35,15 +32,15 @@ Route::middleware('web')->group(function () {
 Route::middleware(['web', 'guest'])->group(function () {
     Route::get('login', [\App\Http\Controllers\User\UserAuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [\App\Http\Controllers\User\UserAuthController::class, 'login']);
-
     Route::get('register', [\App\Http\Controllers\User\UserAuthController::class, 'showRegistrationForm'])->name('register');
     Route::post('register', [\App\Http\Controllers\User\UserAuthController::class, 'register']);
 
     // Password Reset Routes
     Route::get('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'showForgotPasswordForm'])->name('password.request');
     Route::post('password/email', [\App\Http\Controllers\User\UserAuthController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('password/reset/{token}', [\App\Http\Controllers\User\UserAuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'reset'])->name('password.update');
+   Route::get('password/reset/{token}', [\App\Http\Controllers\User\UserAuthController::class, 'showResetForm'])->name('password.reset');
+   Route::post('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'reset'])->name('password.update');
+
 });
 
 // Authenticated User Routes

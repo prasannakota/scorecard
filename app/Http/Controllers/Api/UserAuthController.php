@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ResetUserPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Mail\UserVerificationMail;
+use App\Mail\ResetMail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Hash;
@@ -302,5 +305,117 @@ class UserAuthController extends Controller
             'status' => 'error',
             'message' => 'Email not found or already verified.'
         ], 400);
+    }
+
+    public function generateResetToken(Request $request){
+        $input = $request->all();
+
+        //Validation for Store email
+        $validated = $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        if(!$validated){
+            return $this->sendError('Error validation', "Email field is required.");
+        }
+        //Checking for the Store User
+        $whereFilter = [
+            ['email', $input['email']]
+        ];
+        $user = User::where($whereFilter)->first();
+
+        if($user){
+            //Convert User Obj into array
+            $userInfo = $user->toArray();
+
+            //Generating a string of size 16
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            $token = substr(str_shuffle($chars),0,16);
+
+            //Deleting previously created tokens
+            $data = array('is_active' => 0, 'is_deleted' => 1);
+            $delete = DB::table('tbl_user_password_reset')
+                ->where([
+                    ['id', '=', $userInfo['id']],
+                    ['is_active', '=', 1],
+                    ['is_deleted', '=', 0]
+                ])
+                ->update($data);
+
+            //Inserting token to DB
+            $resetData = [
+                'id' => $userInfo['id'],
+                'email' => $input['email'],
+                'token' => $token,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ];
+            $insertResetData = ResetUserPassword::insert($resetData);
+
+            $app_url = env('APP_URL');
+
+            $details = [
+                'email' => $input['email'],
+                'name' => $userInfo['name'],
+                'reset_link' => $app_url.'/user-password/reset/'.$token
+            ];
+
+            Mail::to($input['email'])->send(new ResetMail($details));
+
+            if($insertResetData) {
+                //Success Response
+                $metaInfo = (object)array("message" => "success");
+                return $this->sendResponse($insertResetData, $metaInfo);
+            }else{
+                return $this->sendError('Error.', ['error'=>'Error']);
+            }
+        }
+        else{
+            //User does not exist Error
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
+    }
+
+    public function changePassword(Request $request){
+
+        $input = $request->all();
+
+        //Checking for the Store User
+        $whereFilter = [
+            ['token', $input["token"]],
+            ['is_active', 1],
+            ['is_deleted', 0]
+        ];
+
+        $resetPassword = ResetUserPassword::where($whereFilter)->first();
+
+        //Displaying the corresponding view based on token validity
+        if($resetPassword) {
+
+            $resetPasswordData = $resetPassword->toArray();
+
+            //Checking for the Store User
+            $whereFilter = [
+                ['email', $resetPasswordData['email']]
+            ];
+            $user = User::where($whereFilter)->first();
+            $user->password = Hash::make($input['password']);
+            $user->save();
+
+            //Deleting previously created tokens
+            $data = array('is_active' => 0, 'is_deleted' => 1);
+            $delete = \DB::table('tbl_user_password_reset')
+                ->where([
+                    ['id', '=', $resetPasswordData['id']],
+                    ['is_active', '=', 1],
+                    ['is_deleted', '=', 0]
+                ])
+                ->update($data);
+
+            $metaInfo = (object)array("message" => "success");
+            return $this->sendResponse($user, $metaInfo);
+        } else {
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
     }
 }

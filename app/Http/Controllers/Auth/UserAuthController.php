@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ResetUserPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class UserAuthController extends Controller
 {
@@ -148,4 +150,5 @@ class UserAuthController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Profile updated successfully.');
     }
+
 }

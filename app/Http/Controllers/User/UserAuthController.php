@@ -109,4 +109,28 @@ class UserAuthController extends Controller
         
         return redirect()->route('home');
     }
+
+    public function showResetForm()
+    {
+        return view('user.password.reset');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, auth()->user()->password)) {
+                    $fail('The current password  is incorrect.');
+                }
+            }],
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Password updated successfully');
+    }
 }

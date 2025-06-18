@@ -28,6 +28,7 @@ import AdminDashBoard from "../pages/Admin/DashBoard/AdminDashBoard";
 import AdminLogin from "../pages/Admin/Auth/adminlogin";
 import AdminRoute from "../routes/AdminRoute";
 import AdminNav from "./common/AdminNav";
+import ResetUserPassword from "../pages/ResetUserPassword.jsx";
 import UserDashBoard from "../pages/Admin/DashBoard/UserDashBoard";
 
 function AppContent() {
@@ -63,10 +64,10 @@ function AppContent() {
                     <Routes>
                         <Route path="/" element={
                             <PublicRoute>
-                              <>
-                                  <FlashMessage />
-                                  <Home />
-                              </>
+                                <>
+                                    <FlashMessage />
+                                    <Home />
+                                </>
                             </PublicRoute>
                         } />
                         <Route path="/social-login" element={<PublicRoute><SocialLoginRedirect /></PublicRoute>} />
@@ -75,6 +76,7 @@ function AppContent() {
                         <Route path="/forget-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
                         <Route path="/admin/manage-questions" element={<PublicRoute><ManageQuestions /></PublicRoute>}/>
                         <Route path="/admin/add-department" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/user-password/reset/:token" element={<PublicRoute><ResetUserPassword /></PublicRoute>} />
 
                         {/* Private routes */}
                         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

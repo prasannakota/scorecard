@@ -19,7 +19,8 @@ Route::post('/resend-verification', [UserAuthController::class, 'resendVerificat
 Route::post('/add-department', [DepartmentController::class, 'createDepartment']);
 Route::get('/fetch-departments', [DepartmentController::class, 'getAllDepartment']);
 Route::get('/fetch-questions', [AssessmentController::class, 'getAllQuestions']);
-
+Route::post('/login-reset', [UserAuthController::class, 'generateResetToken']);
+Route::post('/reset-user-password', [UserAuthController::class, 'changePassword']);
 // React Admin API Routes (public)
 Route::prefix('react-admin')->group(function () {
     Route::get('/dashboard/stats', [\App\Http\Controllers\ReactAdminController::class, 'getDashboardStats']);
