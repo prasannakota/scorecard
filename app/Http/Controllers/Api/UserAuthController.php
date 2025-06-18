@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Mail\UserVerificationMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Hash;
 
 class UserAuthController extends Controller
@@ -231,6 +232,10 @@ class UserAuthController extends Controller
 
             $user->email_verified_at = now();
             $user->save();
+
+            // Send welcome email
+            Mail::to($user->email)->send(new UserRegisteredMail($user));
+
 
             // Set Laravel session message
             session()->flash('success', 'Your email has been verified. You can now login.');

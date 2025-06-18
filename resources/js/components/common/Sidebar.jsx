@@ -7,7 +7,7 @@ export default function Sidebar() {
   if (!isAuthenticated) return null;
 
   return (
-    <aside className="w-64 bg-gray10 text-neutral50 dvh-full pt-6 flex flex-col justify-between shadow-md pb-6">
+    <aside className="w-64 bg-neutral90 text-neutral50 dvh-full pt-6 flex flex-col justify-between shadow-md pb-6">
       <nav className="flex flex-col">
         <Link to="/dashboard" className="flex items-center gap-2 text-neutral50 hover:bg-black hover:text-white px-8 py-4">
           <LayoutDashboard size={18} /> Dashboard

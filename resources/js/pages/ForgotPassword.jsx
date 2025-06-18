@@ -41,19 +41,17 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Card className="w-full max-w-md p-6">
-        <CardHeader>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+      <Card className="w-full max-w-md px-5  py-6 md:px-8 md:py-10 border border-gray10 md:max-w-[620px]">
           {!submitted && (
             <>
-              <CardTitle className="text-2xl font-semibold text-center">Forgot Password?</CardTitle>
-              <p className="text-sm text-gray-500">
+              <h1 className="text-4xl font-black text-center text-black200">Forgot Password?</h1>
+              <p className="text-base text-black">
                 No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
               </p>
             </>
           )}
-        </CardHeader>
-        <CardContent>
+        <div>
           {submitted ? (
             <div className="text-center">
               <div className="flex justify-center mb-4">
@@ -85,12 +83,12 @@ export default function ForgotPassword() {
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="forgotinput relative">
                       <FormLabel>Email*</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder="xyz@gmail.com"
                           className="w-full"
                           {...field}
                         />
@@ -99,13 +97,13 @@ export default function ForgotPassword() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 border-green-600">
+                <Button type="submit" className="w-full custombtn">
                   Send Link
                 </Button>
               </form>
             </Form>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

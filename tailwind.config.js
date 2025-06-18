@@ -9,25 +9,26 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gray10: '#CFCFCF',
         gray50: '#ECF0FF',
         gary70: '#383432',
         gray100: '#ECECEC',
         gary200: '#828282',
-        gary300: '#9C9AA5',
-       
+        gary300: '#9C9AA5',      
 
         dark100: '#605E5C',
+
         blue10: '#465FF166',
         blue50: '#4285F4',
         blue100: '#96BFFF',
         blue200: '#0D8DFF',
-        blue300:'#1B2937',
+        blue300: '#1B2937',
 
         
         neutral30: '#444748',
         neutral50: '#747878',        
-        neutral60:'#8E9192',
-        neutral70:'#A9ACAC',
+        neutral60: '#8E9192',
+        neutral70: '#A9ACAC',
         neutral80: '#C4C7C7',
         neutral90: '#E1E3E3',
 
@@ -45,11 +46,13 @@ module.exports = {
         black650: '#01100F',
 
         green100: '#01473D',
+        green200: '#12B28C',
 
         orage100: '#DF9F20',
 
         violet100: '#6641D3',
         violet50: '#F5EEFF',
+
         primary: {
            DEFAULT: '#4D9078',
             50:  '#f1f8f6',
