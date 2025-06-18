@@ -23,6 +23,11 @@ const AdminSidebarLayout = ({ children }) => {
             iconPath: 'M3 7v4h18V7M3 11v4h18v-4M3 15v4h18v-4',
         },
         {
+            to: '/admin-industries',
+            label: 'Industries',
+            iconPath: 'M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z',
+        },
+        {
             to: '/admin-assessments',
             label: 'Assessments',
             iconPath: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5V3h6v2M9 10h6',
@@ -35,11 +40,7 @@ const AdminSidebarLayout = ({ children }) => {
                 'M15 12a3 3 0 11-6 0 3 3 0 016 0z',
             ],
         },
-        {
-            to: '/admin-industries',
-            label: 'Industries',
-            iconPath: 'M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z',
-        },
+
     ];
 
     return (

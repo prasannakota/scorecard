@@ -29,6 +29,7 @@ import AdminLogin from "../pages/Admin/Auth/adminlogin";
 import AdminRoute from "../routes/AdminRoute";
 import AdminNav from "./common/AdminNav";
 import ResetUserPassword from "../pages/ResetUserPassword.jsx";
+import UserDashBoard from "../pages/Admin/DashBoard/UserDashBoard";
 
 function AppContent() {
     const location = useLocation();
@@ -91,7 +92,7 @@ function AppContent() {
                         <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
                         <Route path="/admin-dashboard" element={<AdminRoute><AdminDashBoard /></AdminRoute>} />
                         <Route path="/admin-departments" element={<AdminRoute><Department /></AdminRoute>} />
-                        <Route path="/admin-users" element={<AdminRoute><Department /></AdminRoute>} />
+                        <Route path="/admin-users" element={<AdminRoute><UserDashBoard /></AdminRoute>} />
                         <Route path="/admin-settings" element={<AdminRoute><Department /></AdminRoute>} />
                         <Route path="/admin-assessments" element={<AdminRoute><Department /></AdminRoute>} />
                         <Route path="/admin-industries" element={<AdminRoute><Department /></AdminRoute>} />
