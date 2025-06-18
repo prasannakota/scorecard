@@ -187,7 +187,7 @@ export default function Register() {
                             </div>
 
                             {/* Profile Picture Upload */}
-                            <FormField control={form.control} name="profile_picture_preview" render={({ field }) => (
+                           {/* <FormField control={form.control} name="profile_picture_preview" render={({ field }) => (
                                 <FormItem className="w-full">
                                     <div className="w-full imageupload bg-gray-100 p-4 mb-4 flex flex-col items-center gap-2">
                                         <div 
@@ -241,7 +241,7 @@ export default function Register() {
                                     </div>
                                     <FormMessage />
                                 </FormItem>
-                            )} />
+                            )} /> */}
 
                             <FormField
                                 control={form.control}
@@ -336,7 +336,7 @@ export default function Register() {
                         </form>
                     </Form>
 
-                <div className="flex justify-center gap-4 mt-4">
+                <div className="flex justify-center gap-4 mt-8">
                        <a className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
                   href={`${backendUrl}/auth/google`} >
                     <svg  className="text-xl" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -370,16 +370,7 @@ export default function Register() {
                               </svg>
                 </a>
                 </div>
-                <div className="mt-6 text-center text-xs text-gray-500 px-6">
-              By signing up to create an account, I accept the Company’s{" "}<br/>
-              <Link to="/terms" className="underline text-black400 hover:no-underline">
-                  Terms of Use
-              </Link>{" "}
-              &{" "}
-              <Link to="/privacy-policy" className="underline text-black400 hover:no-underline">
-                  Privacy Policy
-              </Link>.
-          </div>
+               
         </div>
     );
 }

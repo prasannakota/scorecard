@@ -40,9 +40,14 @@ function AppContent() {
     const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
     const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+    const pageSlug = location.pathname
+    .replace(/^\/|\/$/g, '')     // remove leading/trailing slashes
+    .replace(/[^a-zA-Z0-9]/g, '-') // replace non-alphanum with dash
+    .toLowerCase();
 
+  const pageClass = pageSlug ? `page-${pageSlug}` : 'page-home';
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className={`min-h-screen flex flex-col ${pageClass}`}>
             {/* Flash Messages */}
             <FlashMessage />
 
