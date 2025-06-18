@@ -46,9 +46,6 @@ const AdminSidebarLayout = ({ children }) => {
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <div className="w-64 bg-gray-800 text-white flex flex-col">
-                <div className="h-16 flex items-center justify-center text-2xl font-bold bg-gray-900">
-                    Admin Panel
-                </div>
                 <div className="flex-1 overflow-y-auto">
                     <nav className="px-2 py-4 space-y-1">
                         {navItems.map(({ to, label, iconPath }) => (

@@ -26,10 +26,14 @@ import ProfileForm from '../components/profile/ProfileForm';
 import SocialLoginRedirect from "../routes/SocialLoginRedirect";
 import AdminDashBoard from "../pages/Admin/DashBoard/AdminDashBoard";
 import AdminLogin from "../pages/Admin/Auth/adminlogin";
+import AdminRoute from "../routes/AdminRoute";
+import AdminNav from "./common/AdminNav";
 
 function AppContent() {
     const location = useLocation();
     const isAuthenticated = !!sessionStorage.getItem('authorization');
+    const user = sessionStorage.getItem('user');
+    const admin = sessionStorage.getItem('admin');
     const hideNavbarOn = ['/'];
     const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -41,12 +45,16 @@ function AppContent() {
             <FlashMessage />
 
             {/* Top navbar */}
-            {shouldShowNavbar && <Navbar toggleSidebar={toggleSidebar} />}
+            {shouldShowNavbar && (
+                user ? <Navbar toggleSidebar={toggleSidebar} /> :
+                    admin ? <AdminNav toggleSidebar={toggleSidebar} /> : null
+            )}
 
             {/* Body layout with Sidebar and Main Content */}
             <div className="flex flex-1">
                 {/* Sidebar always visible if authenticated */}
-                {isAuthenticated && isSidebarOpen && <Sidebar />}
+
+                {isAuthenticated && isSidebarOpen && user && <Sidebar />}
 
                 {/* Main content area */}
                 <main className="flex-1 main-wrapper">
@@ -79,12 +87,12 @@ function AppContent() {
 
                         {/* Admin Routes */}
                         <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
-                        <Route path="/admin-dashboard" element={<PublicRoute><AdminDashBoard /></PublicRoute>} />
-                        <Route path="/admin-departments" element={<PublicRoute><Department /></PublicRoute>} />
-                        <Route path="/admin-users" element={<PublicRoute><Department /></PublicRoute>} />
-                        <Route path="/admin-settings" element={<PublicRoute><Department /></PublicRoute>} />
-                        <Route path="/admin-assessments" element={<PublicRoute><Department /></PublicRoute>} />
-                        <Route path="/admin-industries" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/admin-dashboard" element={<AdminRoute><AdminDashBoard /></AdminRoute>} />
+                        <Route path="/admin-departments" element={<AdminRoute><Department /></AdminRoute>} />
+                        <Route path="/admin-users" element={<AdminRoute><Department /></AdminRoute>} />
+                        <Route path="/admin-settings" element={<AdminRoute><Department /></AdminRoute>} />
+                        <Route path="/admin-assessments" element={<AdminRoute><Department /></AdminRoute>} />
+                        <Route path="/admin-industries" element={<AdminRoute><Department /></AdminRoute>} />
                     </Routes>
                 </main>
             </div>

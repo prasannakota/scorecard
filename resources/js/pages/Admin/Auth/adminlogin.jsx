@@ -46,8 +46,8 @@ const AdminLogin = () => {
 
             if (response.data.success) {
                 sessionStorage.setItem("authorization", response.data.token);
-                sessionStorage.setItem("user", JSON.stringify(response.data.user));
-                navigate("/admin/dashboard");
+                sessionStorage.setItem("admin", JSON.stringify(response.data.user));
+                navigate("/admin-dashboard");
             } else {
                 setError(response.data.message || "Login failed.");
             }
