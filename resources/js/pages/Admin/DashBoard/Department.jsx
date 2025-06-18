@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
+import AdminSidebarLayout from "./AdminSidebarLayout";
 
-export default function Department() {
+export default function AdminDepartment() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -95,6 +96,7 @@ export default function Department() {
     };
 
     return (
+        <AdminSidebarLayout>
         <div className="container p-4">
             {/* Add Department Button */}
             <Button onClick={() => setShowModal(true)} className="mb-4">
@@ -186,5 +188,7 @@ export default function Department() {
                 </div>
             )}
         </div>
+            
+        </AdminSidebarLayout>
     );
 }

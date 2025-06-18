@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BsBoxArrowInRight, BsPersonPlus, BsShieldLock } from "react-icons/bs";
 import Login from './Login';
 import Register from './Register';
-import AdminLogin from './AdminLogin';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom"
 
@@ -59,7 +58,8 @@ export default function Home() {
                       id="hero-title"
                       className="relative self-stretch text-5xl font-black tracking-tighter text-center text-white leading-[58px] max-md:max-w-full max-md:text-4xl max-md:leading-[54px]"
                   >
-                      Evaluate your Commerce business's performance tyrtyurtyurty.
+                      Evaluate your Commerce business's performance
+                      .
                   </h1>
                   <p
                       className="relative text-2xl leading-7 text-center text-white font-[350] mt-[380px] max-md:mt-10 max-md:max-w-full"
@@ -78,7 +78,7 @@ export default function Home() {
           <div className='logo mb-[30px] md:mb-[75px]'>
             <img src="/images/Kensiumlogo.svg" alt="Logo" />
           </div>
-          <Tabs defaultValue="login" className="w-full">
+            <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-3 mb-4 p-1 bg-gray50">
               <TabsTrigger value="login" className="flex items-center justify-center gap-2 px-5 py-2 rounded-md !text-base">
                 Login
