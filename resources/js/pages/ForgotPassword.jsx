@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address!' }),
@@ -22,6 +23,20 @@ export default function ForgotPassword() {
 
   const handleSubmit = (data) => {
     console.log('Sending password reset link to:', data.email);
+    axios.post(`/login-reset`, {
+      email: data.email.trim()
+    },{
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "application/json",
+      }}).then((response) => {
+      if(response.data.code === 200) {
+        console.log(response);
+        setSubmitted(true);
+      }
+    }).catch(error => {
+      console.log(error);
+    });
     setSubmitted(true);
   };
 
