@@ -5,7 +5,6 @@ import FlashMessage from './common/FlashMessage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import AdminLogin from '../pages/AdminLogin';
 import Dashboard from '../pages/Dashboard';
 import ForgotPassword from "../pages/ForgotPassword";
 
@@ -22,10 +21,11 @@ import GetAdvice from "../pages/GetAdvice";
 import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
 import ManageQuestions from '../pages/ManageQuestions';
-import Department from '../pages/Department';
+import Department from '../pages/Admin/DashBoard/Department';
 import ProfileForm from '../components/profile/ProfileForm';
 import SocialLoginRedirect from "../routes/SocialLoginRedirect";
 import AdminDashBoard from "../pages/Admin/DashBoard/AdminDashBoard";
+import AdminLogin from "../pages/Admin/Auth/adminlogin";
 
 function AppContent() {
     const location = useLocation();
@@ -62,7 +62,6 @@ function AppContent() {
                         } />
                         <Route path="/social-login" element={<PublicRoute><SocialLoginRedirect /></PublicRoute>} />
                         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                        <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
                         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
                         <Route path="/forget-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
                         <Route path="/admin/manage-questions" element={<PublicRoute><ManageQuestions /></PublicRoute>}/>
@@ -81,7 +80,11 @@ function AppContent() {
                         {/* Admin Routes */}
                         <Route path="/admin-login" element={<PublicRoute><AdminLogin /></PublicRoute>} />
                         <Route path="/admin-dashboard" element={<PublicRoute><AdminDashBoard /></PublicRoute>} />
-
+                        <Route path="/admin-departments" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/admin-users" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/admin-settings" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/admin-assessments" element={<PublicRoute><Department /></PublicRoute>} />
+                        <Route path="/admin-industries" element={<PublicRoute><Department /></PublicRoute>} />
                     </Routes>
                 </main>
             </div>

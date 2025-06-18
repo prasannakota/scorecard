@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BsBoxArrowInRight, BsPersonPlus, BsShieldLock } from "react-icons/bs";
 import Login from './Login';
 import Register from './Register';
-import AdminLogin from './AdminLogin';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom"
 
