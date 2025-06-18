@@ -25,6 +25,7 @@ import ManageQuestions from '../pages/ManageQuestions';
 import Department from '../pages/Department';
 import ProfileForm from '../components/profile/ProfileForm';
 import SocialLoginRedirect from "../routes/SocialLoginRedirect";
+import ResetUserPassword from "../pages/ResetUserPassword.jsx";
 
 function AppContent() {
     const location = useLocation();
@@ -66,7 +67,7 @@ function AppContent() {
                         <Route path="/forget-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
                         <Route path="/admin/manage-questions" element={<PublicRoute><ManageQuestions /></PublicRoute>}/>
                         <Route path="/admin/add-department" element={<PublicRoute><Department /></PublicRoute>} />
-
+                        <Route path="/user-password/reset/:token" element={<PublicRoute><ResetUserPassword /></PublicRoute>} />
                         {/* Private routes */}
                         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
                         <Route path="/assessment-form" element={<PrivateRoute><AssessmentForm /></PrivateRoute>} />

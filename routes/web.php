@@ -27,7 +27,7 @@ Route::middleware('web')->group(function () {
     Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
     Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 });
-Route::POST('/login-reset', [UserAuthController::class, 'generateResetToken']);
+
 // User Authentication Routes
 Route::middleware(['web', 'guest'])->group(function () {
     Route::get('login', [\App\Http\Controllers\User\UserAuthController::class, 'showLoginForm'])->name('login');
@@ -38,8 +38,8 @@ Route::middleware(['web', 'guest'])->group(function () {
     // Password Reset Routes
     Route::get('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'showForgotPasswordForm'])->name('password.request');
     Route::post('password/email', [\App\Http\Controllers\User\UserAuthController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('password/reset/{token}', [\App\Http\Controllers\User\UserAuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'reset'])->name('password.update');
+   Route::get('password/reset/{token}', [\App\Http\Controllers\User\UserAuthController::class, 'showResetForm'])->name('password.reset');
+   Route::post('password/reset', [\App\Http\Controllers\User\UserAuthController::class, 'reset'])->name('password.update');
 
 });
 

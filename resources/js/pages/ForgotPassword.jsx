@@ -22,14 +22,13 @@ export default function ForgotPassword() {
   });
 
   const handleSubmit = (data) => {
-    console.log('Sending password reset link to:', data.email);
-    axios.post(`/login-reset`, {
+    axios.post(`/api/login-reset`, {
       email: data.email.trim()
     },{
       headers: {
         "X-Requested-With": "XMLHttpRequest",
         "Content-Type": "application/json",
-      }}).then((response) => {
+      }, withCredentials: true,}).then((response) => {
       if(response.data.code === 200) {
         console.log(response);
         setSubmitted(true);
