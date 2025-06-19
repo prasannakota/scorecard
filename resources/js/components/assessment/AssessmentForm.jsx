@@ -296,8 +296,8 @@ export default function AssessmentForm() {
                 )}
 
                 <form onSubmit={(e) => e.preventDefault()}>
-                    <div className="mb-4 flex flex-col gap-2 custominput">
-                        <Label htmlFor="organisation" className='text-neutral30'>Name of your Organisation</Label>
+                    <div className="mb-4 flex flex-col gap-2 inputstyle">
+                        <Label htmlFor="organisation" className="text-gray10 text-xs font-medium">Name of your Organisation</Label>
                         <Input
                             id="organisation"
                             value={organisation}
@@ -309,8 +309,8 @@ export default function AssessmentForm() {
                             <p className="text-sm text-red-500">{getError('organization_name')}</p>
                         )}
                     </div>
-                    <div className="mb-4 flex flex-col gap-2 custominput">
-                        <Label htmlFor="companyUrl" className='text-neutral30'>What is your company website(URL)</Label>
+                    <div className="mb-4 flex flex-col gap-2 inputstyle">
+                        <Label htmlFor="companyUrl" className="text-gray10 text-xs font-medium">What is your company website(URL)</Label>
                         <Input
                             id="companyUrl"
                             type="url"
@@ -324,7 +324,7 @@ export default function AssessmentForm() {
                         )}
                     </div>
                     <div className="mb-4 flex flex-col gap-2">
-                        <Label className='text-neutral30'>Which industry or sector do you primarily operate in?</Label>
+                        <Label className="text-gray10 text-xs font-medium">Which industry or sector do you primarily operate in?</Label>
                         <Select value={industry} onValueChange={setIndustry}>
                             <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
@@ -338,7 +338,7 @@ export default function AssessmentForm() {
                         )}
                     </div>
                     <div className="mb-4 flex flex-col gap-2">
-                        <Label className='text-neutral30'>What is you annual total revenue?</Label>
+                        <Label className="text-gray10 text-xs font-medium">What is you annual total revenue?</Label>
                         <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
                             <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-46"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
@@ -352,7 +352,7 @@ export default function AssessmentForm() {
                         )}
                     </div>
                     <div className="mb-4 flex flex-col gap-2">
-                        <Label className='text-neutral30'>What country do you operate from?</Label>
+                        <Label className="text-gray10 text-xs font-medium">What country do you operate from?</Label>
                         <Select value={country} onValueChange={setCountry}>
                             <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
@@ -366,7 +366,7 @@ export default function AssessmentForm() {
                         )}
                     </div>
                     <div className="mb-4 flex flex-col gap-2">
-                        <Label className='text-neutral30'>How are you positioned in the market?</Label>
+                        <Label className="text-gray10 text-xs font-medium">How are you positioned in the market?</Label>
                         <Select value={marketPosition} onValueChange={setMarketPosition}>
                             <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>

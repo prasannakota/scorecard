@@ -118,32 +118,33 @@ const Login = () => {
   return (
     <div className="w-full mx-auto">
       <FlashMessage />
-      <form onSubmit={handleSubmit} className="space-y-4 w-full">
-        <div className="inputstyle relative mb-6">
-          <Label htmlFor="email">Email <em className="text-blue200">*</em></Label>
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="inputstyle relative flex flex-col gap-2 mb-6">
+          <Label htmlFor="email" className="text-gray10 text-xs font-medium">Email <em>*</em></Label>
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="name@example.com"
+            placeholder="Enter Email Address"
             value={formData.email}
             onChange={handleChange}
             required
-            className="border"
+            className="border text-sm font-medium"
           />
         </div>
 
-        <div className="inputstyle relative mb-6">
-          <Label htmlFor="password">Password <em className="text-blue200">*</em></Label>
+        <div className="inputstyle relative flex flex-col gap-2 mb-6">
+          <Label htmlFor="password" className="text-gray10 text-xs font-medium">Password <em>*</em></Label>
           <Input
             id="password"
             name="password"
+            placeholder="Enter Password"            
             type={showPassword ? "text" : "password"}
             value={formData.password}
             disabled={verifyingEmail}
             onChange={handleChange}
             required
-            className="pr-10"
+            className="pr-10 text-sm font-medium"
           />
 
           {error && (
@@ -187,25 +188,25 @@ const Login = () => {
             <Label htmlFor="remember" className="text-sm">Remember me</Label>
           </div>
           <Link to="/forget-password" className="text-sm text-gary200 underline hover:no-underline">
-            Forgot your password?
+            Forgot Password?
           </Link>
         </div>
 
         <Button
           type="submit"
-          className="w-full custombtn"
+          className="w-full custombtn mt-8"
           disabled={verifyingEmail}
         >
           {verifyingEmail ? 'Please wait...' : 'Login'}
         </Button>
 
-        <div className="flex items-center justify-center">
-          <Separator className="flex-grow" />
-          <span class="text-sm text-center  block text-gary300 my-3 mb-6 w-[180px] relative :before:content-[''] before:block before:w-full before:h-[1px] before:bg-gary300 before:relative before:top-2.5"><span className="bg-white text-gary300 p-1 relative z-1">OR</span></span>
-          <Separator className="flex-grow" />
+         <div className="flex items-center justify-center">
+            <Separator className="flex-grow" />
+            <span className="text-sm text-center  block text-gary300 mt-4 mb-4 w-[180px] relative :before:content-[''] before:block before:w-full before:h-[1px] before:bg-gary300 before:relative before:top-2.5"><span className="bg-white text-gary300 p-1 relative z-1">OR</span></span>
+            <Separator className="flex-grow" />
         </div>
 
-        <div className="flex justify-center gap-4 mt-4">
+        <div className="flex justify-center gap-4">
                 <a className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
                   href={`${backendUrl}/auth/google`} >
                     <svg  className="text-xl" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

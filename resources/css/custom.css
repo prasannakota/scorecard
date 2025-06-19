@@ -1,12 +1,7 @@
 .inputstyle input{
-    @apply rounded-lg  bg-white h-[56px] border border-gray100 hover:border-blue100 focus:border-blue100 focus-visible:border-blue100 !outline-none;
+    @apply rounded-md p-3 bg-white h-[40px] border border-neutral100 hover:border-blue100 focus:border-blue100 focus-visible:border-blue100 !outline-none;
 }
-.inputstyle label{
-    @apply absolute top-[-13px] left-3 py-1 px-2 bg-white text-black100 hover:text-blue200 z-10;
-}
-.inputstyle:hover label{
-    @apply  text-blue200;
-}
+
 button[data-state="active"]{
      @apply  bg-black500 text-white;
 }
@@ -35,9 +30,7 @@ button.custombtn{
 .imageupload button{
     @apply border  border-blue10 text-black100;
 }
-.custominput input{
-    @apply   h-[48px] rounded-lg md:h-[56px] border border-neutral70 hover:border-blue100 focus:border-blue100 focus-visible:border-blue100 !outline-none;
-}
+
 .forgotinput input{
     @apply  bg-white rounded-lg h-[56px] border border-green200 hover:border-green200 focus:border-green200 focus-visible:border-green200 !outline-none;
 }
@@ -46,4 +39,46 @@ button.custombtn{
 }
 .page-forget-password .main-wrapper{
     @apply flex  items-center justify-center;
+}
+.icon-dashbord{
+   @apply  bg-[url('/public/icons/dashboard.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-dashbord:hover .icon-dashbord{
+   @apply  bg-[url('/public/icons/dashboard-hover.svg')]
+}
+.icon-scoreboard{
+   @apply  bg-[url('/public/icons/scoreboard.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-scoreboard:hover .icon-scoreboard{
+   @apply  bg-[url('/public/icons/scoreboard-hover.svg')]
+}
+.icon-methodology{
+   @apply  bg-[url('/public/icons/methodology.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-methodology:hover .icon-methodology{
+   @apply  bg-[url('/public/icons/methodology-hover.svg')]
+}
+.icon-resources{
+   @apply  bg-[url('/public/icons/resources.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-resources:hover .icon-resources{
+   @apply  bg-[url('/public/icons/resources-hover.svg')]
+}
+.icon-feedback{
+   @apply  bg-[url('/public/icons/feedback.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-feedback:hover .icon-feedback{
+   @apply  bg-[url('/public/icons/feedback-hover.svg')]
+}
+.icon-settings{
+   @apply  bg-[url('/public/icons/settings.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-settings:hover .icon-settings{
+   @apply  bg-[url('/public/icons/settings-hover.svg')]
+}
+.icon-getadvice{
+   @apply  bg-[url('/public/icons/getadvice.svg')] bg-no-repeat bg-center h-5 w-5;
+}
+.link-getadvice:hover .icon-getadvice{
+   @apply  bg-[url('/public/icons/getadvice-hover.svg')]
 }
