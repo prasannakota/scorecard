@@ -18,6 +18,11 @@ const AdminSidebarLayout = ({ children }) => {
             iconPath: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 3.13a4 4 0 010 7.75M8 3.13a4 4 0 000 7.75',
         },
         {
+            to: '/admin-questions',
+            label: 'Questions',
+            iconPath: 'M12 14l9-9H5',
+        },
+        {
             to: '/admin-departments',
             label: 'Departments',
             iconPath: 'M3 7v4h18V7M3 11v4h18v-4M3 15v4h18v-4',

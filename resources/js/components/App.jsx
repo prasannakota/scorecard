@@ -20,7 +20,9 @@ import AssessmentScreen from '../components/assessment/AssessmentScreen';
 import GetAdvice from "../pages/GetAdvice";
 import AddUser from "../pages/AddUser";
 import FeedBack from "../pages/FeedBack";
-import ManageQuestions from '../pages/ManageQuestions';
+import ManageQuestions from '../pages/Admin/DashBoard/ManageQuestions';
+import Questions from '../pages/Admin/DashBoard/Questions';
+
 import Department from '../pages/Admin/DashBoard/Department';
 import ProfileForm from '../components/profile/ProfileForm';
 import SocialLoginRedirect from "../routes/SocialLoginRedirect";
@@ -102,6 +104,8 @@ function AppContent() {
                         <Route path="/admin-settings" element={<AdminRoute><Department /></AdminRoute>} />
                         <Route path="/admin-assessments" element={<AdminRoute><Department /></AdminRoute>} />
                         <Route path="/admin-industries" element={<AdminRoute><AdminIndustries /></AdminRoute>} />
+			<Route path="/admin-managequestions" element={<AdminRoute><ManageQuestions /></AdminRoute>} />
+                       <Route path="/admin-questions" element={<AdminRoute><Questions /></AdminRoute>} />
                     </Routes>
                 </main>
             </div>
