@@ -16,7 +16,7 @@ export default function Home() {
         <div className="hidden md:flex flex-col items-center text-center md:w-[50%]">
           {activeTab === "login" && (
             <section
-                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl max-w-[676px] min-h-[850px] max-md:px-5 max-md:py-24"
+                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl max-w-[676px] min-h-[870px] max-md:px-5 max-md:py-24"
                   role="banner"
                   aria-labelledby="hero-title"
               >
@@ -45,7 +45,7 @@ export default function Home() {
 
           {activeTab === "register" && (
                       <section
-                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl w-full min-h-[850px] max-md:px-5 max-md:py-24"
+                  className="flex overflow-hidden relative flex-col items-center px-16 py-28 rounded-xl w-full min-h-[870px] max-md:px-5 max-md:py-24"
                   role="banner"
                   aria-labelledby="hero-title"
               >
@@ -66,11 +66,11 @@ export default function Home() {
         </div>
 
         <div className='loginscreen py-[40px] px-[20px] md:w-[50%]'>
-          <div className='logo mb-[30px] md:mb-[75px]'>
+          <div className='logo mb-[30px] md:mb-[50px]'>
             <img src="/images/Kensiumlogo.svg" alt="Logo" />
           </div>
             <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-2 mb-4 p-1 bg-gray50">
+            <TabsList className="grid grid-cols-2 mb-8 p-1 bg-gray50">
               <TabsTrigger value="login" className="flex items-center justify-center gap-2 px-3 md:px-5 py-2 rounded-md text-sm md:!text-base">
                 Login
               </TabsTrigger>
