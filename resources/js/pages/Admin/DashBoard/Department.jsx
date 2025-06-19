@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -209,6 +210,18 @@ export default function AdminDepartment (){
         }
     };
 
+    const navigate = useNavigate();
+
+    const handleViewQuestions = (department) => {
+        navigate('/admin-questions', {
+            state: {
+                departmentId: department.id,
+                departmentName: department.name,
+            },
+        });
+    };
+
+
     return (
         <AdminSidebarLayout>
         <div className="p-6">
@@ -302,6 +315,25 @@ export default function AdminDepartment (){
                                         {/* Empty space to maintain layout */}
                                     </div>
                                     <div className="mt-6 flex justify-end space-x-3">
+
+                                        {/*<button
+                                            onClick={() => window.open(`/admin-questions/${dept.id}`, '_blank')}
+                                            className="text-green-600 hover:text-green-800"
+                                        >
+                                            View Questions
+
+                                        </button>*/}
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                console.log('Edit button clicked for department:', dept);
+                                                handleViewQuestions(dept);
+                                            }}
+                                            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                        >
+                                            View Questions
+                                        </button>
                                         <button
                                             onClick={(e) => {
                                                 e.preventDefault();

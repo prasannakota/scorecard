@@ -793,7 +793,7 @@ export default function QuestionOptionFlowBuilder() {
                 </div>*/}
 
                 <div className="mt-4 grid grid-cols-4 gap-4 text-sm justify-center mx-auto max-w-4xl">
-                    <div className="flex flex-col items-center justify-center">
+                   {/* <div className="flex flex-col items-center justify-center">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                             <span>Questions</span>
@@ -820,7 +820,7 @@ export default function QuestionOptionFlowBuilder() {
                             <span>Follow-up Pool</span>
                         </div>
                         <span className="font-semibold text-purple-700 mt-1">{allFollowUpQuestions.length}</span>
-                    </div>
+                    </div>*/}
                 </div>
             </div>
 

@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import AdminSidebarLayout from "./AdminSidebarLayout";
 
 export default function Questions() {
+    const location = useLocation();
+    const { departmentId, departmentName } = location.state || {};
     const [questions, setQuestions] = useState([]);
     const containerRef = useRef(null);
 
     // API Functions
-    const fetchQuestions = async () => {
+    const fetchQuestions = async (departmentId = null) => {
         try {
             const token = sessionStorage.getItem("authorization");
-            const response = await fetch("/api/fetch-questions", {
+            const url = departmentId
+                ? `/api/fetch-questions?department_id=${departmentId}`
+                : `/api/fetch-questions`;
+
+            const response = await fetch(url, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -25,15 +32,18 @@ export default function Questions() {
             }
 
             const data = await response.json();
-            setQuestions(data);
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                setQuestions([]);
+            } else {
+                setQuestions(data);
+            }
         } catch (err) {
-            setError(err.message);
             console.error("Failed to fetch questions:", err);
         }
     };
 
     useEffect(() => {
-        fetchQuestions();
+        fetchQuestions(departmentId);
     }, []);
 
     const handleClick = (questionId) => {
@@ -92,6 +102,13 @@ export default function Questions() {
         <div className="container p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Questions List</h1>
+
+                {departmentName && (
+                    <p className="text-sm text-gray-600 mt-1">
+                        Questions for Department: <span className="font-medium">{departmentName}</span>
+                    </p>
+                )}
+
                 <Button 
                     variant="outline" 
                     className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
@@ -104,40 +121,57 @@ export default function Questions() {
             
             <div className="space-y-4">
                 <div ref={containerRef} className="space-y-4">
-                    {questions.map((question, index) => (
-                        <div
-                            key={question.id}
-                            className="bg-white rounded-lg shadow-md p-6 cursor-move hover:shadow-lg transition-shadow"
-                            draggable={true}
-                            onDragStart={(e) => handleDragStart(e, index)}
-                            onDragOver={(e) => handleDragOver(e)}
-                            onDrop={(e) => handleDrop(e, index)}
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <span className="text-sm text-gray-500">ID: {question.id}</span>
-                            </div>
-                            <div className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                Question
-                            </div>
-                            <div className="text-gray-800 font-medium">
-                                {question.question_text}
-                            </div>
-                            <div className="mt-2 flex gap-4">
-                                <span className="text-xs text-gray-500">Drag handle</span>
-                                <div className="w-6 h-6 bg-gray-200 rounded-full cursor-move hover:bg-gray-300" />
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleClick(question.id)}
-                                >
-                                    View Details
-                                </Button>
-                            </div>
+                    {questions.length === 0 ? (
+                        <div className="text-center py-8">
+                            <p className="text-gray-600">No questions available</p>
                         </div>
-                    ))}
+                    ) : (
+                        questions.map((question, index) => (
+                            <div
+                                key={question.id}
+                                className="bg-white rounded-lg shadow-md p-6 cursor-move hover:shadow-lg transition-shadow"
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e) => handleDragOver(e)}
+                                onDrop={(e) => handleDrop(e, index)}
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="text-lg font-semibold">{question.question}</h3>
+                                        <p className="text-sm text-gray-600">{question.description}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            className="text-blue-600 hover:text-blue-800"
+                                            onClick={() => handleClick(question.id)}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <div className="text-gray-800 font-medium">
+                                        {question.question_text}
+                                    </div>
+                                    <div className="mt-2 flex gap-4">
+                                        <span className="text-xs text-gray-500">Drag handle</span>
+                                        <div className="w-6 h-6 bg-gray-200 rounded-full cursor-move hover:bg-gray-300" />
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleClick(question.id)}
+                                        >
+                                            View Details
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>
-        </AdminSidebarLayout>
-    );
+    </AdminSidebarLayout>
+);
 }

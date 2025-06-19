@@ -196,34 +196,10 @@ class QuestionController extends Controller
             // Common required fields with defaults
             $q['question_text'] = $q['text'] ?? 'Sample Question';
             $q['department_id'] = $q['department_id'] ?? 1;
-            $q['option_a'] = $q['option_a'] ?? 'Option A';
-            $q['option_b'] = $q['option_b'] ?? 'Option B';
-            $q['option_c'] = $q['option_c'] ?? 'Option C';
-            $q['option_d'] = $q['option_d'] ?? 'Option D';
-            $q['option_e'] = $q['option_e'] ?? 'Option E';
-            $q['option_f'] = $q['option_f'] ?? 'Option F';
-            $q['score_a'] = $q['score_a'] ?? 0;
-            $q['score_b'] = $q['score_b'] ?? 1;
-            $q['score_c'] = $q['score_c'] ?? 2;
-            $q['score_d'] = $q['score_d'] ?? 3;
-            $q['score_e'] = $q['score_e'] ?? 4;
-            $q['score_f'] = $q['score_f'] ?? 5;
 
             $validator = Validator::make($q, [
                 'question_text' => 'required|string|max:255',
-                'department_id' => 'required|integer',
-                'option_a' => 'required|string|max:255',
-                'option_b' => 'required|string|max:255',
-                'option_c' => 'required|string|max:255',
-                'option_d' => 'required|string|max:255',
-                'option_e' => 'required|string|max:255',
-                'option_f' => 'required|string|max:255',
-                'score_a' => 'required|integer|min:0',
-                'score_b' => 'required|integer|min:0',
-                'score_c' => 'required|integer|min:0',
-                'score_d' => 'required|integer|min:0',
-                'score_e' => 'required|integer|min:0',
-                'score_f' => 'required|integer|min:0'
+                'department_id' => 'required|integer'
             ]);
 
             if ($validator->fails()) {
