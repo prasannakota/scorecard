@@ -45,9 +45,18 @@ class AssessmentController extends Controller
         return $this->sendResponse($assessment, ['message' => 'Assessment fetched successfully']);
     }
 
-    public function getAllQuestions()
+    public function getAllQuestions(Request $request)
     {
-        $questions = Question::select('id', 'question_text')->get();
+        $departmentId = $request->query('department_id');
+
+        $query = Question::select('id', 'question_text');
+
+        if ($departmentId) {
+            $query->where('department_id', $departmentId);
+        }
+
+        $questions = $query->get();
+
         return response()->json($questions);
     }
 
