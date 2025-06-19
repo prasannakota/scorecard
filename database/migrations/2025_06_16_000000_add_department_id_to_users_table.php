@@ -9,20 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+/*    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('department_id')->nullable()->after('business_category');
         });
     }
+ */
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+   /* public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('department_id');
         });
-    }
+    }*/
 };
