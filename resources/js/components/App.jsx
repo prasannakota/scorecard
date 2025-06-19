@@ -40,8 +40,13 @@ function AppContent() {
     const user = sessionStorage.getItem('user');
     const admin = sessionStorage.getItem('admin');
     const hideNavbarOn = ['/'];
+    const guestNavbarOn = ['/forget-password'];
     const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+    let shouldShowGuestNavbar = guestNavbarOn.includes(location.pathname);
+    if((location.pathname).startsWith('/user-password/reset/')){
+        shouldShowGuestNavbar = true;
+    }
     const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
     const pageSlug = location.pathname
     .replace(/^\/|\/$/g, '')     // remove leading/trailing slashes
@@ -58,6 +63,10 @@ function AppContent() {
             {shouldShowNavbar && (
                 user ? <Navbar toggleSidebar={toggleSidebar} /> :
                     admin ? <AdminNav toggleSidebar={toggleSidebar} /> : null
+            )}
+
+            {shouldShowGuestNavbar && (
+                <GuestNavbar/>
             )}
 
             {/* Body layout with Sidebar and Main Content */}
