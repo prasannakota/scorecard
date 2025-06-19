@@ -29,6 +29,20 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
+import {Form, FormField, FormItem, FormMessage} from "../ui/form.js";
+import { useForm } from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+
+const formSchema = z
+    .object({
+        name: z.string().min(1, "Name is required"),
+        profile_picture_preview: z.any().optional(),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+        message: "Passwords do not match",
+        path: ["password_confirmation"],
+    });
 
 
 export default function ProfileForm() {
@@ -39,6 +53,8 @@ export default function ProfileForm() {
     const [user, setUser] = useState({});
     const [editing, setEditing] = useState(false);
     const [newName, setNewName] = useState(user?.name || '');
+    const [newDesignation, setNewDesignation] = useState(user?.role || '');
+    const [newNumber, setNewNumber] = useState(user?.mobile || '');
     const [newAvatar, setNewAvatar] = useState(null); // Holds the new avatar file
 
     const [companyUrl, setCompanyUrl] = useState('');
@@ -67,10 +83,19 @@ export default function ProfileForm() {
 
     const [isEmailDialogOpen, setEmailDialogOpen] = useState(false);
     const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [isProfileDialogOpen, setProfileDialogOpen] = useState(false);
     const [newEmail, setNewEmail] = useState('');
+    const [ConfirmnewEmail, setConfirmnewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
-
-
+    const [step, setStep] = useState(1);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const form = useForm({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            profile_picture_preview: null,
+        },
+    });
     const handleSaveProfile = async () => {
         // Handle saving updated name and avatar (send to backend)
         const formData = new FormData();
@@ -208,9 +233,15 @@ export default function ProfileForm() {
         }
     };
 
+    const [emailError, setEmailError] = useState("");
     const handleUpdateEmail = async () => {
         try {
             setSettingsSuccessMessage('');
+            setEmailError("");
+            if (newEmail !== ConfirmnewEmail) {
+                setEmailError("Email do not match.");
+                return;
+            }
             const formData = new FormData();
             formData.append('email', newEmail);
             const response = await updateProfile(formData);
@@ -225,6 +256,15 @@ export default function ProfileForm() {
 
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    const handleNextStep = () => {
+        if (!currentPassword) {
+            setPasswordError("Please enter your current password.");
+            return;
+        }
+        setPasswordError("");
+        setStep(2);
+    };
 
     const handleUpdatePassword = async () => {
         setPasswordError("");
@@ -271,50 +311,61 @@ export default function ProfileForm() {
                 {
                     user?.profile_picture || newAvatar
                         ? <span className='rounded-full border'><img
-                            src={ newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}` }
+                            src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
                             alt={user?.name || 'User'}
                             className="w-24 h-24 rounded-full object-cover"
                         /></span>
 
-                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"   alt={user?.name} /></span>
+                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"
+                                                                     alt={user?.name}/></span>
                 }
+                <>
+                    <h6 className="mt-4 text-xs font-medium rounded-full border border-violet100 text-violet100 bg-violet50 px-3 py-1">Administrator</h6>
+                    <h2 className="mt-4 text-lg text-black350 font-black capitalize">{user?.name}</h2>
+                    <Separator className="my-4"/>
+                    <div
+                        className="text-sm text- black350 flex items-center gap-3 py-3 border-b border-neutral90 w-full text-left">
+                        <Mail size={16}/> {user?.email || 'user@company.com'}</div>
+                    <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone
+                        size={16}/> {user?.mobile || '+1 555-123-4567'}</div>
 
-                {editing ? (
-                    <>
-                        {/* Name Input */}
-                        <Input
-                            value={newName ?? user?.name ?? ''} // Use fallback
-                            onChange={(e) => setNewName(e.target.value)}
-                            className="mt-4 text-center"
-                        />
+                    <Dialog open={isProfileDialogOpen} className="top-[50%]" onOpenChange={(open) => {
+                        setProfileDialogOpen(open);
+                        if (!open) {
+                            setNewEmail("");
+                            setConfirmnewEmail("");
+                            setEmailError("");
+                        }
+                    }}>
+                        <DialogTrigger asChild><Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base">Edit Profile</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogTitle>Edit Profile</DialogTitle>
+                            {
+                                user?.profile_picture || newAvatar
+                                    ? <span className='rounded-full border'><img
+                                        src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
+                                        alt={user?.name || 'User'}
+                                        className="w-24 h-24 rounded-full object-cover"
+                                    /></span>
 
-                        {/* Avatar Upload */}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setNewAvatar(e.target.files[0])}
-                            className="mt-2"
-                        />
-
-                        {/* Save and Cancel Buttons */}
-                        <div className="flex gap-2 mt-4">
+                                    : <span className='rounded-full border'><img src="/images/profile_placeholder.png"
+                                                                                 alt={user?.name}/></span>
+                            }
+                            <label>Full Name</label>
+                            <Input type="input" value={newName} onChange={e => setNewName(e.target.value)}/>
+                            <label>Designation</label>
+                            <Input type="input" value={newDesignation} onChange={e => setNewDesignation(e.target.value)}/>
+                            <label>Email</label>
+                            <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
+                            <label>Mobile Number</label>
+                            <Input type="input" value={newNumber} onChange={e => setNewNumber(e.target.value)}/>
+                            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+                            <Button variant="outline" onClick={() => setProfileDialogOpen(false)}>Discard</Button>
                             <Button onClick={handleSaveProfile}>Save</Button>
-                            <Button variant="secondary" onClick={() => setEditing(false)}>Cancel</Button>
-                        </div>
-                    </>
-                )    : (
-                    <>
-                        <h6 className="mt-4 text-xs font-medium rounded-full border border-violet100 text-violet100 bg-violet50 px-3 py-1">Administrator</h6>
-                        <h2 className="mt-4 text-lg text-black350 font-black capitalize">{user?.name}</h2>
-                        <Separator className="my-4" />
-                        <div className="text-sm text- black350 flex items-center gap-3 py-3 border-b border-neutral90 w-full text-left"><Mail size={16} /> {user?.email || 'user@company.com'}</div>
-                        <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone size={16} /> {user?.mobile || '+1 555-123-4567'}</div>
+                        </DialogContent>
+                    </Dialog>
+                </>
 
-                        <Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base" onClick={() => setEditing(true)}>
-                            Edit Profile
-                        </Button>
-                    </>
-                )}
             </aside>
 
             {/* Right Content with Tabs */}
@@ -342,13 +393,13 @@ export default function ProfileForm() {
                 </div>
 
 
-
                 {/* Tab Content */}
                 {activeTab === 'background' && (
                     <div className="flex flex-col w-full max-w-2xl">
                         {successMessage && (
-                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                            <Alert variant="default"
+                                   className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                                <CheckCircle className="w-5 h-5 text-green-600"/>
                                 <AlertTitle className="font-semibold">Success</AlertTitle>
                                 <AlertDescription>{successMessage}</AlertDescription>
                             </Alert>
@@ -360,7 +411,8 @@ export default function ProfileForm() {
 
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="mb-4 flex flex-col gap-2">
-                                <Label htmlFor="organisation" className='text-neutral30'>Name of your organisation</Label>
+                                <Label htmlFor="organisation" className='text-neutral30'>Name of your
+                                    organisation</Label>
                                 <Input
                                     id="organisation"
                                     value={organisation}
@@ -387,7 +439,8 @@ export default function ProfileForm() {
                             <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
-                                    <SelectTrigger className="border border-neutral80"><SelectValue placeholder="Select industry" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral80"><SelectValue
+                                        placeholder="Select industry"/></SelectTrigger>
                                     <SelectContent>
                                         {industryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -401,7 +454,8 @@ export default function ProfileForm() {
                             <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'>Annual revenue</Label>
                                 <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select revenue" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue
+                                        placeholder="Select revenue"/></SelectTrigger>
                                     <SelectContent>
                                         {annualRevenueOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -415,7 +469,8 @@ export default function ProfileForm() {
                             <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'>Country</Label>
                                 <Select value={country} onValueChange={setCountry}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select country" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue
+                                        placeholder="Select country"/></SelectTrigger>
                                     <SelectContent>
                                         {countryOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -429,7 +484,8 @@ export default function ProfileForm() {
                             <div className="mb-4 flex flex-col gap-2">
                                 <Label className='text-neutral30'>Market position</Label>
                                 <Select value={marketPosition} onValueChange={setMarketPosition}>
-                                    <SelectTrigger className="border border-neutral70"><SelectValue placeholder="Select position" /></SelectTrigger>
+                                    <SelectTrigger className="border border-neutral70"><SelectValue
+                                        placeholder="Select position"/></SelectTrigger>
                                     <SelectContent>
                                         {marketPositionOptions.map((item) => (
                                             <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -494,8 +550,9 @@ export default function ProfileForm() {
                 {activeTab === 'settings' && (
                     <div className="flex flex-col gap-6 max-w-md">
                         {settingsSuccessMessage && (
-                            <Alert variant="default" className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                            <Alert variant="default"
+                                   className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
+                                <CheckCircle className="w-5 h-5 text-green-600"/>
                                 <AlertTitle className="font-semibold">Success</AlertTitle>
                                 <AlertDescription>{settingsSuccessMessage}</AlertDescription>
                             </Alert>
@@ -504,12 +561,23 @@ export default function ProfileForm() {
                         <div>
                             <Label>Email</Label>
                             <p className="mt-1">{user?.email}</p>
-                            <Dialog open={isEmailDialogOpen} onOpenChange={setEmailDialogOpen}>
+                            <Dialog open={isEmailDialogOpen} className="top-[50%]" onOpenChange={(open) => {
+                                setEmailDialogOpen(open);
+                                if (!open) {
+                                    setNewEmail("");
+                                    setConfirmnewEmail("");
+                                    setEmailError("");
+                                }
+                            }}>
                                 <DialogTrigger asChild><Button variant="outline" className="mt-2">Update Email</Button></DialogTrigger>
                                 <DialogContent>
                                     <DialogTitle>Update Email</DialogTitle>
-                                    <DialogDescription>Enter your new email address</DialogDescription>
-                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+                                    <label>Email Address*</label>
+                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
+                                    <label>Email Address*</label>
+                                    <Input type="email" value={ConfirmnewEmail} onChange={e => setConfirmnewEmail(e.target.value)}/>
+                                    {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+                                    <Button variant="outline" onClick={() => setEmailDialogOpen(false)}>Discard</Button>
                                     <Button onClick={handleUpdateEmail}>Save</Button>
                                 </DialogContent>
                             </Dialog>
@@ -518,32 +586,61 @@ export default function ProfileForm() {
                             <Label>Password</Label>
                             <p className="mt-1">********</p>
 
-                            <Dialog open={isPasswordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                            <Dialog open={isPasswordDialogOpen} className="top-[50%]" onOpenChange={(open) => {
+                                setPasswordDialogOpen(open);
+                                if (!open) {
+                                    setStep(1); // Reset step when dialog closes
+                                    setCurrentPassword("");
+                                    setNewPassword("");
+                                    setConfirmPassword("");
+                                    setPasswordError("");
+                                }
+                            }}>
                                 <DialogTrigger asChild>
                                     <Button variant="outline" className="mt-2">Update Password</Button>
                                 </DialogTrigger>
 
                                 <DialogContent>
                                     <DialogTitle>Update Password</DialogTitle>
-                                    <DialogDescription>Enter a new password</DialogDescription>
+                                    {step === 1 && (
+                                        <div className="space-y-2">
+                                            <label>Current Password*</label>
+                                            <Input
+                                                type="password"
+                                                placeholder="Current Password"
+                                                value={currentPassword}
+                                                onChange={e => setCurrentPassword(e.target.value)}
+                                            />
+                                            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
 
-                                    <div className="space-y-2">
-                                        <Input
-                                            type="password"
-                                            placeholder="New Password"
-                                            value={newPassword}
-                                            onChange={e => setNewPassword(e.target.value)}
-                                        />
-                                        <Input
-                                            type="password"
-                                            placeholder="Confirm Password"
-                                            value={confirmPassword}
-                                            onChange={e => setConfirmPassword(e.target.value)}
-                                        />
-                                        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-                                    </div>
+                                            <Button onClick={handleNextStep} className="mt-2">Next</Button>
+                                        </div>
+                                    )}
 
-                                    <Button onClick={handleUpdatePassword}>Save</Button>
+                                    {step === 2 && (
+                                        <div className="space-y-2">
+                                            <label>New Password*</label>
+                                            <Input
+                                                type="password"
+                                                placeholder="New Password"
+                                                value={newPassword}
+                                                onChange={e => setNewPassword(e.target.value)}
+                                            />
+                                            <label>Confirm New Password*</label>
+                                            <Input
+                                                type="password"
+                                                placeholder="Confirm New Password"
+                                                value={confirmPassword}
+                                                onChange={e => setConfirmPassword(e.target.value)}
+                                            />
+                                            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+
+                                            <div className="flex justify-between mt-4">
+                                                <Button variant="outline" onClick={() => setPasswordDialogOpen(false)}>Cancel</Button>
+                                                <Button onClick={handleUpdatePassword}>Save Changes</Button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </DialogContent>
                             </Dialog>
                         </div>
