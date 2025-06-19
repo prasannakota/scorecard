@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import {
     Form,
@@ -121,17 +122,18 @@ export default function Register() {
                             </div>
                         )}
 
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                             {/* First and Last Name */}
                             <div className="flex flex-col md:flex-row gap-4">
                                 <FormField
                                     control={form.control}
                                     name="first_name"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>First Name<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                            <FormLabel className="text-gray10 text-xs font-medium">First Name<em>*</em></FormLabel>
                                             <FormControl>
-                                                <Input placeholder="John" {...field} />
+                                                <Input placeholder="Enter First Name" {...field} 
+                                                 className="text-sm font-medium" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -141,10 +143,11 @@ export default function Register() {
                                     control={form.control}
                                     name="last_name"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Last Name<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                            <FormLabel className="text-gray10 text-xs font-medium">Last Name<em>*</em></FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Doe" {...field} />
+                                                <Input placeholder="Enter Lasr Name" {...field} 
+                                                 className="text-sm font-medium" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -158,10 +161,11 @@ export default function Register() {
                                     control={form.control}
                                     name="email"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Work Email<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                            <FormLabel className="text-gray10 text-xs font-medium">Work Email<em>*</em></FormLabel>
                                             <FormControl>
-                                                <Input type="email" placeholder="you@company.com" {...field} />
+                                                <Input type="email" placeholder="Enter Email Address" {...field} 
+                                                 className="text-sm font-medium" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -171,14 +175,14 @@ export default function Register() {
                                     control={form.control}
                                     name="mobile"
                                     render={({ field }) => (
-                                        <FormItem className="flex-1 inputstyle relative mb-4">
-                                            <FormLabel>Mobile<em className="text-blue200">*</em></FormLabel>
+                                        <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                            <FormLabel className="text-gray10 text-xs font-medium">Mobile<em>*</em></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="tel"
                                                     placeholder="+11234567890"
                                                     {...field}
-                                                />
+                                                     className="text-sm font-medium" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -186,75 +190,21 @@ export default function Register() {
                                 />
                             </div>
 
-                            {/* Profile Picture Upload */}
-                           {/* <FormField control={form.control} name="profile_picture_preview" render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <div className="w-full imageupload bg-gray-100 p-4 mb-4 flex flex-col items-center gap-2">
-                                        <div 
-                                            className="relative  flex items-center justify-center w-32 h-32   overflow-hidden cursor-pointer"
-                                            onDragOver={(e) => e.preventDefault()}
-                                            onDrop={(e) => {
-                                                e.preventDefault();
-                                                const file = e.dataTransfer.files[0];
-                                                if (file && file.type.startsWith('image/')) {
-                                                    field.onChange(file);
-                                                }
-                                            }}
-                                            onClick={() => document.getElementById('profile-upload')?.click()}
-                                        >
-                                            {field.value && typeof field.value !== 'string' ? (
-                                                <img 
-                                                    src={URL.createObjectURL(field.value)} 
-                                                    alt="Preview" 
-                                                    className="object-cover w-24 h-24 rounded-full" 
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                    <p className="text-xs">Add profile picture</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="mt-2 ">
-                                            <Button 
-                                                variant="outline" 
-                                                className="border border-blue-700"
-                                                onClick={() => document.getElementById('profile-upload')?.click()}
-                                            >
-                                                {field.value ? 'Change Photo' : 'Upload Photo'}
-                                            </Button>
-                                            <input
-                                                type="file"
-                                                id="profile-upload"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (file) {
-                                                        field.onChange(file);
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                    <FormMessage />
-                                </FormItem>
-                            )} /> */}
+                            
 
                             <FormField
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <FormItem className="flex-1 inputstyle relative mb-4">
-                                        <FormLabel>Password<em className="text-blue200">*</em></FormLabel>
+                                    <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                        <FormLabel className="text-gray10 text-xs font-medium">Password<em>*</em></FormLabel>
                                         <FormControl>
                                             <div className="inputstyle relative mb-4">
                                                 <Input
                                                     type={showPassword ? "text" : "password"}
-                                                    placeholder="******"
+                                                    placeholder="Enter Password"
                                                     {...field}
+                                                     className="text-sm font-medium"
                                                 />
                                                 <button
                                                     type="button"
@@ -273,14 +223,15 @@ export default function Register() {
                                 control={form.control}
                                 name="password_confirmation"
                                 render={({ field }) => (
-                                    <FormItem className="flex-1 inputstyle relative mb-4">
-                                        <FormLabel>Confirm Password<em className="text-blue200">*</em></FormLabel>
+                                    <FormItem className="flex-1 inputstyle relative flex flex-col gap-2 mb-6">
+                                        <FormLabel className="text-gray10 text-xs font-medium">Confirm Password<em>*</em></FormLabel>
                                         <FormControl>
                                             <div className="relative">
                                                 <Input
                                                     type={showConfirmPassword ? "text" : "password"}
-                                                    placeholder="******"
+                                                    placeholder="Re-Enter Password"
                                                     {...field}
+                                                     className="text-sm font-medium"
                                                 />
                                                 <button
                                                     type="button"
@@ -299,7 +250,7 @@ export default function Register() {
                                 control={form.control}
                                 name="terms"
                                 render={({ field }) => (
-                                    <FormItem className="flex items-start space-x-2 relative mb-4 inputchekbtn">
+                                    <FormItem className="flex items-start space-x-2 relative mt-2 inputchekbtn">
                                         <FormControl>
                                             <Checkbox
                                                 checked={field.value}
@@ -330,13 +281,18 @@ export default function Register() {
                                 )}
                             />
 
-                            <Button type="submit" className="w-full custombtn">
+                            <Button type="submit" className="w-full custombtn mt-8">
                                 Create Account
                             </Button>
                         </form>
                     </Form>
+                    <div className="flex items-center justify-center">
+                        <Separator className="flex-grow" />
+                        <span className="text-sm text-center  block text-gary300 mt-4 mb-4 w-[180px] relative :before:content-[''] before:block before:w-full before:h-[1px] before:bg-gary300 before:relative before:top-2.5"><span className="bg-white text-gary300 p-1 relative z-1">OR</span></span>
+                        <Separator className="flex-grow" />
+                    </div>
 
-                <div className="flex justify-center gap-4 mt-8">
+                <div className="flex justify-center gap-4">
                        <a className="px-8 py-2 rounded-md border   border-blue10 hover:bg-white inline-flex items-center justify-center"
                   href={`${backendUrl}/auth/google`} >
                     <svg  className="text-xl" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
