@@ -135,6 +135,12 @@ class UserAuthController extends Controller
             if ($request->has('email')) {
                 $rules['email'] = 'required|email|unique:users,email,' . $user->id;
             }
+            if ($request->has('role')) {
+                $rules['role'] = 'required|string|max:255';
+            }
+            if ($request->has('mobile')) {
+                $rules['mobile'] = 'required|string|max:255';
+            }
 
             if ($request->has('password')) {
                 $rules['password'] = [
@@ -164,12 +170,20 @@ class UserAuthController extends Controller
             if (isset($validated['password'])) {
                 $user->password = Hash::make($validated['password']);
             }
+            if (isset($validated['role'])) {
+                $user->role = $validated['role'];
+            }
+            if (isset($validated['mobile'])) {
+                $user->mobile = $validated['mobile'];
+            }
 
             // Handle avatar upload
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $path = $file->store('profile_pictures', 'public');
                 $user->profile_picture = $path;
+            }else{
+                $user->profile_picture = null;
             }
 
             $user->save();
