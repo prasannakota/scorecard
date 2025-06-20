@@ -280,6 +280,8 @@ export default function AssessmentForm() {
                       </span>
                 </h1>
             </header>
+
+            
             <p>A few quick answers will enable us to better support your assessment journey.</p>
 
             <div className="flex flex-col w-full max-w-2xl">
@@ -326,7 +328,7 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className="text-gray10 text-xs font-medium">Which industry or sector do you primarily operate in?</Label>
                         <Select value={industry} onValueChange={setIndustry}>
-                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger className="border border-neutral60  p-2"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
                                 {industryOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -340,8 +342,8 @@ export default function AssessmentForm() {
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className="text-gray10 text-xs font-medium">What is you annual total revenue?</Label>
                         <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
-                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-46"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent>
+                            <SelectTrigger className="border border-neutral60  p-2"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent className="!w-full !relative max-h-[250px] overflow-auto bg-white">
                                 {annualRevenueOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
                                 ))}
@@ -351,11 +353,11 @@ export default function AssessmentForm() {
                             <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
                         )}
                     </div>
-                    <div className="mb-4 flex flex-col gap-2">
+                    <div className="mb-4 flex flex-col gap-2 customselect">
                         <Label className="text-gray10 text-xs font-medium">What country do you operate from?</Label>
                         <Select value={country} onValueChange={setCountry}>
-                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent>
+                            <SelectTrigger className="border border-neutral60  p-2"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectContent className="!w-full !relative max-h-[250px] overflow-auto bg-white">
                                 {countryOptions.map((item) => (
                                     <SelectItem key={item} value={item}>{item}</SelectItem>
                                 ))}
@@ -367,11 +369,11 @@ export default function AssessmentForm() {
                     </div>
                     <div className="mb-4 flex flex-col gap-2">
                         <Label className="text-gray10 text-xs font-medium">How are you positioned in the market?</Label>
-                        <Select value={marketPosition} onValueChange={setMarketPosition}>
-                            <SelectTrigger className="border border-neutral60  px-3 py-3 md:px-4 md:py-4"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent>
+                        <Select value={marketPosition} onValueChange={setMarketPosition} className="w-full">
+                            <SelectTrigger className="border border-neutral60 w-full p-2"><SelectValue placeholder="Select" /></SelectTrigger>
+                             <SelectContent className="!w-full !relative max-w-[100%] max-h-[250px] overflow-auto bg-white">
                                 {marketPositionOptions.map((item) => (
-                                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                                    <SelectItem className="!w-full max-w-[100%]" key={item} value={item}>{item}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
