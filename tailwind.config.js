@@ -25,6 +25,7 @@ module.exports = {
         blue200: '#0D8DFF',
         blue300: '#0B2035',
         blue400: '#092540',
+        blue500: '#3B6AFF',
 
         
         neutral30: '#444748',
@@ -34,13 +35,15 @@ module.exports = {
         neutral80: '#C4C7C7',
         neutral90: '#E1E3E3',
         neutral100: '#D4D4D4',
-        
+
         white05: '#FFFFFF0D',
         white10: '#FFFFFF1C',
         white40: '#FFFFFF75',
         white50: '#F1F1F1',
         white60: '#F6F6F6',
-        white100: '#F8F8F8',      
+        white100: '#F8F8F8', 
+        white90: '#F8FAFA', 
+        white100:'#FAF8FF',    
         
         black100: '#131525',      
         black200: '#0A2540',
@@ -50,6 +53,7 @@ module.exports = {
         black500: '#0C1E2E',
         black600: '#011917',
         black650: '#01100F',
+        black700: '#5C5F5F',
 
         green100: '#01473D',
         green200: '#12B28C',

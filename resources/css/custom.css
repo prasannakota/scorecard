@@ -12,7 +12,7 @@ button[data-state="active"]{
      @apply w-[24px] h-[24px] items-center;
 }
 button.custombtn{
-    @apply  text-white h-[56px] font-black text-xl hover:bg-primary-600;
+    @apply  text-white h-[56px] bg-primary-500 font-black text-xl hover:bg-primary-600;
 }
 .customlabel{
     @apply flex gap-2 flex-col;
@@ -81,4 +81,10 @@ button.custombtn{
 }
 .link-getadvice:hover .icon-getadvice{
    @apply  bg-[url('/public/icons/getadvice-hover.svg')]
+}
+div[role="dialog"][data-state="open"]{
+    @apply  !bg-white border-0 rounded-none translate-x-[-50%] translate-y-[-50%] md:max-w-[666px] p-0; 
+}
+.dialogtitle{
+    @apply !text-4xl px-12 py-6  border border-black;
 }

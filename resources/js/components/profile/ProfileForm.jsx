@@ -329,7 +329,7 @@ export default function ProfileForm() {
                     <div className="text-sm text- black350 flex items-center gap-3 py-3 w-full text-left"><Phone
                         size={16}/> {user?.mobile || '+1 555-123-4567'}</div>
 
-                    <Dialog open={isProfileDialogOpen} className="top-[50%]" onOpenChange={(open) => {
+                    <Dialog open={isProfileDialogOpen} className="top-[50%] !bg-white custompopup " onOpenChange={(open) => {
                         setProfileDialogOpen(open);
                         if (!open) {
                             setNewEmail("");
@@ -339,29 +339,44 @@ export default function ProfileForm() {
                     }}>
                         <DialogTrigger asChild><Button variant="outline" className="mt-4 neutral50 !font-black rounded-md border border-neutral50 px-6 py-3 w-full text-base">Edit Profile</Button></DialogTrigger>
                         <DialogContent>
-                            <DialogTitle>Edit Profile</DialogTitle>
-                            {
-                                user?.profile_picture || newAvatar
-                                    ? <span className='rounded-full border'><img
-                                        src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
-                                        alt={user?.name || 'User'}
-                                        className="w-24 h-24 rounded-full object-cover"
-                                    /></span>
+                            
+                            <DialogTitle className="dialogtitle">Edit Profile</DialogTitle>
+                            <div className="px-12 py-3 flex flex-col gap-0">
+                                {
+                                    user?.profile_picture || newAvatar
+                                        ? <span className='rounded-full border'><img
+                                            src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
+                                            alt={user?.name || 'User'}
+                                            className="w-24 h-24 rounded-full object-cover"
+                                        /></span>
 
-                                    : <span className='rounded-full border'><img src="/images/profile_placeholder.png"
-                                                                                 alt={user?.name}/></span>
-                            }
-                            <label>Full Name</label>
-                            <Input type="input" value={newName} onChange={e => setNewName(e.target.value)}/>
-                            <label>Designation</label>
-                            <Input type="input" value={newDesignation} onChange={e => setNewDesignation(e.target.value)}/>
-                            <label>Email</label>
-                            <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
-                            <label>Mobile Number</label>
-                            <Input type="input" value={newNumber} onChange={e => setNewNumber(e.target.value)}/>
-                            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
-                            <Button variant="outline" onClick={() => setProfileDialogOpen(false)}>Discard</Button>
-                            <Button onClick={handleSaveProfile}>Save</Button>
+                                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"
+                                                                                    alt={user?.name}/></span>
+                                }
+                                 <div className="mb-4 flex flex-col gap-2 inputstyle">
+                                    <Label  className='text-neutral30'>Full Name</Label>
+                                    <Input type="input" value={newName} onChange={e => setNewName(e.target.value)}/>
+                                </div>
+                                 <div className="mb-4 flex flex-col gap-2 inputstyle">
+                                    <Label  className='text-neutral30'>Designation</Label>
+                                    <Input type="input" value={newDesignation} onChange={e => setNewDesignation(e.target.value)}/>
+                                </div>
+                                 <div className="mb-4 flex flex-col gap-2 inputstyle">
+                                    <Label  className='text-neutral30'>Email</Label>
+                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
+                                </div>
+                                 <div className="mb-4 flex flex-col gap-2 inputstyle">
+                                    <Label  className='text-neutral30'>Mobile Number</Label>
+                                    <Input type="input" value={newNumber} onChange={e => setNewNumber(e.target.value)}/>
+                                    {emailError && <div className="text-red-500 text-sm">{emailError}</div>}   
+                                </div>                  
+                                
+
+                                <div className="flex justify-end gap-4">
+                                    <Button variant="outline" onClick={() => setProfileDialogOpen(false)} className="text-xl !font-black py-2 px-8">Discard</Button>
+                                    <Button onClick={handleSaveProfile} className="text-white100 text-xl !font-black py-2 px-8">Save</Button>
+                                </div>
+                            </div>
                         </DialogContent>
                     </Dialog>
                 </>
@@ -371,21 +386,21 @@ export default function ProfileForm() {
             {/* Right Content with Tabs */}
             <main className="w-3/4 p-6 flex flex-col">
                 {/* Tab Headers */}
-                <div className="flex gap-4 mb-6 border-b">
+                <div className="flex gap-4 border-b bg-white px-8">
                     <button
-                        className={`pb-2 ${activeTab === 'background' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
+                        className={`${activeTab === 'background' ? ' border-b-2 border-blue500 text-blue500 font-semibold' : ' text-neutral60 px-3 py-3 border-b-2 border-transparent'}`}
                         onClick={() => setActiveTab('background')}
                     >
                         About Company
                     </button>
                     <button
-                        className={`pb-2 ${activeTab === 'additional-users' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
+                        className={`${activeTab === 'additional-users' ? ' border-b-2 border-blue500 text-blue500 font-semibold' : 'text-neutral60 px-3 py-3 border-b-2 border-transparent'}`}
                         onClick={() => setActiveTab('additional-users')}
                     >
                         Manage Collaborators
                     </button>
                     <button
-                        className={`pb-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-500 font-semibold' : 'text-gray-600'}`}
+                        className={`${activeTab === 'settings' ? 'border-b-2 border-blue500 text-blue500 font-semibold' : 'text-neutral60 px-3 py-3 border-b-2 border-transparent'}`}
                         onClick={() => setActiveTab('settings')}
                     >
                         Settings
@@ -395,7 +410,7 @@ export default function ProfileForm() {
 
                 {/* Tab Content */}
                 {activeTab === 'background' && (
-                    <div className="flex flex-col w-full max-w-2xl">
+                    <div className="flex flex-col w-full max-w-3xl p-10">
                         {successMessage && (
                             <Alert variant="default"
                                    className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
@@ -410,12 +425,13 @@ export default function ProfileForm() {
                         )}
 
                         <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="mb-4 flex flex-col gap-2">
+                            <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label htmlFor="organisation" className='text-neutral30'>Name of your
                                     organisation</Label>
                                 <Input
                                     id="organisation"
                                     value={organisation}
+                                    placeholder="XYZ Enterprises"
                                     onChange={(e) => setOrganisation(e.target.value)}
                                     className="border border-neutral80 "
                                 />
@@ -423,12 +439,13 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('organization_name')}</p>
                                 )}
                             </div>
-                            <div className="mb-4 flex flex-col gap-2">
+                            <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label htmlFor="companyUrl" className='text-neutral30'>Company website URL</Label>
                                 <Input
                                     id="companyUrl"
                                     type="url"
                                     value={companyUrl}
+                                    placeholder="www.companyname.com"
                                     onChange={(e) => setCompanyUrl(e.target.value)}
                                     className="border border-neutral80"
                                 />
@@ -436,7 +453,7 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('website_url')}</p>
                                 )}
                             </div>
-                            <div className="mb-4 flex flex-col gap-2">
+                            <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label className='text-neutral30'> Industry or sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
                                     <SelectTrigger className="border border-neutral80"><SelectValue
@@ -451,7 +468,7 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('industry_sector')}</p>
                                 )}
                             </div>
-                            <div className="mb-4 flex flex-col gap-2">
+                           <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label className='text-neutral30'>Annual revenue</Label>
                                 <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
                                     <SelectTrigger className="border border-neutral70"><SelectValue
@@ -466,7 +483,7 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('annual_revenue')}</p>
                                 )}
                             </div>
-                            <div className="mb-4 flex flex-col gap-2">
+                            <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label className='text-neutral30'>Country</Label>
                                 <Select value={country} onValueChange={setCountry}>
                                     <SelectTrigger className="border border-neutral70"><SelectValue
@@ -481,7 +498,7 @@ export default function ProfileForm() {
                                     <p className="text-sm text-red-500">{getError('country')}</p>
                                 )}
                             </div>
-                            <div className="mb-4 flex flex-col gap-2">
+                            <div className="mb-4 flex flex-col gap-2 inputstyle">
                                 <Label className='text-neutral30'>Market position</Label>
                                 <Select value={marketPosition} onValueChange={setMarketPosition}>
                                     <SelectTrigger className="border border-neutral70"><SelectValue
@@ -497,8 +514,8 @@ export default function ProfileForm() {
                                 )}
                             </div>
                             <div className="flex justify-end ">
-                                <Button onClick={handleSave} disabled={loading}>
-                                    {loading ? 'Saving...' : 'Next'}
+                                <Button onClick={handleSave} disabled={loading} Class="custombtn px-8 py-2 rounded-md" >
+                                    {loading ? 'Saving...' : 'Save'}
                                 </Button>
                             </div>
                         </form>
@@ -506,9 +523,9 @@ export default function ProfileForm() {
                 )}
 
                 {activeTab === 'additional-users' && (
-                    <div>
+                    <div className='p-10'>
                         <h2 className="text-xl font-bold mb-4">Collaborators</h2>
-                        <table className="min-w-full bg-white border">
+                        <table className="min-w-full bg-white border ">
                             <thead>
                             <tr className="bg-gray-100">
                                 <th className="py-2 px-4 border">First Name</th>
@@ -548,7 +565,7 @@ export default function ProfileForm() {
                 )}
 
                 {activeTab === 'settings' && (
-                    <div className="flex flex-col gap-6 max-w-md">
+                    <div className="flex flex-col gap-8 max-w-3xl p-10">
                         {settingsSuccessMessage && (
                             <Alert variant="default"
                                    className="mb-6 border-green-500 bg-green-50 text-green-700 flex items-center gap-2">
@@ -558,8 +575,9 @@ export default function ProfileForm() {
                             </Alert>
                         )}
 
-                        <div>
+                        <div className='border border-neutral90 rounded-md py-6 px-2 bg-white'>
                             <Label>Email</Label>
+                            <div className='flex justify-between items-center '>
                             <p className="mt-1">{user?.email}</p>
                             <Dialog open={isEmailDialogOpen} className="top-[50%]" onOpenChange={(open) => {
                                 setEmailDialogOpen(open);
@@ -569,23 +587,37 @@ export default function ProfileForm() {
                                     setEmailError("");
                                 }
                             }}>
-                                <DialogTrigger asChild><Button variant="outline" className="mt-2">Update Email</Button></DialogTrigger>
+                                <DialogTrigger asChild>
+                                     <Button variant="outline" className="rounded-sm border borde-text-neutral80 bg:white90 text-black700 text-xs !font-black">Update Email</Button>
+                                </DialogTrigger>
                                 <DialogContent>
-                                    <DialogTitle>Update Email</DialogTitle>
-                                    <label>Email Address*</label>
+                                    <DialogTitle className="dialogtitle">Update Email</DialogTitle>
+                                      <div className="px-12 py-3 flex flex-col gap-0">
+                                            <div className="inputstyle relative flex flex-col gap-2 mb-6">
+                                            <Label className="text-gray10 text-xs font-medium">Email Address<em>*</em></Label>
                                     <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
-                                    <label>Email Address*</label>
-                                    <Input type="email" value={ConfirmnewEmail} onChange={e => setConfirmnewEmail(e.target.value)}/>
-                                    {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
-                                    <Button variant="outline" onClick={() => setEmailDialogOpen(false)}>Discard</Button>
-                                    <Button onClick={handleUpdateEmail}>Save</Button>
+                                    </div>
+                                     <div className="inputstyle relative flex flex-col gap-2 mb-6">
+                                            <Label className="text-gray10 text-xs font-medium">Email Address<em>*</em></Label>
+                                            <Input type="email" value={ConfirmnewEmail} onChange={e => setConfirmnewEmail(e.target.value)}/>
+                                            {emailError && <div className="text-red-500 text-sm">{emailError}</div>}
+                                        </div>
+                                  
+                                     <div className="flex justify-end gap-4">
+                                        <Button variant="outline" onClick={() => setEmailDialogOpen(false)} className=" text-xl !font-black py-2 px-8">Discard</Button>
+                                        <Button onClick={handleUpdateEmail} className="text-white100 text-xl !font-black py-2 px-8">Save</Button>
+                                    </div>
+                                    </div>
                                 </DialogContent>
                             </Dialog>
+                            </div>
                         </div>
-                        <div>
-                            <Label>Password</Label>
-                            <p className="mt-1">********</p>
-
+                          <div className='border border-neutral90 rounded-md py-6 px-2 bg-white'>                           
+                            <div className='flex justify-between items-center '>
+                                <div className='flex flex-col gap-1'>
+                                    <h3 className='text-neutral30 text-xl font-black'>Password has been set</h3>
+                                    <p className='text-neutral50 text-sm'>Choose a strong unique password that’s at least 8 characters long</p>
+                                </div>
                             <Dialog open={isPasswordDialogOpen} className="top-[50%]" onOpenChange={(open) => {
                                 setPasswordDialogOpen(open);
                                 if (!open) {
@@ -597,54 +629,60 @@ export default function ProfileForm() {
                                 }
                             }}>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" className="mt-2">Update Password</Button>
+                                    <Button variant="outline" className="rounded-sm border borde-text-neutral80 bg:white90 text-black700 text-xs !font-black">Update Password</Button>
                                 </DialogTrigger>
 
                                 <DialogContent>
-                                    <DialogTitle>Update Password</DialogTitle>
+                                    <DialogTitle className="dialogtitle">Update Password</DialogTitle>
                                     {step === 1 && (
-                                        <div className="space-y-2">
-                                            <label>Current Password*</label>
+                                        <div className="px-12 py-3 flex flex-col gap-0">
+                                            <div className="inputstyle relative flex flex-col gap-2 mb-6">
+                                            <Label className="text-gray10 text-xs font-medium">Current Password <em>*</em></Label>
                                             <Input
                                                 type="password"
                                                 placeholder="Current Password"
                                                 value={currentPassword}
                                                 onChange={e => setCurrentPassword(e.target.value)}
                                             />
-                                            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-
-                                            <Button onClick={handleNextStep} className="mt-2">Next</Button>
+                                            {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
+                                            </div>
+                                            <div className='flex justify-end'>
+                                                <Button onClick={handleNextStep} className="text-white100 text-xl !font-black py-2 px-8">Next</Button>
+                                            </div>
                                         </div>
                                     )}
 
                                     {step === 2 && (
-                                        <div className="space-y-2">
-                                            <label>New Password*</label>
+                                        <div className="px-12 py-3 flex flex-col gap-0">
+                                            <div className="inputstyle relative flex flex-col gap-2 mb-6">
+                                            <Label className="text-gray10 text-xs font-medium">New Password <em>*</em></Label>
                                             <Input
                                                 type="password"
                                                 placeholder="New Password"
                                                 value={newPassword}
                                                 onChange={e => setNewPassword(e.target.value)}
                                             />
-                                            <label>Confirm New Password*</label>
+                                            </div>
+                                            <div className="inputstyle relative flex flex-col gap-2 mb-6">
+                                            <Label className="text-gray10 text-xs font-medium">Confirm New Password <em>*</em></Label>
                                             <Input
                                                 type="password"
                                                 placeholder="Confirm New Password"
                                                 value={confirmPassword}
                                                 onChange={e => setConfirmPassword(e.target.value)}
                                             />
-                                            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-
-                                            <div className="flex justify-between mt-4">
-                                                <Button variant="outline" onClick={() => setPasswordDialogOpen(false)}>Cancel</Button>
-                                                <Button onClick={handleUpdatePassword}>Save Changes</Button>
+                                            {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
+                                            </div>
+                                            <div className="flex justify-end gap-4">
+                                                <Button variant="outline" onClick={() => setPasswordDialogOpen(false)} className="text-xl !font-black py-2 px-8">Cancel</Button>
+                                                <Button onClick={handleUpdatePassword} className="text-white100 text-xl !font-black py-2 px-8">Save Changes</Button>
                                             </div>
                                         </div>
                                     )}
                                 </DialogContent>
                             </Dialog>
                         </div>
-
+                        </div>
                     </div>
                 )}
             </main>
