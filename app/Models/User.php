@@ -31,6 +31,7 @@ class User extends Authenticatable
         'business_category',
         'provider',
         'provider_id',
+        'role'
     ];
 
     /**

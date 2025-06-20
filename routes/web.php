@@ -45,16 +45,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
-   /* Route::get('/', function () {
-        return view('dashboard');
-    });*/
-
-//    Route::get('/dashboard', function () {
-//        return view('dashboard');
-//    })->name('dashboard');
-
     Route::match(['get', 'post'], 'logout', [\App\Http\Controllers\User\UserAuthController::class, 'logout'])->name('logout');
-    Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'index'])->name('profile.show');
     Route::get('profile/assessment/{id}/edit', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.assessment.edit');
     Route::put('profile/assessment/{id}', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.assessment.update');
     
@@ -81,8 +72,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('password/reset-form', [UserAuthController::class, 'showResetForm'])->name('password.reset.form');
     //Route::put('password/reset', [UserAuthController::class, 'resetPassword'])->name('password.reset');
 
-    Route::get('profile', [UserAuthController::class, 'showProfile'])->name('user.profile.show');
-    Route::put('profile', [UserAuthController::class, 'updateProfile'])->name('user.profile.update');
+//    Route::get('profile', [UserAuthController::class, 'showProfile'])->name('user.profile.show');
+//    Route::put('profile', [UserAuthController::class, 'updateProfile'])->name('user.profile.update');
 
 });
 
