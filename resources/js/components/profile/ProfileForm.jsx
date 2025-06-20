@@ -29,21 +29,8 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
-import {Form, FormField, FormItem, FormMessage} from "../ui/form.js";
 import { useForm } from "react-hook-form";
-import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-
-const formSchema = z
-    .object({
-        name: z.string().min(1, "Name is required"),
-        profile_picture_preview: z.any().optional(),
-    })
-    .refine((data) => data.password === data.password_confirmation, {
-        message: "Passwords do not match",
-        path: ["password_confirmation"],
-    });
-
 
 export default function ProfileForm() {
     const navigate = useNavigate();
@@ -56,6 +43,7 @@ export default function ProfileForm() {
     const [newDesignation, setNewDesignation] = useState(user?.role || '');
     const [newNumber, setNewNumber] = useState(user?.mobile || '');
     const [newAvatar, setNewAvatar] = useState(null); // Holds the new avatar file
+    const [removeAvatar, setRemoveAvatar] = useState(false);
 
     const [companyUrl, setCompanyUrl] = useState('');
     const [industry, setIndustry] = useState('');
@@ -89,26 +77,36 @@ export default function ProfileForm() {
     const [newPassword, setNewPassword] = useState('');
     const [step, setStep] = useState(1);
     const [currentPassword, setCurrentPassword] = useState("");
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            profile_picture_preview: null,
-        },
-    });
+    const [showDragDrop, setShowDragDrop] = useState(false);
+    const [updateProfileError, setProfileError] = useState("");
+
     const handleSaveProfile = async () => {
         // Handle saving updated name and avatar (send to backend)
+        setProfileError("");
         const formData = new FormData();
-        formData.append('name', newName);
-        if (newAvatar) {
-            formData.append('avatar', newAvatar);
+        if(newName===""){
+            setProfileError("Name cannot be empty!");
+            return;
         }
+        if(newDesignation===""){
+            setProfileError("Designation cannot be empty!");
+            return;
+        }
+        if(newNumber===""){
+            setProfileError("Mobile number cannot be empty!");
+            return;
+        }
+        formData.append('name', newName);
+        formData.append('role', newDesignation);
+        formData.append('mobile', newNumber);
+        formData.append('avatar', newAvatar);
         setLoading(true);
         setErrors({});
         setSuccessMessage('');
 
         try {
             const response = await updateProfile(formData);
+            setProfileDialogOpen(false);
             setSuccessMessage('Profile updated successfully!');
             console.log(response.data.user);
             updateUserSession(response.data);
@@ -177,6 +175,15 @@ export default function ProfileForm() {
     useEffect(() => {
         if (user?.name) {
             setNewName(user.name);
+        }
+        if (user?.role) {
+            setNewDesignation(user.role);
+        }
+        if (user?.mobile) {
+            setNewNumber(user.mobile);
+        }
+        if (user?.email) {
+            setNewEmail(user.email);
         }
 
         if (user?.id) {
@@ -342,17 +349,79 @@ export default function ProfileForm() {
                             
                             <DialogTitle className="dialogtitle">Edit Profile</DialogTitle>
                             <div className="px-12 py-3 flex flex-col gap-0">
-                                {
-                                    user?.profile_picture || newAvatar
-                                        ? <span className='rounded-full border'><img
-                                            src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
-                                            alt={user?.name || 'User'}
-                                            className="w-24 h-24 rounded-full object-cover"
-                                        /></span>
+                                <div className="flex flex-col items-center mb-4">
+                                    {
+                                        (!removeAvatar && (user?.profile_picture || newAvatar)) ? (
+                                            <span className="rounded-full border mb-2">
+                                                <img
+                                                    src={newAvatar ? URL.createObjectURL(newAvatar) : `/storage/${user.profile_picture}?t=${Date.now()}`}
+                                                    alt={user?.name || 'User'}
+                                                    className="w-24 h-24 rounded-full object-cover"
+                                                />
+                                            </span>
+                                            ) : (
+                                                <span className="rounded-full border mb-2">
+                                                <img
+                                                    src="/images/profile_placeholder.png"
+                                                    alt={user?.name}
+                                                    className="w-24 h-24 rounded-full object-cover"
+                                                />
+                                            </span>
+                                        )
+                                    }
+                                    {/* Change Picture Button */}
+                                    <Button
+                                        variant="outline"
+                                        className="mb-2"
+                                        onClick={() => setShowDragDrop(true)}
+                                    >
+                                        Change Avatar
+                                    </Button>
 
-                                        : <span className='rounded-full border'><img src="/images/profile_placeholder.png"
-                                                                                    alt={user?.name}/></span>
-                                }
+                                    {/* Drag & Drop Area - show only if user clicked Change */}
+                                    {showDragDrop && (
+                                        <div
+                                            className="border-2 border-dashed rounded p-4 text-center cursor-pointer hover:bg-gray-100"
+                                            onDragOver={(e) => e.preventDefault()}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                                                    setNewAvatar(e.dataTransfer.files[0]);
+                                                    setShowDragDrop(false);
+                                                }
+                                            }}
+                                            onClick={() => document.getElementById('profilePictureInput').click()}
+                                        >
+                                            <p className="text-sm text-gray-600 mb-2">Drag & drop image here, or click to select</p>
+                                            <input
+                                                id="profilePictureInput"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    if (e.target.files && e.target.files[0]) {
+                                                        setNewAvatar(e.target.files[0]);
+                                                        setShowDragDrop(false);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Remove Picture Button */}
+                                    {(user?.profile_picture || newAvatar) && (
+                                        <Button
+                                            variant="ghost"
+                                            className="mt-2 text-blue-500"
+                                            onClick={() => {
+                                                setNewAvatar(null);
+                                                setRemoveAvatar(true);
+                                            }}
+                                        >
+                                            Remove Avatar
+                                        </Button>
+                                    )}
+                                </div>
                                  <div className="mb-4 flex flex-col gap-2 inputstyle">
                                     <Label  className='text-neutral30'>Full Name</Label>
                                     <Input type="input" value={newName} onChange={e => setNewName(e.target.value)}/>
@@ -363,15 +432,13 @@ export default function ProfileForm() {
                                 </div>
                                  <div className="mb-4 flex flex-col gap-2 inputstyle">
                                     <Label  className='text-neutral30'>Email</Label>
-                                    <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
+                                    <Input type="email" disabled={true} value={newEmail} />
                                 </div>
                                  <div className="mb-4 flex flex-col gap-2 inputstyle">
                                     <Label  className='text-neutral30'>Mobile Number</Label>
                                     <Input type="input" value={newNumber} onChange={e => setNewNumber(e.target.value)}/>
-                                    {emailError && <div className="text-red-500 text-sm">{emailError}</div>}   
-                                </div>                  
-                                
-
+                                </div>
+                                {updateProfileError && <div className="text-red-500 text-sm">{updateProfileError}</div>}
                                 <div className="flex justify-end gap-4">
                                     <Button variant="outline" onClick={() => setProfileDialogOpen(false)} className="text-xl !font-black py-2 px-8">Discard</Button>
                                     <Button onClick={handleSaveProfile} className="text-white100 text-xl !font-black py-2 px-8">Save</Button>
@@ -426,8 +493,7 @@ export default function ProfileForm() {
 
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="mb-4 flex flex-col gap-2 inputstyle">
-                                <Label htmlFor="organisation" className='text-neutral30'>Name of your
-                                    organisation</Label>
+                                <Label htmlFor="organisation" className='text-neutral30'>Company Name</Label>
                                 <Input
                                     id="organisation"
                                     value={organisation}
@@ -440,7 +506,7 @@ export default function ProfileForm() {
                                 )}
                             </div>
                             <div className="mb-4 flex flex-col gap-2 inputstyle">
-                                <Label htmlFor="companyUrl" className='text-neutral30'>Company website URL</Label>
+                                <Label htmlFor="companyUrl" className='text-neutral30'>Company URL</Label>
                                 <Input
                                     id="companyUrl"
                                     type="url"
@@ -454,7 +520,7 @@ export default function ProfileForm() {
                                 )}
                             </div>
                             <div className="mb-4 flex flex-col gap-2 inputstyle">
-                                <Label className='text-neutral30'> Industry or sector</Label>
+                                <Label className='text-neutral30'> Sector</Label>
                                 <Select value={industry} onValueChange={setIndustry}>
                                     <SelectTrigger className="border border-neutral80"><SelectValue
                                         placeholder="Select industry"/></SelectTrigger>
@@ -469,7 +535,7 @@ export default function ProfileForm() {
                                 )}
                             </div>
                            <div className="mb-4 flex flex-col gap-2 inputstyle">
-                                <Label className='text-neutral30'>Annual revenue</Label>
+                                <Label className='text-neutral30'>Total Annual Revenue</Label>
                                 <Select value={annualRevenue} onValueChange={setAnnualRevenue} className="bg-white">
                                     <SelectTrigger className="border border-neutral70"><SelectValue
                                         placeholder="Select revenue"/></SelectTrigger>
@@ -499,7 +565,7 @@ export default function ProfileForm() {
                                 )}
                             </div>
                             <div className="mb-4 flex flex-col gap-2 inputstyle">
-                                <Label className='text-neutral30'>Market position</Label>
+                                <Label className='text-neutral30'>Positioning</Label>
                                 <Select value={marketPosition} onValueChange={setMarketPosition}>
                                     <SelectTrigger className="border border-neutral70"><SelectValue
                                         placeholder="Select position"/></SelectTrigger>
